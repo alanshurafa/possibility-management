@@ -10,7 +10,6 @@ Related: [ETB-Expand-The-Box](https://github.com/alanshurafa/ETB-Expand-The-Box)
 
 ## License
 
-- Code and tools: [MIT License](LICENSE).
-- Possibility Management content (documents, distinctions, thoughtware, experiments): World Copyleft by Clinton Callahan, under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Keep the attribution and share adaptations under the same license.
+World Copyleft. Everything in this repository — content, documents, and tools — is released under the [Creative Commons Attribution-ShareAlike 4.0 International License](LICENSE) (CC BY-SA 4.0), the same terms Possibility Management uses for its materials. Use, copy, modify, and distribute freely; keep the attribution and share adaptations under the same license.
 
-Details in [LICENSE-CONTENT.md](LICENSE-CONTENT.md).
+Lineage: Possibility Management originates with [Clinton Callahan](https://possibilitymanagement.org/) and the Possibility Management trainer network.

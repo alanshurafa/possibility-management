@@ -8,6 +8,9 @@ This repo is the public home for Possibility Management-related work: documents,
 
 Related: [ETB-Expand-The-Box](https://github.com/alanshurafa/ETB-Expand-The-Box) — digital course versions of Expand The Box.
 
-## Copyright
+## License
 
-World Copyleft. Use, copy, modify, and distribute freely. Attribution appreciated.
+- Code and tools: [MIT License](LICENSE).
+- Possibility Management content (documents, distinctions, thoughtware, experiments): World Copyleft by Clinton Callahan, under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Keep the attribution and share adaptations under the same license.
+
+Details in [LICENSE-CONTENT.md](LICENSE-CONTENT.md).

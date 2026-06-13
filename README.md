@@ -27,11 +27,13 @@ Or just open `index.html` in a browser.
 
 ## Host your own copy
 
-Fork the repo and deploy your fork. Your copy stays yours, and this one stays untouched.
+Easiest path: click **Use this template** at the top of this repo to get your own copy, then deploy it. Your copy stays yours, and this one stays untouched. (Forking works too.)
+
+One click to Vercel:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Falanshurafa%2Fpossibility-management)
 
-It also runs on any static host: GitHub Pages, Netlify, Cloudflare Pages, or an object store. A `.nojekyll` file is included so GitHub Pages serves the `_assets` folder correctly.
+There's no build step, so it runs on any static host: Vercel, GitHub Pages, Netlify, Cloudflare Pages, or an object store. A `.nojekyll` file is included so GitHub Pages serves the `_assets` folder correctly.
 
 ## Layout
 

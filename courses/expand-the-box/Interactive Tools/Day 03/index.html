@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 3 · Interactive Tools · Expand the Box</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --mustard: #d8b04a;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.05) 0%, transparent 55%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.55;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 48px 56px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+  gap: 24px;
+  flex-wrap: wrap;
+}
+header.top .num { color: var(--vermillion); font-weight: 600; }
+header.top a.back {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border 0.2s, color 0.2s;
+}
+header.top a.back:hover {
+  color: var(--vermillion);
+  border-bottom-color: var(--vermillion);
+}
+
+.hero {
+  margin: 80px 0 64px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 56px;
+  align-items: end;
+}
+@media (max-width: 800px) { .hero { grid-template-columns: 1fr; gap: 32px; } }
+
+.hero .left .eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(48px, 8vw, 104px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+h1.display .super {
+  display: block;
+  font-size: 0.28em;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144, 'SOFT' 0;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.hero .right {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-style: italic;
+  border-left: 3px solid var(--vermillion);
+  padding-left: 24px;
+  margin-bottom: 8px;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 64px 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* one tool — give it more room since it's solo */
+.tools {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 80px;
+  max-width: 720px;
+}
+
+.tool {
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--ink);
+  padding: 44px 40px 36px;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+.tool:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(14, 10, 5, 0.16);
+  background: var(--ivory);
+}
+
+.tool .tool-num {
+  position: absolute;
+  top: -16px;
+  left: 28px;
+  background: var(--ivory);
+  padding: 0 12px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  color: var(--vermillion);
+  line-height: 1;
+}
+
+.tool .kind {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.tool h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 44px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.tool h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+
+.tool .one-liner {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+}
+
+.tool .body-text {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-mute);
+  margin-bottom: auto;
+  padding-bottom: 24px;
+}
+
+.tool .meta {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.tool .meta .open {
+  color: var(--vermillion);
+  font-weight: 600;
+}
+.tool:hover .meta .open { color: var(--vermillion-deep); }
+
+.about {
+  margin: 0 0 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+}
+@media (max-width: 800px) { .about { grid-template-columns: 1fr; gap: 24px; } }
+.about h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.about h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.about p {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+.about p:last-child { margin-bottom: 0; }
+.about p em { color: var(--ink); font-style: italic; }
+
+footer.bottom {
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.divider {
+  text-align: center;
+  margin: 40px 0;
+  color: var(--rule);
+  font-family: var(--display);
+  font-size: 24px;
+  letter-spacing: 1em;
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+
+/* Maps for this day */
+.daymaps { margin: 8px 0 72px; }
+.daymaps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+.daymap { background: var(--ivory-shade); border: 1.5px solid var(--ink); padding: 16px 16px 18px; text-decoration: none; color: inherit; transition: transform .3s cubic-bezier(0.2,0.7,0.2,1), box-shadow .3s, background .3s; display: flex; flex-direction: column; }
+.daymap:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(14,10,5,0.16); background: var(--ivory); }
+.daymap:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+.daymap img { width: 100%; height: auto; border: 1px solid var(--rule); background: #fff; display: block; }
+.daymap .cap { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 14px; line-height: 1.5; }
+.daymap .cap strong { color: var(--vermillion); }
+.daymap .cap .open { color: var(--vermillion); font-weight: 600; }
+.daymaps .note { font-family: var(--body); font-style: italic; font-size: 17px; line-height: 1.55; color: var(--ink-soft); margin-top: 22px; max-width: 760px; }
+.daymaps .note a { color: var(--vermillion); text-decoration: none; border-bottom: 1px solid transparent; }
+.daymaps .note a:hover { border-bottom-color: var(--vermillion); }
+.daymap-cell { display: flex; flex-direction: column; }
+.daymap-cell .daymap { flex: 1 1 auto; }
+.daymap-tool { display: block; margin-top: 8px; padding: 12px 16px; background: var(--ivory-shade); border: 1.5px solid var(--ink); border-top: none; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--vermillion); text-decoration: none; text-align: center; transition: background .3s, color .3s; }
+.daymap-tool:hover { background: var(--ivory); color: var(--vermillion-deep); }
+.daymap-tool:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 03</span> · EXPAND THE BOX · Interactive Tools
+    </div>
+    <div>
+      <a href="../index.html" class="back">← All Interactive Tools</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="left">
+      <div class="eyebrow">Possibility Management · Day 3 · Embodied Practice</div>
+      <h1 class="display">
+        <span class="super">Day 3 — Liquid State, Center-Ground-Bubble, Five Bodies</span>
+        The energetic-body practices <em>PM rests on.</em><br>
+        Standing or sitting. Solo.
+      </h1>
+    </div>
+    <div class="right">
+      Day 3 installs the equipment the rest of the course runs on. A working set of four energetic-body practices — center, grounding cord, bubble, golden cube — that let you stay present while your thoughtware is loosening. Without them, liquid state is destabilising. With them, it is <em>workable.</em>
+    </div>
+  </section>
+
+  <div class="section-label">Maps for this day</div>
+
+  <section class="daymaps">
+    <div class="daymaps-grid">
+      <div class="daymap-cell">
+        <a class="daymap" href="../../Map%20Notes/M05%20-%20Liquid%20State.md">
+        <img src="../../Maps/M05.png" alt="Liquid State — Possibility Management map" loading="lazy">
+        <div class="cap"><strong>M05</strong> · Liquid State · <span class="open">Map Note →</span></div>
+      </a>
+        <a class="daymap-tool" href="../../Map%20Atlas/M05%20-%20Liquid%20State.html">Interactive tool →</a>
+      </div>
+      <div class="daymap-cell">
+        <a class="daymap" href="../../Map%20Notes/M06%20-%20Five%20Bodies.md">
+        <img src="../../Maps/M06.png" alt="Five Bodies — Possibility Management map" loading="lazy">
+        <div class="cap"><strong>M06</strong> · Five Bodies · <span class="open">Map Note →</span></div>
+      </a>
+        <a class="daymap-tool" href="../../Map%20Atlas/M06%20-%20Five%20Bodies.html">Interactive tool →</a>
+      </div>
+      <div class="daymap-cell">
+        <a class="daymap" href="../../Map%20Notes/M07%20-%20Center%2C%20Grounding%20Cord%2C%20Bubble%2C%20Golden%20Cube.md">
+        <img src="../../Maps/M07.png" alt="Center, Grounding Cord, Bubble, Golden Cube — Possibility Management map" loading="lazy">
+        <div class="cap"><strong>M07</strong> · Center, Grounding Cord, Bubble, Golden Cube · <span class="open">Map Note →</span></div>
+      </a>
+        <a class="daymap-tool" href="../../Map%20Atlas/M07%20-%20Center%2C%20Grounding%20Cord%2C%20Bubble%2C%20Golden%20Cube.html">Interactive tool →</a>
+      </div>
+    </div>
+    <p class="note">These are the maps Day 3 installs. Click a map to open its Map Note — what it shows, the key distinctions, how to use it. Full module: <a href="../../Days/Day%2003%20-%20Liquid%20State%2C%20Center-Ground-Bubble%2C%20Five%20Bodies.md">Day 3 module →</a></p>
+  </section>
+
+  <div class="section-label">The practice</div>
+
+  <section class="tools">
+
+    <a href="centering-practice.html" class="tool">
+      <div class="tool-num">I.</div>
+      <div class="kind">Guided sequence · ~15 min · solo</div>
+      <h2>Centering <em>Practice.</em></h2>
+      <div class="one-liner">Find your center. Drop a grounding cord. Set a bubble. Open the golden cube. Close cleanly. Note what shifted.</div>
+      <div class="body-text">
+        The canonical PM four-step energetic-body sequence — guided, paced, with body diagrams that build through the practice. A breath rhythm of ten in / ten out runs alongside each step. At the end, a short journal capture saves on this device, so you can see what landed last time when you come back tomorrow to do it again. By the third or fourth pass the equipment is yours.
+      </div>
+      <div class="meta">
+        <span>~15 min · seated or standing</span>
+        <span class="open">Begin →</span>
+      </div>
+    </a>
+
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <section class="about">
+    <div>
+      <h3>How to <em>use</em> this.</h3>
+      <p>
+        Read the Day 3 module first (`Days/Day 03 - Liquid State, Center-Ground-Bubble, Five Bodies.md`).
+        Watch the two source videos. Then come here.
+      </p>
+      <p>
+        Run the practice once today. Sleep on it. Run it again tomorrow.
+        Run it a third time the day after that. The energetic body's perceptual interface
+        comes online by being practised — not by being insisted on.
+      </p>
+      <p>
+        Then run the partner exchange in the module, with the equipment now <em>installed</em> rather than theoretical.
+      </p>
+    </div>
+    <div>
+      <h3>What the tool <em>saves</em>.</h3>
+      <p>
+        Your practice note from each pass is stored in your browser's local storage —
+        on this device only, never sent anywhere. The next visit shows the date, rep count, and
+        the last note you wrote.
+      </p>
+      <p>
+        Clear your browser data and the tool forgets. That is the design. This is your practice, not the course's record.
+      </p>
+    </div>
+  </section>
+
+  <footer class="bottom">
+    <div>Day 3 · Interactive Tools · prototype v2.0 · 2026-06-10</div>
+    <div>Built for the async ETB course</div>
+  </footer>
+</div>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapid Learning · Map Atlas M26 · Expand the Box</title>
+<meta name="description" content="Interactive teaching tool for the Possibility Management Map of Rapid Learning — the fast inner loop Go! → Beep! → Shift! → Go!, and the Feedback Swamp that kills it.">
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+/* ============================================================
+   MAP ATLAS — shared design system (template for all 29 maps).
+   Tokens, fonts, paper-grain, GROUND-NOW, reduced-motion and the
+   license comment are inherited from the ETB course design system
+   (see Interactive Tools / feeling-locator.html). Keep in sync.
+   ============================================================ */
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --vermillion-glow: rgba(196, 59, 28, 0.32);
+  --mustard: #d8b04a;
+  --mustard-text: #b8902c;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+/* paper-grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 200;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 18px;
+  text-decoration: none;
+}
+a.skip-link:focus { left: 8px; }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+/* ====================== HEADER BAR ====================== */
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+  gap: 24px;
+}
+header.top .left { display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+header.top .right { display: flex; gap: 22px; flex-wrap: wrap; align-items: baseline; }
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top .brand { color: var(--ink-mute); }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+header.top a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+
+/* ====================== HERO ====================== */
+.hero { margin: 48px 0 24px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 16px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 22px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 760px;
+  font-style: italic;
+}
+
+/* ====================== MAP FIGURE ====================== */
+figure.map-figure {
+  margin: 56px 0 16px;
+  padding: 28px;
+  background: var(--ivory-shade);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--vermillion);
+  text-align: center;
+}
+figure.map-figure a.map-link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  cursor: zoom-in;
+}
+figure.map-figure a.map-link:focus-visible { outline: 3px solid var(--vermillion); outline-offset: 4px; }
+figure.map-figure img {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  border: 1px solid var(--rule);
+  background: var(--ivory);
+  box-shadow: 0 14px 40px rgba(14, 10, 5, 0.16);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s;
+}
+figure.map-figure a.map-link:hover img {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(14, 10, 5, 0.22);
+}
+figure.map-figure figcaption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 20px;
+}
+figure.map-figure figcaption .zoom-hint { color: var(--vermillion); }
+
+/* ====================== SECTION FRAME ====================== */
+.section {
+  margin-top: 56px;
+  padding: 48px 52px;
+  background: var(--ivory-shade);
+  border-top: 3px solid var(--vermillion);
+}
+.section .section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+}
+.section h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.section h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.section .prose {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 760px;
+}
+.section .prose p { margin-bottom: 16px; }
+.section .prose p:last-child { margin-bottom: 0; }
+.section .prose em { color: var(--ink); font-style: italic; }
+.section .prose strong { color: var(--ink); font-weight: 600; }
+.section .prose .emph {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+  font-weight: 400;
+}
+
+/* ====================== STEPPER (distinctions) ====================== */
+.stepper-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin: 28px 0 6px;
+  flex-wrap: wrap;
+}
+.stepper-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.stepper-count .now { color: var(--vermillion); font-weight: 700; }
+.progress {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0 22px;
+}
+.progress .seg {
+  flex: 1;
+  height: 3px;
+  background: var(--rule);
+  transition: background 0.2s;
+}
+.progress .seg.done { background: var(--mustard); }
+.progress .seg.current { background: var(--vermillion); }
+
+.step-card {
+  background: var(--ivory);
+  border: 1.5px solid var(--ink-mute);
+  border-left: 4px solid var(--vermillion);
+  padding: 34px 38px;
+  min-height: 220px;
+  animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.step-card[hidden] { display: none; }
+.step-card .sc-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.step-card .sc-name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(28px, 3.6vw, 42px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.05;
+  color: var(--vermillion);
+  margin-bottom: 16px;
+}
+.step-card .sc-body {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.step-card .sc-body em { color: var(--ink); font-style: italic; }
+.step-card .sc-rows { margin-top: 6px; }
+.step-card .sc-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px dashed var(--rule);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.step-card .sc-row:first-child { border-top: none; }
+.step-card .sc-row .lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  padding-top: 4px;
+}
+.step-card .sc-row .val { color: var(--ink-soft); }
+.step-card .sc-row .val.shadow {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-mute);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====================== FLIP CARDS (misunderstandings) ====================== */
+.flip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 26px;
+}
+@media (max-width: 760px) { .flip-grid { grid-template-columns: 1fr; } }
+
+.flip {
+  background: transparent;
+  perspective: 1400px;
+  min-height: 230px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+  display: block;
+  width: 100%;
+}
+.flip:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 4px; }
+.flip-inner {
+  position: relative;
+  width: 100%;
+  min-height: 230px;
+  height: 100%;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip[aria-pressed="true"] .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.flip-face .fc-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.flip-face .fc-text {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
+  line-height: 1.3;
+}
+.flip-face .fc-hint {
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.flip-front {
+  background: var(--ivory);
+  border: 1.5px solid var(--ink-mute);
+}
+.flip-front .fc-tag { color: var(--ink-mute); }
+.flip-front .fc-tag::before { content: '✗  '; color: var(--ink-mute); }
+.flip-front .fc-text { color: var(--ink); font-style: italic; }
+.flip-front .fc-hint { color: var(--ink-mute); }
+.flip-back {
+  background: var(--ink);
+  border: 1.5px solid var(--ink);
+  transform: rotateY(180deg);
+}
+.flip-back .fc-tag { color: var(--mustard); }
+.flip-back .fc-tag::before { content: '✓  '; color: var(--mustard); }
+.flip-back .fc-text { color: var(--ivory); }
+.flip-back .fc-text em { color: var(--mustard); font-style: italic; }
+.flip-back .fc-hint { color: rgba(244, 236, 220, 0.5); }
+
+/* ====================== SAY IT (verbal) ====================== */
+.quote-block {
+  margin-top: 26px;
+  padding: 40px 44px;
+  background: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(19px, 2.1vw, 23px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 70, 'WONK' 1;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.quote-block p { margin-bottom: 18px; }
+.quote-block p:last-child { margin-bottom: 0; }
+.quote-block .lead-in {
+  font-style: italic;
+  color: var(--vermillion);
+}
+.quote-tools {
+  display: flex;
+  gap: 14px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.read-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ====================== EMBODY (practice) ====================== */
+.practice-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 22px 0 8px;
+}
+ol.practice {
+  list-style: none;
+  counter-reset: practice;
+  margin: 18px 0 0;
+}
+ol.practice > li {
+  counter-increment: practice;
+  position: relative;
+  padding: 18px 0 18px 64px;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+ol.practice > li:first-child { border-top: none; }
+ol.practice > li::before {
+  content: counter(practice);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--vermillion);
+  border: 1.5px solid var(--vermillion);
+  border-radius: 50%;
+}
+ol.practice > li em { color: var(--ink); font-style: italic; }
+ol.practice > li strong { color: var(--ink); font-weight: 600; }
+ol.practice .four-list {
+  list-style: none;
+  margin: 12px 0 4px;
+  padding: 14px 18px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-size: 16px;
+}
+ol.practice .four-list li { padding: 4px 0; color: var(--ink-soft); }
+ol.practice .four-list li b { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mustard-text); margin-right: 8px; }
+
+.practice-closer {
+  margin-top: 24px;
+  padding: 22px 26px;
+  background: var(--ivory);
+  border-left: 3px solid var(--vermillion);
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.practice-capture {
+  margin-top: 24px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.capture-state {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+}
+
+/* ====================== REFLECTION ====================== */
+.reflect-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 22px 0 12px;
+}
+textarea.reflect {
+  width: 100%;
+  padding: 22px 26px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.45;
+  display: block;
+}
+textarea.reflect:focus { outline: none; border-color: var(--vermillion); }
+.reflect-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.reflect-saved {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+}
+.privacy-note {
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.prior-entry {
+  margin-top: 18px;
+  padding: 18px 22px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.prior-entry[hidden] { display: none; }
+.prior-entry .pe-label {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ====================== BUTTONS ====================== */
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+.btn[disabled]:hover { background: transparent; color: var(--ink); }
+
+/* ====================== FOOTER ====================== */
+footer.bottom {
+  margin-top: 72px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+}
+footer.bottom .nav-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+footer.bottom .nav-row a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+footer.bottom .nav-row a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+footer.bottom .nav-row a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+footer.bottom .license {
+  margin-top: 26px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+  max-width: 860px;
+}
+footer.bottom .license a { color: var(--ink-mute); text-decoration: underline; }
+footer.bottom .license a:hover { color: var(--vermillion); }
+footer.bottom .license .cc { color: var(--ink-soft); font-weight: 600; letter-spacing: 0.06em; }
+
+/* ====================== GROUND NOW — floating safety button ====================== */
+.ground-now {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  background: var(--vermillion);
+  color: var(--ivory);
+  border: 2px solid var(--vermillion-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 22px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(196, 59, 28, 0.28);
+  transition: all 0.25s ease;
+  line-height: 1.1;
+}
+.ground-now:hover {
+  background: var(--vermillion-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(196, 59, 28, 0.36);
+}
+.ground-now:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.ground-now .small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* ====================== GROUNDING MODAL ====================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(14, 10, 5, 0.86);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.modal.show { display: flex; }
+.modal-inner {
+  max-width: 620px;
+  width: 100%;
+  background: var(--ivory);
+  border: 2px solid var(--vermillion);
+  padding: 44px 40px 36px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-inner::before {
+  content: 'GROUNDING · 60 SECONDS';
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.modal-inner h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.modal-inner h2 em { font-style: italic; color: var(--vermillion); }
+.modal-inner ol {
+  margin: 0 0 22px 22px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.modal-inner ol li { margin-bottom: 12px; }
+.modal-inner ol li strong { color: var(--ink); }
+.modal-inner .session-paused {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+.modal-inner .modal-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+@media (max-width: 760px) {
+  .wrap { padding: 24px 20px 60px; }
+  .section { padding: 32px 26px; }
+  .step-card { padding: 28px 24px; }
+  .quote-block { padding: 30px 26px; }
+  .ground-now { top: 16px; right: 16px; padding: 12px 16px; font-size: 11px; }
+  .modal-inner { padding: 36px 24px 28px; }
+}
+
+/* ====================== REDUCED MOTION ====================== */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+    scroll-behavior:auto!important;
+  }
+  .flip[aria-pressed="true"] .flip-inner { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to map</a>
+
+<!-- floating safety button — always available; this tool engages the emotional body -->
+<button class="ground-now" id="groundNowBtn" type="button" onclick="openGround()" aria-haspopup="dialog">
+  GROUND NOW
+  <span class="small">60-second pause</span>
+</button>
+
+<div class="wrap">
+
+  <!-- ====================== 1 · HEADER BAR ====================== -->
+  <header class="top">
+    <div class="left">
+      <span><span class="num">MAP ATLAS · M26</span></span>
+      <span class="brand">Possibility Management</span>
+    </div>
+    <div class="right">
+      <a href="index.html">← All maps</a>
+      <a href="../Days/Day%2004%20-%20Feedback%2C%20Coaching%2C%20Rapid%20Learning%2C%20Experiments.md">Taught in Day 4 →</a>
+    </div>
+  </header>
+
+  <!-- ====================== 2 · HERO ====================== -->
+  <section class="hero" id="main">
+    <div class="eyebrow">New Map · The Inner Loop</div>
+    <h1 class="display">Rapid <em>Learning.</em></h1>
+    <p class="lede">
+      The fast inner loop by which a person upgrades thoughtware in ordinary life — Go! → Beep! → Shift! → Go! — and the one swamp that kills it. You are not meant to get it right. You are meant to keep the wheel turning.
+    </p>
+  </section>
+
+  <!-- ====================== 3 · THE MAP ====================== -->
+  <figure class="map-figure">
+    <a class="map-link" href="../Maps/M26.png" target="_blank" rel="noopener" aria-label="Open the full-size Map of Rapid Learning in a new tab">
+      <img src="../Maps/M26.png"
+           alt="The Map of Rapid Learning: a wheel with three stations — Go! (you act), Beep! (something did not work as planned), Shift! (change one thing, run it again) — looping back to Go!; with a trap-door down into the red Feedback Swamp of self-verdict, and the clean line 'Thank you for the feedback.'">
+    </a>
+    <figcaption>Map of Rapid Learning · <span class="zoom-hint">click the map to open full-size →</span></figcaption>
+  </figure>
+
+  <!-- ====================== 4 · WHAT THIS MAP SHOWS ====================== -->
+  <section class="section" aria-labelledby="shows-h">
+    <div class="section-label">What this map shows</div>
+    <h2 id="shows-h">A loop, <em>not a line.</em></h2>
+    <div class="prose">
+      <p>
+        The map is a loop, not a line and not a ladder. Three stations on a wheel that keeps turning. <strong>GO!</strong> at the top — you act, you try the thing. → <strong>BEEP!</strong> — something did not work as planned. → <strong>SHIFT!</strong> — you change one specific thing, run the experiment again. → arrow back up to <strong>GO!</strong> This is a <span class="emph">do-over</span>, and the do-over is the whole point. You are not meant to get it right. You are meant to keep the wheel turning.
+      </p>
+      <p>
+        The map labels both responses to the loop. Off <strong>GO!</strong>, in green, the clean line: <em>"Thank you for the feedback!"</em> Off <strong>BEEP!</strong>, the trap-door: <em>"Uh, I'm just in the swamp!"</em> — pointing down into a red cloud, the <strong>FEEDBACK SWAMP</strong>, captioned with everything the swamp tells you: <em>Oh no! · I can't do anything right · No, you are wrong · I am not good enough · They are attacking · I feel alone · This is your shadow projection.</em> Around the edges: <em>Bang! Boing!</em> — the noise of the wheel jamming.
+      </p>
+      <p>
+        The <strong>BEEP!</strong> box itself carries the correction: <em>This is NOT a failure. 1) Working feedback. 2) Coaching — try something different.</em> That box is doing the load-bearing work of the entire map. A Beep! is not a verdict on you. It is <strong>design data</strong> — a precise specification of what to change next. Both Go! and Beep! are feedback. The loop only dies when Beep! collapses into "I am bad" and the actor slides off the wheel into the swamp.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================== 5 · WALK THE DISTINCTIONS (stepper) ====================== -->
+  <section class="section" aria-labelledby="walk-h">
+    <div class="section-label">Walk the distinctions</div>
+    <h2 id="walk-h">Take them <em>one at a time.</em></h2>
+    <p class="prose">Step through the load-bearing distinctions this map draws. Move at the pace of your body, not your reading speed.</p>
+
+    <div class="stepper-head">
+      <div class="stepper-count">Distinction <span class="now" id="stepNow">1</span> of <span id="stepTotal">8</span></div>
+    </div>
+    <div class="progress" id="stepProgress" aria-hidden="true"></div>
+
+    <div id="stepRegion" aria-live="polite">
+      <!-- step cards injected by JS -->
+    </div>
+
+    <div class="quote-tools" style="margin-top: 22px;">
+      <button class="btn ghost" id="stepPrev" type="button" onclick="stepBy(-1)" disabled>← Prev</button>
+      <button class="btn primary" id="stepNext" type="button" onclick="stepBy(1)">Next →</button>
+    </div>
+  </section>
+
+  <!-- ====================== 6 · COMMON MISUNDERSTANDINGS (flip cards) ====================== -->
+  <section class="section" aria-labelledby="mis-h">
+    <div class="section-label">Common misunderstandings</div>
+    <h2 id="mis-h">Each card shows the <em>wrong</em> belief. Flip it for the correction.</h2>
+    <p class="prose">Click a card — or focus it and press Enter or Space — to turn it over.</p>
+    <div class="flip-grid" id="flipGrid">
+      <!-- flip cards injected by JS -->
+    </div>
+  </section>
+
+  <!-- ====================== 7 · SAY IT (verbal) ====================== -->
+  <section class="section" aria-labelledby="say-h">
+    <div class="section-label">Say it · the verbal map</div>
+    <h2 id="say-h">Now <em>explain it aloud.</em></h2>
+    <p class="prose">This is the spoken version of the map. Read it through once, then close your eyes and say it in your own words. You teach the map by speaking it.</p>
+    <blockquote class="quote-block">
+      <p><span class="lead-in">Here is the whole procedure for upgrading thoughtware without a trainer in the room.</span> A loop with three stations that never stops turning. <em>Go!</em> — you act, you try the actual thing, not the thought of it; if it worked, keep going. <em>Beep!</em> — something did not work as planned. <em>Shift!</em> — you change one specific variable, not your whole self, and Go! again. That last arrow is the do-over, and the do-over is the point. You were never supposed to nail it on the first turn. You were supposed to keep the wheel turning, because reps install thoughtware and insight does not.</p>
+      <p>The move the whole thing depends on lives at Beep!. The Beep! is <em>information,</em> not a verdict — a design specification for what to change. It does not say <em>you are bad at this.</em> It says <em>that specific thing, in that specific moment, did not produce that specific result.</em> Those are completely different sentences, and your gremlin will try to read you the first one. Do not let it.</p>
+      <p>Now the failure mode, because it is the most important part of the map. When the Beep! lands and instead of <em>that didn't work, here's the Shift</em> you hear <em>oh no, I can't do anything right, they're attacking me, I'm not good enough, I'm alone in this</em> — you have fallen into the <em>Feedback Swamp.</em> The wheel jams. Bang. Boing. You are no longer learning; you are drowning in a red cloud of self-verdict.</p>
+      <p>The exit is one sentence: <em>"Thank you for the feedback."</em> Say it. Then open the Beep! Book — the literal notebook, your engineering log — write the Beep! as flat design data, name one Shift!, and step back onto the wheel. The sentence is not about being nice. It is the move that turns a verdict back into data.</p>
+      <p>That is Rapid Learning: not learning faster than is natural, but what is left when you stop the things you do to prevent learning — defending against Beeps, dressing Shifts up as identity crises, refusing to Go! because Go! is uncomfortable. The universe is already handing you feedback at full speed. Rapid Learning is what happens when you stop hiding from it.</p>
+    </blockquote>
+    <div class="quote-tools">
+      <button class="btn ghost" id="saidBtn" type="button" onclick="markSaid()" aria-pressed="false">I said it aloud</button>
+      <span class="read-status" id="saidStatus" role="status"></span>
+    </div>
+  </section>
+
+  <!-- ====================== 8 · EMBODY IT (practice) ====================== -->
+  <section class="section" aria-labelledby="embody-h">
+    <div class="section-label">Embody it · solo practice</div>
+    <h2 id="embody-h">The <em>do-over out loud.</em></h2>
+    <p class="prose">You need your Beep! Book and a chair. Feet flat, hands on thighs, the neutral PM posture. One full turn of the wheel, out loud, with one person in the room: you. Pick <em>one thing you attempted recently that did not work</em> — not a whole bad week, one specific attempt: a sentence you tried, a message you sent, a moment you reached and missed.</p>
+    <div class="practice-meta">Solo · ≤12 minutes · Beep! Book required</div>
+
+    <ol class="practice">
+      <li><strong>Name the Go!</strong> <em>"Here is what I tried."</em> Flat. Just the action. <em>"I tried to tell my partner I was overwhelmed during dinner."</em></li>
+      <li><strong>Name the Beep!</strong> <em>"Here is what did not work — as design data, no self-judgment."</em> Say it the way an engineer reads an instrument: <em>"It came out as an attack and they got defensive. Beep."</em> If what comes out instead is <em>"I always do this, I'm so bad at this, I ruin everything"</em> — stop. That is the gremlin grabbing the pen, and you just heard the sound of the swamp. Ground. Run this station again with the witness in the chair, not the gremlin.</li>
+      <li><strong>Say "Thank you for the feedback."</strong> Out loud. Mean it as the move, not the manners. Notice what changes in your chest when you say it.</li>
+      <li><strong>Name one Shift!</strong> One specific variable. <em>"Next time I say it before dinner, sitting down, starting with 'I need thirty seconds' — one sentence, then stop."</em> Write all four lines in the Beep! Book.</li>
+      <li>
+        <strong>Then teach the map in your body.</strong> Say, out loud, both versions of the same moment. Same event. Notice the difference where you actually feel it — the first drops you toward the swamp (heavier, smaller, alone); the second keeps you on the wheel (lighter, specific, still moving). That bodily difference <em>is</em> the distinction.
+        <ul class="four-list">
+          <li><b>Version A</b> "I failed."</li>
+          <li><b>Version B</b> "Beep. Here's the Shift."</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="practice-closer">
+      The map is not asking you to feel good about the Beep!. It is asking you to feel the difference between a verdict and a do-over — and to choose the do-over, on purpose, the next thousand times.
+    </div>
+
+    <div class="practice-capture">
+      <button class="btn" id="practiceBtn" type="button" onclick="togglePractice()" aria-pressed="false">Start the do-over</button>
+      <span class="capture-state" id="practiceState" role="status"></span>
+    </div>
+  </section>
+
+  <!-- ====================== 9 · REFLECTION CAPTURE ====================== -->
+  <section class="section" aria-labelledby="reflect-h">
+    <div class="section-label">Reflection</div>
+    <h2 id="reflect-h">What <em>landed?</em></h2>
+    <p class="prose">One or two lines is plenty. Could you keep the Beep! as design data, or did the gremlin grab the pen? What changed in your body between "I failed" and "Beep. Here's the Shift"?</p>
+
+    <div class="prior-entry" id="priorEntry" hidden>
+      <span class="pe-label">Your last reflection · this device</span>
+      <span id="priorEntryText"></span>
+    </div>
+
+    <label class="reflect-label" for="reflectInput">Your reflection on Rapid Learning</label>
+    <textarea class="reflect" id="reflectInput" aria-label="Your reflection on Rapid Learning — what landed for you" placeholder="What landed…"></textarea>
+    <div class="reflect-row">
+      <button class="btn primary" type="button" onclick="saveReflection()">Save reflection</button>
+      <button class="btn ghost" type="button" onclick="clearReflection()">Clear</button>
+      <span class="reflect-saved" id="reflectSaved" role="status"></span>
+    </div>
+    <p class="privacy-note">Saved on this device only, in your browser (localStorage). Nothing is uploaded. No accounts, no telemetry, no external calls except the web-font request.</p>
+  </section>
+
+  <!-- ====================== 10 · FOOTER ====================== -->
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="index.html">← All maps · Map Atlas</a>
+      <a href="../Days/Day%2004%20-%20Feedback%2C%20Coaching%2C%20Rapid%20Learning%2C%20Experiments.md">Taught in Day 4 →</a>
+    </div>
+    <p class="license">
+      <span class="cc">🄯 World Copyleft 2026 · Expand the Box (Digital).</span>
+      Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+      Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. Please share, share-alike.
+      Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>.
+      Full terms: <code>LICENSE.md</code> in the course root.
+    </p>
+  </footer>
+</div>
+
+<!-- modal: grounding (60-second sequence) -->
+<div class="modal" id="groundModal" role="dialog" aria-modal="true" aria-labelledby="groundModalTitle">
+  <div class="modal-inner">
+    <h2 id="groundModalTitle">Ground. <em>Now.</em></h2>
+    <ol>
+      <li><strong>Stop.</strong> Stand up — both feet flat on the floor. Feel the contact.</li>
+      <li><strong>Breathe out, longer than in</strong> — three slow exhales.</li>
+      <li><strong>Name three things you can see</strong> in this room. Out loud is best.</li>
+      <li><strong>Name one thing you can hear.</strong> The fridge. Traffic. Your own breath.</li>
+      <li><strong>One hand on your sternum, one on your belly.</strong> Notice your body is here.</li>
+      <li><strong>Then decide:</strong> continue, pause 10 minutes, or stop for today. Any of the three is fine.</li>
+    </ol>
+    <p class="session-paused">Take as long as you need.</p>
+    <div class="modal-actions">
+      <button class="btn primary" type="button" onclick="closeGround()">I'm grounded — continue</button>
+      <a href="index.html" class="btn ghost">Stop — return to the Atlas</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   M26 — Rapid Learning. Teaching content is sourced verbatim
+   from Map Note "M26 - Rapid Learning.md".
+   Local-only: the single localStorage key etb_atlas_M26.
+   ============================================================ */
+
+/* ---------------------- DATA: distinctions (stepper) ---------------------- */
+/* The three stations of the loop and the swamp as structured cards, then the
+   cross-cutting distinctions (Shift is one variable, the exit sentence, the
+   Beep! Book, fast loop vs spiral). Straight from the Map Note. */
+const DISTINCTIONS = [
+  {
+    kicker: 'Station 1 of 3',
+    name: 'Go!',
+    rows: [
+      ['Move', 'You act. You try the actual thing, not the thought of it. At the top of the wheel.'],
+      ['Read', 'An action that worked — continue. If it worked, keep going.'],
+      ['Both', 'Go! and Beep! are both feedback. The wheel needs both.'],
+      ['Clean line', '"Thank you for the feedback!" — off Go!, in green on the map.']
+    ]
+  },
+  {
+    kicker: 'Station 2 of 3',
+    name: 'Beep!',
+    rows: [
+      ['Move', 'Something did not work as planned. An action that did not produce the result you wanted.'],
+      ['Is', 'Design data — a precise specification of what to change next. NOT a verdict on you.'],
+      ['Box says', 'This is NOT a failure. 1) Working feedback. 2) Coaching — try something different.'],
+      ['Shadow', 'The trap-door: "Uh, I\'m just in the swamp!" — when Beep! collapses into "I am bad."']
+    ]
+  },
+  {
+    kicker: 'Station 3 of 3',
+    name: 'Shift!',
+    rows: [
+      ['Move', 'You change one specific thing and run the experiment again. The arrow back up to Go!'],
+      ['One thing', 'One specific, observable variable — not your whole self. "Feet flat, eyes up, the same sentence."'],
+      ['Not', '"I\'ll be better next time" is not a Shift. Change the variable, not the identity.'],
+      ['Do-over', 'The last arrow people forget. The do-over is not optional; it is the mechanism.']
+    ]
+  },
+  {
+    kicker: 'The failure mode',
+    name: 'The Feedback Swamp',
+    rows: [
+      ['What', 'When Beep! collapses into oh no / I can\'t do anything right / they\'re attacking me / I\'m not good enough, the wheel jams.'],
+      ['Sound', 'Bang! Boing! — the noise of the wheel jamming. A red cloud of self-verdict.'],
+      ['Not', 'Not a feeling to push through — a location you fell into, with a one-sentence exit.'],
+      ['Exit', '"Thank you for the feedback." Said out loud or under your breath. Then write the Beep!, name the Shift!, return to the loop.']
+    ]
+  },
+  {
+    kicker: 'The loop',
+    name: 'Go! → Beep! → Shift! → Go!',
+    body: 'The last arrow is the one people forget. The do-over is not optional; it is the mechanism. A loop you exit after one Beep! was never a loop. Reps install thoughtware; insight does not.'
+  },
+  {
+    kicker: 'The exit',
+    name: '"Thank you for the feedback."',
+    body: 'The exit from the swamp is one sentence. Said out loud or under your breath. Then write the Beep! as design data in the Beep! Book, name the Shift!, and return to the loop. The sentence is not politeness — it is the move that pulls you back onto the wheel.'
+  },
+  {
+    kicker: 'The instrument',
+    name: 'The Beep! Book is a log, not a journal.',
+    body: 'A literal notebook with <em>Beep! Book</em> on the cover. Beeps go in, Gos go in, Shifts go in. Design notes for your own thoughtware — <em>not</em> a place to process your feelings about failing.'
+  },
+  {
+    kicker: 'Fast vs slow',
+    name: 'Inner loop, not the spiral.',
+    body: 'Rapid Learning is the <em>fast inner loop</em> — seconds to minutes, the move in a single conversation. The Learning Spiral (M19) is the <em>slow outer loop</em> — the same distinction returning on a deeper lap over weeks and years. You run a thousand fast loops inside one turn of the spiral.'
+  }
+];
+
+/* ---------------------- DATA: misunderstandings (flip cards) ---------------------- */
+const MISUNDERSTANDINGS = [
+  {
+    wrong: '"A Beep! means I failed. I did something wrong."',
+    right: 'A Beep! is design data — information that an approach did not produce the result you wanted. It says nothing about your worth. Collapsing the Beep! into <em>"I\'m bad"</em> is not honesty about failure; it <em>is</em> the Feedback Swamp. The map literally captions the Beep! box: <em>This is NOT a failure.</em>'
+  },
+  {
+    wrong: '"If I get a Beep!, I should feel bad, apologize, or explain myself."',
+    right: 'The clean response to a Beep! is <em>"Thank you for the feedback,"</em> then Shift!. The swamp — <em>oh no / I\'m not good enough / they\'re attacking me</em> — is the gremlin eating the Beep! instead of using it. Feeling bad does not convert the data; it just jams the wheel. Write the Beep!, name the Shift!, Go! again.'
+  },
+  {
+    wrong: '"Rapid Learning and the Learning Spiral are the same thing."',
+    right: 'Rapid Learning is the <em>fast inner loop</em> — Go!/Beep!/Shift!, seconds to minutes, the move in a single conversation. The Learning Spiral (M19) is the <em>slow outer loop</em> — the same distinction returning on a deeper lap over weeks, months, years. You run a thousand fast loops inside one turn of the spiral.'
+  },
+  {
+    wrong: '"Go! is the win and Beep! is the loss — I want more Gos and fewer Beeps."',
+    right: 'Both Go! and Beep! are feedback, and the wheel needs both. A run of Beeps means the universe is handing you design data fast — that is the loop working <em>at speed,</em> not against you. A learner who only counts Gos is keeping score, not running experiments.'
+  },
+  {
+    wrong: '"I\'ll Shift! by being more present / trying harder / doing better next time."',
+    right: 'That is not a Shift!, it is a New Year\'s resolution. A Shift! is one specific, observable change to a single variable — <em>"feet flat, eyes up, the same sentence."</em> Vague Shifts produce vague Beeps and the wheel spins without traction.'
+  }
+];
+
+const STORE_KEY = 'etb_atlas_M26';
+
+/* ---------------------- A11Y HELPERS ---------------------- */
+/* keyboard activation for custom (non-native) controls */
+function kb(e, fn) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    fn();
+  }
+}
+
+/* ---------------------- STEPPER ---------------------- */
+let stepIndex = 0;
+
+function buildProgress() {
+  const p = document.getElementById('stepProgress');
+  p.innerHTML = DISTINCTIONS.map(() => '<div class="seg"></div>').join('');
+  document.getElementById('stepTotal').textContent = DISTINCTIONS.length;
+}
+
+function renderStep(focusCard) {
+  const d = DISTINCTIONS[stepIndex];
+  const region = document.getElementById('stepRegion');
+  let inner = `<div class="sc-kicker">${d.kicker}</div><div class="sc-name">${d.name}</div>`;
+  if (d.rows) {
+    inner += '<div class="sc-rows">';
+    for (const [lbl, val] of d.rows) {
+      const shadow = lbl === 'Shadow' ? ' shadow' : '';
+      inner += `<div class="sc-row"><div class="lbl">${lbl}</div><div class="val${shadow}">${val}</div></div>`;
+    }
+    inner += '</div>';
+  } else {
+    inner += `<div class="sc-body">${d.body}</div>`;
+  }
+  region.innerHTML = `<article class="step-card" id="stepCard" tabindex="-1" aria-label="${d.name}">${inner}</article>`;
+
+  document.getElementById('stepNow').textContent = stepIndex + 1;
+  document.querySelectorAll('#stepProgress .seg').forEach((s, i) => {
+    s.classList.remove('done', 'current');
+    if (i < stepIndex) s.classList.add('done');
+    else if (i === stepIndex) s.classList.add('current');
+  });
+
+  document.getElementById('stepPrev').disabled = stepIndex === 0;
+  document.getElementById('stepNext').disabled = stepIndex === DISTINCTIONS.length - 1;
+
+  // move focus to the freshly-revealed card for keyboard / SR users
+  if (focusCard) {
+    const card = document.getElementById('stepCard');
+    if (card) card.focus({ preventScroll: true });
+  }
+}
+
+function stepBy(delta) {
+  const next = stepIndex + delta;
+  if (next < 0 || next >= DISTINCTIONS.length) return;
+  stepIndex = next;
+  renderStep(true);
+}
+
+/* ---------------------- FLIP CARDS ---------------------- */
+function buildFlipCards() {
+  const grid = document.getElementById('flipGrid');
+  grid.innerHTML = MISUNDERSTANDINGS.map((m, i) => `
+    <button class="flip" type="button" id="flip${i}" aria-pressed="false"
+            aria-label="Misunderstanding ${i + 1}: ${m.wrong.replace(/"/g, '')} — activate to reveal the correction"
+            onclick="toggleFlip(${i})" onkeydown="kb(event,()=>toggleFlip(${i}))">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <div class="fc-tag">Common belief</div>
+          <div class="fc-text">${m.wrong}</div>
+          <div class="fc-hint">Flip for the correction →</div>
+        </div>
+        <div class="flip-face flip-back">
+          <div class="fc-tag">On this map</div>
+          <div class="fc-text">${m.right}</div>
+          <div class="fc-hint">← Flip back</div>
+        </div>
+      </div>
+    </button>
+  `).join('');
+}
+
+function toggleFlip(i) {
+  const el = document.getElementById('flip' + i);
+  const flipped = el.getAttribute('aria-pressed') === 'true';
+  el.setAttribute('aria-pressed', flipped ? 'false' : 'true');
+}
+
+/* ---------------------- SAY IT ---------------------- */
+function markSaid() {
+  const btn = document.getElementById('saidBtn');
+  const pressed = btn.getAttribute('aria-pressed') === 'true';
+  btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+  document.getElementById('saidStatus').textContent = pressed ? '' : 'Said aloud ✓ — say it again until it is yours.';
+  saveState();
+}
+
+/* ---------------------- EMBODY ---------------------- */
+function togglePractice() {
+  const btn = document.getElementById('practiceBtn');
+  const state = document.getElementById('practiceState');
+  const phase = btn.dataset.phase || 'idle';
+  if (phase === 'idle') {
+    btn.dataset.phase = 'running';
+    btn.textContent = 'Mark do-over done';
+    btn.setAttribute('aria-pressed', 'true');
+    state.textContent = 'Do-over started — run one full turn of the wheel, then mark done.';
+  } else {
+    btn.dataset.phase = 'idle';
+    btn.textContent = 'Start the do-over';
+    btn.setAttribute('aria-pressed', 'false');
+    state.textContent = 'Do-over complete ✓';
+    saveState();
+  }
+}
+
+/* ---------------------- REFLECTION + STATE ---------------------- */
+function loadState() {
+  let data = {};
+  try {
+    data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+  } catch (e) {
+    data = {};
+  }
+  if (data.reflection) {
+    document.getElementById('reflectInput').value = data.reflection;
+    const prior = document.getElementById('priorEntry');
+    document.getElementById('priorEntryText').textContent = data.reflection;
+    prior.hidden = false;
+    if (data.savedAt) {
+      document.getElementById('reflectSaved').textContent = 'Last saved ' + new Date(data.savedAt).toLocaleString();
+    }
+  }
+  if (data.said) {
+    const btn = document.getElementById('saidBtn');
+    btn.setAttribute('aria-pressed', 'true');
+    document.getElementById('saidStatus').textContent = 'Said aloud ✓ — say it again until it is yours.';
+  }
+  if (data.embodied) {
+    document.getElementById('practiceState').textContent = 'Do-over completed before ✓';
+  }
+}
+
+function currentData() {
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { data = {}; }
+  return data;
+}
+
+function saveState() {
+  const data = currentData();
+  data.said = document.getElementById('saidBtn').getAttribute('aria-pressed') === 'true';
+  const ps = document.getElementById('practiceState').textContent;
+  if (ps.indexOf('complete') !== -1 || ps.indexOf('completed') !== -1) data.embodied = true;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+function saveReflection() {
+  const val = document.getElementById('reflectInput').value.trim();
+  const data = currentData();
+  data.reflection = val;
+  data.savedAt = new Date().toISOString();
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    document.getElementById('reflectSaved').textContent = val ? 'Saved ✓ · ' + new Date().toLocaleString() : 'Saved (empty) ✓';
+    const prior = document.getElementById('priorEntry');
+    if (val) {
+      document.getElementById('priorEntryText').textContent = val;
+      prior.hidden = false;
+    } else {
+      prior.hidden = true;
+    }
+  } catch (e) {
+    document.getElementById('reflectSaved').textContent = 'Could not save (storage blocked).';
+  }
+}
+
+function clearReflection() {
+  document.getElementById('reflectInput').value = '';
+  const data = currentData();
+  delete data.reflection;
+  delete data.savedAt;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+  document.getElementById('priorEntry').hidden = true;
+  document.getElementById('reflectSaved').textContent = 'Cleared.';
+}
+
+/* ---------------------- GROUNDING MODAL ---------------------- */
+let _groundReturnFocus = null;
+function openGround() {
+  _groundReturnFocus = document.activeElement;
+  const modal = document.getElementById('groundModal');
+  modal.classList.add('show');
+  const firstBtn = modal.querySelector('.modal-actions .btn');
+  if (firstBtn) firstBtn.focus();
+}
+function closeGround() {
+  document.getElementById('groundModal').classList.remove('show');
+  if (_groundReturnFocus && typeof _groundReturnFocus.focus === 'function') _groundReturnFocus.focus();
+  _groundReturnFocus = null;
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('groundModal');
+    if (modal.classList.contains('show')) closeGround();
+  }
+});
+
+/* ---------------------- INIT ---------------------- */
+window.addEventListener('DOMContentLoaded', () => {
+  buildProgress();
+  renderStep(false);
+  buildFlipCards();
+  loadState();
+});
+</script>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

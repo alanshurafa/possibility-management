@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Red-Pill Ceremony · ETB Day 1</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #5c4f3d;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+
+/* paper grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* deckle edge */
+.frame {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 28px 48px 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  gap: 24px;
+}
+.header .left { display: flex; gap: 28px; flex-wrap: wrap; }
+.header .right { display: flex; gap: 24px; align-items: baseline; flex-shrink: 0; }
+.header .num { color: var(--vermillion); font-weight: 500; }
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 60px;
+  position: relative;
+}
+
+.step {
+  display: none;
+  max-width: 760px;
+  width: 100%;
+  text-align: center;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.step.active { display: block; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 22px;
+}
+
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(34px, 5vw, 64px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+  color: var(--ink);
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+
+.spoken {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(28px, 4vw, 44px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 28px 0;
+  padding: 32px 28px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.spoken::before, .spoken::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--vermillion);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.spoken::before { top: 0; }
+.spoken::after { bottom: -4px; }
+
+.spoken.muted {
+  color: var(--ink-mute);
+  font-size: clamp(22px, 3vw, 32px);
+}
+
+.instruction {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 580px;
+  margin: 0 auto 20px;
+}
+
+.cue {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 14px;
+}
+
+/* breath circle */
+.breath {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  margin: 36px 0 28px;
+}
+.breath-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 1.5px solid var(--vermillion);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, var(--vermillion-soft) 0%, transparent 70%);
+}
+.breath-circle .pulse {
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: var(--vermillion);
+  opacity: 0.18;
+  animation: breathe 11s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%   { transform: scale(0.5); opacity: 0.10; }
+  36%  { transform: scale(1.0); opacity: 0.40; }
+  100% { transform: scale(0.5); opacity: 0.10; }
+}
+.breath-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 500;
+}
+.breath-count {
+  font-family: var(--display);
+  font-size: 48px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 0;
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* posture figure */
+.posture {
+  width: 90px;
+  height: 180px;
+  margin: 28px auto;
+  display: block;
+}
+
+/* buttons */
+.actions {
+  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 16px 30px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+.btn:hover {
+  background: var(--ink);
+  color: var(--ivory);
+}
+.btn.primary {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.btn.primary:hover {
+  background: var(--vermillion-deep);
+  border-color: var(--vermillion-deep);
+}
+.btn.ghost {
+  border-color: var(--ink-mute);
+  color: var(--ink-mute);
+}
+.btn.ghost:hover {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn.large {
+  font-size: 13px;
+  padding: 22px 42px;
+}
+
+/* pill choice */
+.pill-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 36px 0 20px;
+}
+.pill-card {
+  border: 1.5px solid var(--ink-mute);
+  padding: 36px 28px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  background: var(--ivory-shade);
+  text-align: center;
+  position: relative;
+}
+.pill-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+}
+.pill-card.red {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.pill-card.red:hover {
+  background: var(--vermillion-deep);
+  border-color: var(--vermillion-deep);
+  box-shadow: 0 8px 24px rgba(196,59,28,0.25);
+}
+.pill-card .pill-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+.pill-card .pill-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.1;
+}
+
+/* commitment capture */
+.capture {
+  margin: 28px 0;
+}
+.capture textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 24px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.4;
+}
+.capture textarea:focus {
+  outline: none;
+  border-color: var(--vermillion);
+  background: var(--ivory);
+}
+.capture .hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+  display: block;
+  text-align: left;
+}
+
+/* commitment card (closing step) */
+.commitment-card {
+  border: 2px solid var(--vermillion);
+  padding: 42px 36px;
+  background: var(--ivory-shade);
+  position: relative;
+  margin: 28px 0;
+  text-align: left;
+}
+.commitment-card::before {
+  content: 'RED PILL';
+  position: absolute;
+  top: -10px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+.commitment-card .date {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+.commitment-card .sentence {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 26px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+/* return-visit banner */
+.return-banner {
+  position: fixed;
+  top: 60px;
+  left: 48px;
+  right: 48px;
+  z-index: 3;
+  display: none;
+  padding: 18px 24px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.return-banner.show { display: flex; }
+.return-banner .label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-right: 12px;
+}
+.return-banner .sentence-mini {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ivory);
+  flex: 1;
+}
+.return-banner button {
+  background: transparent;
+  color: var(--ivory);
+  border: 1px solid var(--ivory);
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.return-banner button:hover {
+  background: var(--ivory);
+  color: var(--ink);
+}
+
+/* progress dots */
+.progress {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+.progress .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rule);
+  transition: all 0.3s;
+}
+.progress .dot.active {
+  background: var(--vermillion);
+  width: 24px;
+  border-radius: 3px;
+}
+.progress .dot.done {
+  background: var(--ink-mute);
+}
+
+/* nav links (now inline in header) */
+.nav-back {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border 0.2s;
+}
+.nav-back:hover {
+  color: var(--vermillion);
+  border-bottom-color: var(--vermillion);
+}
+
+.print-only { display: none; }
+@media print {
+  body::before, .return-banner, .progress, .header, .actions, .nav-back { display: none !important; }
+  .print-only { display: block; }
+  body { background: white; overflow: visible; }
+  .step { display: block !important; }
+  .step:not(.print-step) { display: none !important; }
+}
+
+@media (max-width: 640px) {
+  .header { padding: 20px 24px 0; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .header .right { flex-wrap: wrap; }
+  .main { padding: 24px 20px; }
+  .pill-grid { grid-template-columns: 1fr; }
+  .return-banner { left: 16px; right: 16px; top: 50px; padding: 14px 16px; flex-direction: column; align-items: flex-start; }
+}
+
+.pill-card:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 4px; }
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<div class="return-banner" id="returnBanner">
+  <div style="display:flex; align-items:center; flex:1; min-width:0;">
+    <span class="label">Last commitment</span>
+    <span class="sentence-mini" id="bannerSentence"></span>
+  </div>
+  <button onclick="hideBanner()">Run ceremony again</button>
+</div>
+
+<div class="frame">
+  <div class="header">
+    <div class="left">
+      <span><span class="num">DAY 01</span> / EXPAND THE BOX</span>
+      <span>The Red-Pill Ceremony</span>
+    </div>
+    <div class="right">
+      <span><span id="stepLabel">STEP I</span> · OF VIII</span>
+      <a href="index.html" class="nav-back">← All Day 1 tools</a>
+    </div>
+  </div>
+
+  <main class="main">
+
+    <!-- STEP 1: Setup -->
+    <section class="step active" data-step="1">
+      <div class="eyebrow">Day 1 · Embodied Practice · ~15 minutes</div>
+      <h1 class="display">The Red-Pill <em>Ceremony</em></h1>
+      <p class="instruction">
+        This is the analogue of the live ETB ceremony — the moment the trainer asks <em>blue pill or red pill?</em>
+        and gives everyone 90 seconds to walk out and get their money back. Online and async, you do it for yourself.
+      </p>
+      <p class="instruction">
+        Find a place where you will not be interrupted. Stand. Have voice. Have the next 15 minutes.
+      </p>
+      <p class="cue">Read the next step in your body, not in your head.</p>
+      <div class="actions">
+        <button class="btn primary large" onclick="next()">I'm standing — begin</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: Posture -->
+    <section class="step" data-step="2">
+      <div class="eyebrow">Step II · Body</div>
+      <h1 class="display"><em>Stand.</em> Feet on the floor.</h1>
+      <svg class="posture" viewBox="0 0 90 180" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <circle cx="45" cy="22" r="13"/>
+        <line x1="45" y1="35" x2="45" y2="110"/>
+        <line x1="45" y1="48" x2="22" y2="78"/>
+        <line x1="45" y1="48" x2="68" y2="78"/>
+        <line x1="45" y1="110" x2="32" y2="172"/>
+        <line x1="45" y1="110" x2="58" y2="172"/>
+        <line x1="20" y1="172" x2="44" y2="172" stroke="#c43b1c" stroke-width="2"/>
+        <line x1="46" y1="172" x2="70" y2="172" stroke="#c43b1c" stroke-width="2"/>
+      </svg>
+      <p class="instruction">
+        Both feet on the floor. Shoulders down, away from your ears. Hands loose at your sides.
+        Spine long, not stiff.
+      </p>
+      <p class="cue">Standing matters. Don't sit down for this.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="next()">I'm in posture</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: Breath -->
+    <section class="step" data-step="3">
+      <div class="eyebrow">Step III · Breath</div>
+      <h1 class="display">Three breaths. Exhale <em>longer</em> than inhale.</h1>
+      <div class="breath">
+        <div class="breath-circle" aria-hidden="true">
+          <div class="pulse"></div>
+        </div>
+        <div class="breath-label" id="breathPhase">Breathe in</div>
+        <div class="breath-count" id="breathCount">3</div>
+      </div>
+      <p class="cue">Audible exhale is fine. The body knows what to do.</p>
+      <div class="actions">
+        <button class="btn ghost" onclick="next()">Skip breath cycles</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: First sentence -->
+    <section class="step" data-step="4">
+      <div class="eyebrow">Step IV · Speaking</div>
+      <h1 class="display">Out loud, now:</h1>
+      <div class="spoken">In the next 30 days I am going to do this course.</div>
+      <p class="instruction">
+        Say it. Don't think it — say it.
+      </p>
+      <p class="cue">Notice what your body did when you said that. Tightened? Braced? Brightened? That's data.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="next()">I said it — continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 5: Second sentence -->
+    <section class="step" data-step="5">
+      <div class="eyebrow">Step V · Speaking</div>
+      <h1 class="display">Now, this one:</h1>
+      <div class="spoken">I can stop at any time. I can pause at any time. I can put it down at any time. Nothing makes me do this.</div>
+      <p class="cue">Notice what your body did <em>that</em> time. Different?</p>
+      <div class="actions">
+        <button class="btn primary" onclick="next()">I said it — continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 6: Blue pill -->
+    <section class="step" data-step="6">
+      <div class="eyebrow">Step VI · The blue pill</div>
+      <h1 class="display">Speak this out loud — feel it land:</h1>
+      <div class="spoken muted">
+        Blue pill. I'm not doing this. The course is interesting but I'm not actually in it.
+        I'll watch the videos when I get to them. I won't pair with anyone.
+        I won't run the experiments. I'm a tourist.
+      </div>
+      <p class="cue">Pause. Notice what your body said back.</p>
+      <div class="actions">
+        <button class="btn ghost" onclick="next()">I noticed — continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 7: Red pill -->
+    <section class="step" data-step="7">
+      <div class="eyebrow">Step VII · The red pill</div>
+      <h1 class="display">Now this one. Out loud.</h1>
+      <div class="spoken">
+        Red pill. I am in this. For the next 30 days I am the author of what this becomes for me.
+        I will pair with my partner. I will run the experiments. I will use the safety practices when I need them.
+        I will not pretend to be in if I am not. <em>I am in.</em>
+      </div>
+      <p class="cue">Pause. Notice. Which sentence did your body recognize as true?</p>
+      <div class="actions">
+        <button class="btn primary" onclick="next()">I'm ready to choose</button>
+      </div>
+    </section>
+
+    <!-- STEP 8: Choose -->
+    <section class="step" data-step="8">
+      <div class="eyebrow">Step VIII · The choice</div>
+      <h1 class="display">Choose <em>now.</em></h1>
+      <div class="pill-grid">
+        <div class="pill-card" role="button" tabindex="0" aria-label="Option I — I take the blue pill" onclick="chooseBlue()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+          <div class="pill-eyebrow">Option I</div>
+          <div class="pill-title">I take the blue pill</div>
+        </div>
+        <div class="pill-card red" role="button" tabindex="0" aria-label="Option II — I take the red pill" onclick="chooseRed()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+          <div class="pill-eyebrow">Option II</div>
+          <div class="pill-title">I take the red pill</div>
+        </div>
+      </div>
+      <p class="cue">Neither is wrong. Honesty is the only thing being measured.</p>
+    </section>
+
+    <!-- STEP 9 (BLUE): Closing -->
+    <section class="step" data-step="9-blue">
+      <div class="eyebrow">Clean choice</div>
+      <h1 class="display">That's a <em>clean</em> answer.</h1>
+      <p class="instruction">
+        The course will be here in three months. Or six. Or in a year.
+        Talk to your community manager about pausing your enrollment.
+        Doing this course as a tourist is worse than not doing it.
+      </p>
+      <p class="cue">Blessings on your integrity. — the script the live trainer uses, verbatim.</p>
+      <div class="actions">
+        <a href="index.html" class="btn">Return to Day 1 tools</a>
+      </div>
+    </section>
+
+    <!-- STEP 9 (RED): Capture -->
+    <section class="step" data-step="9-red">
+      <div class="eyebrow">You chose red. Now make it yours.</div>
+      <h1 class="display">Type your <em>commitment</em> sentence.</h1>
+      <p class="instruction">
+        In your own words. Not impressive. Not perfect. <em>True.</em>
+      </p>
+      <div class="capture">
+        <textarea id="commitmentText" aria-label="Your commitment sentence, in your own words" placeholder="For the next 30 days I am the one who…"></textarea>
+        <span class="hint">This sentence will be saved on this device. You can re-read it any time.</span>
+      </div>
+      <div class="actions">
+        <button class="btn primary large" onclick="commit()">Commit</button>
+      </div>
+    </section>
+
+    <!-- STEP 10 (RED): Closing -->
+    <section class="step" data-step="10-red">
+      <div class="eyebrow">Witnessed. Dated. Saved.</div>
+      <h1 class="display">The work <em>begins</em> now.</h1>
+      <div class="commitment-card">
+        <div class="date">
+          <span id="commitDate"></span>
+          <span>Day 01 · ETB</span>
+        </div>
+        <div class="sentence" id="commitSentence"></div>
+      </div>
+      <p class="instruction">
+        Print this. Put it where you will see it during this course — on a wall, on your laptop, on your bathroom mirror.
+        Then start Day 1's content.
+      </p>
+      <div class="actions">
+        <button class="btn" onclick="window.print()">Print this page</button>
+        <a href="index.html" class="btn primary">Continue to Day 1</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="progress" id="progressBar"></div>
+</div>
+
+<script>
+const steps = [1, 2, 3, 4, 5, 6, 7, 8];
+let current = 1;
+
+function show(stepId, focusStep = true) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const target = document.querySelector(`[data-step="${stepId}"]`);
+  if (target) target.classList.add('active');
+  updateProgress(stepId);
+  document.getElementById('stepLabel').textContent = `STEP ${toRoman(parseInt(stepId)) || stepId.toUpperCase()}`;
+  if (focusStep && target) {
+    const heading = target.querySelector('h1, h2, h3');
+    if (heading) {
+      heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    }
+  }
+  if (stepId === 3) startBreath();
+}
+
+function next() {
+  current++;
+  if (current > 8) return;
+  show(current);
+}
+
+function toRoman(num) {
+  const map = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+  return map[num];
+}
+
+function updateProgress(stepId) {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  for (let i = 1; i <= 8; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    if (typeof stepId === 'string' && stepId.startsWith('9') || stepId === '10-red') {
+      dot.classList.add('done');
+    } else if (i === parseInt(stepId)) {
+      dot.classList.add('active');
+    } else if (i < parseInt(stepId)) {
+      dot.classList.add('done');
+    }
+    bar.appendChild(dot);
+  }
+}
+
+/* breath cycle: 3 breaths × ~11s = ~33s, then auto-advance */
+let breathTimer;
+let breathRemaining = 3;
+function startBreath() {
+  breathRemaining = 3;
+  document.getElementById('breathCount').textContent = breathRemaining;
+  document.getElementById('breathPhase').textContent = 'Breathe in';
+  let phase = 'in';
+  let phaseTimer = setInterval(() => {
+    if (phase === 'in') {
+      phase = 'out';
+      document.getElementById('breathPhase').textContent = 'Breathe out (long)';
+    } else {
+      phase = 'in';
+      breathRemaining--;
+      document.getElementById('breathCount').textContent = breathRemaining;
+      document.getElementById('breathPhase').textContent = breathRemaining > 0 ? 'Breathe in' : 'Done';
+      if (breathRemaining <= 0) {
+        clearInterval(phaseTimer);
+        setTimeout(() => { if (current === 3) next(); }, 1200);
+      }
+    }
+  }, 5500);
+  breathTimer = phaseTimer;
+}
+
+function chooseBlue() { show('9-blue'); }
+function chooseRed() { show('9-red'); setTimeout(() => document.getElementById('commitmentText').focus(), 400); }
+
+function commit() {
+  const text = document.getElementById('commitmentText').value.trim();
+  if (!text) {
+    document.getElementById('commitmentText').focus();
+    return;
+  }
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  localStorage.setItem('etb_day01_commitment', JSON.stringify({ text, date: dateStr, iso: now.toISOString() }));
+  document.getElementById('commitDate').textContent = dateStr;
+  document.getElementById('commitSentence').textContent = text;
+  show('10-red');
+}
+
+function hideBanner() {
+  document.getElementById('returnBanner').classList.remove('show');
+}
+
+/* on load: check for prior commitment */
+window.addEventListener('DOMContentLoaded', () => {
+  const stored = localStorage.getItem('etb_day01_commitment');
+  if (stored) {
+    try {
+      const data = JSON.parse(stored);
+      document.getElementById('bannerSentence').textContent = `"${data.text}" — ${data.date}`;
+      document.getElementById('returnBanner').classList.add('show');
+    } catch (e) {}
+  }
+  show(1, false);
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

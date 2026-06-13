@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EHP Walker · ETB Day 6</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { min-height: 100%; }
+
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+
+/* paper grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.frame {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 28px 48px 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  gap: 24px;
+}
+.header .left { display: flex; gap: 28px; flex-wrap: wrap; }
+.header .right { display: flex; gap: 24px; align-items: baseline; flex-shrink: 0; }
+.header .num { color: var(--vermillion); font-weight: 500; }
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 60px 120px;
+  position: relative;
+}
+
+.step {
+  display: none;
+  max-width: 760px;
+  width: 100%;
+  text-align: center;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.step.active { display: block; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 22px;
+}
+
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(32px, 4.6vw, 56px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+  color: var(--ink);
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+
+.spoken {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(22px, 2.8vw, 30px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 28px 0;
+  padding: 32px 28px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  text-align: left;
+}
+.spoken::before, .spoken::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--vermillion);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.spoken::before { top: 0; }
+.spoken::after { bottom: -4px; }
+
+.instruction {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 600px;
+  margin: 0 auto 20px;
+  text-align: left;
+}
+.instruction.center { text-align: center; }
+
+.cue {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 14px;
+}
+
+/* buttons */
+.actions {
+  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.actions.stack { flex-direction: column; align-items: stretch; max-width: 540px; margin-left: auto; margin-right: auto; }
+
+.btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 16px 30px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+.btn:hover {
+  background: var(--ink);
+  color: var(--ivory);
+}
+.btn.primary {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.btn.primary:hover {
+  background: var(--vermillion-deep);
+  border-color: var(--vermillion-deep);
+}
+.btn.ghost {
+  border-color: var(--ink-mute);
+  color: var(--ink-mute);
+}
+.btn.ghost:hover {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn.large {
+  font-size: 13px;
+  padding: 22px 42px;
+}
+.btn.full {
+  display: block;
+  width: 100%;
+  padding: 22px 28px;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.btn.full .sub {
+  display: block;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink-mute);
+  margin-top: 6px;
+  font-weight: 400;
+}
+.btn.full.primary .sub { color: rgba(244, 236, 220, 0.85); }
+.btn.full.ghost { padding: 18px 28px; }
+.btn.full.refuse {
+  border-color: var(--sky);
+  color: var(--sky);
+}
+.btn.full.refuse:hover {
+  background: var(--sky);
+  color: var(--ivory);
+}
+.btn.full.refuse .sub { color: var(--ink-mute); }
+.btn.full.refuse:hover .sub { color: rgba(244, 236, 220, 0.85); }
+
+/* GROUND NOW — floating safety button (always visible) */
+.ground-now {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  background: var(--vermillion);
+  color: var(--ivory);
+  border: 2px solid var(--vermillion-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 22px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(196, 59, 28, 0.28);
+  transition: all 0.25s ease;
+  line-height: 1.1;
+}
+.ground-now:hover {
+  background: var(--vermillion-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(196, 59, 28, 0.36);
+}
+.ground-now .small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* PAUSE button — bottom-right of each step */
+.pause-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 24px;
+  z-index: 45;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.pause-btn {
+  background: transparent;
+  color: var(--ink-mute);
+  border: 1px solid var(--ink-mute);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.pause-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--ivory-shade);
+}
+
+/* gate card (Step 0 — trauma carve-out) */
+.gate-card {
+  border: 2px solid var(--vermillion);
+  background: var(--ivory-shade);
+  padding: 36px 36px 28px;
+  margin: 28px 0;
+  text-align: left;
+  position: relative;
+}
+.gate-card::before {
+  content: 'CONSENT GATE';
+  position: absolute;
+  top: -10px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+.gate-card h3 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.gate-card p {
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+.gate-card p:last-child { margin-bottom: 0; }
+.gate-card ul {
+  margin: 10px 0 14px 22px;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+.gate-card ul li { margin-bottom: 6px; }
+.gate-card .emph { color: var(--vermillion-deep); font-weight: 600; font-style: italic; }
+
+/* refusal screen (chose trauma path) */
+.refusal {
+  border: 2px solid var(--sky);
+  background: var(--ivory-shade);
+  padding: 36px;
+  margin: 28px 0;
+  text-align: left;
+  position: relative;
+}
+.refusal::before {
+  content: 'NOT THE RIGHT CONTAINER';
+  position: absolute;
+  top: -10px;
+  left: 28px;
+  background: var(--sky);
+  color: var(--ivory);
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+.refusal h3 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 26px;
+  margin-bottom: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+}
+.refusal p { margin-bottom: 12px; font-size: 17px; line-height: 1.55; color: var(--ink-soft); }
+.refusal ul { margin: 6px 0 16px 22px; font-size: 16px; color: var(--ink-soft); }
+.refusal ul li { margin-bottom: 6px; }
+.refusal ul li strong { color: var(--ink); }
+
+/* body silhouette */
+.body-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0;
+}
+.body-svg {
+  width: 200px;
+  height: 380px;
+  cursor: pointer;
+}
+.body-zone {
+  fill: var(--ivory-shade);
+  stroke: var(--ink-mute);
+  stroke-width: 1;
+  cursor: pointer;
+  transition: fill 0.2s;
+}
+.body-zone:hover { fill: var(--vermillion-soft); }
+.body-zone.picked { fill: var(--vermillion); stroke: var(--vermillion-deep); }
+.body-outline {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.body-zones-key {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 8px 22px;
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.body-zones-key span.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--vermillion);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* breath circle for "30-second hand on location" */
+.breath {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin: 28px 0 20px;
+}
+.breath-circle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1.5px solid var(--vermillion);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, var(--vermillion-soft) 0%, transparent 70%);
+}
+.breath-circle .pulse {
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: var(--vermillion);
+  opacity: 0.18;
+  animation: breathe 11s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%   { transform: scale(0.5); opacity: 0.10; }
+  36%  { transform: scale(1.0); opacity: 0.40; }
+  100% { transform: scale(0.5); opacity: 0.10; }
+}
+.breath-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 500;
+}
+.breath-count {
+  font-family: var(--display);
+  font-size: 36px;
+  font-variation-settings: 'opsz' 144;
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* feeling-pick (four checkboxes) */
+.feeling-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 28px 0 16px;
+}
+.feeling-card {
+  border: 1.5px solid var(--ink-mute);
+  background: var(--ivory-shade);
+  padding: 22px 20px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  position: relative;
+  user-select: none;
+}
+.feeling-card:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+.feeling-card.picked {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.feeling-card .name {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 26px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.feeling-card .ask {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.feeling-card .check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--ink-mute);
+  border-radius: 50%;
+}
+.feeling-card.picked .check {
+  background: var(--ivory);
+  border-color: var(--ivory);
+  position: relative;
+}
+.feeling-card.picked .check::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background: var(--vermillion);
+  border-radius: 50%;
+}
+
+/* feeling-move (single feeling timer) */
+.feeling-move {
+  border: 1.5px solid var(--rule);
+  background: var(--ivory-shade);
+  padding: 28px;
+  margin: 24px 0;
+  text-align: left;
+}
+.feeling-move .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 8px;
+}
+.feeling-move .name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 36px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--ink);
+  margin-bottom: 14px;
+  line-height: 1;
+}
+.feeling-move .invitation {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+}
+.feeling-move .invitation em { color: var(--vermillion); font-style: italic; }
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 16px 0;
+}
+.timer-arc {
+  width: 80px;
+  height: 80px;
+  position: relative;
+}
+.timer-arc svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer-arc .track { fill: none; stroke: var(--rule); stroke-width: 4; }
+.timer-arc .fill {
+  fill: none;
+  stroke: var(--vermillion);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+.timer-arc .num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 24px;
+  color: var(--ink);
+  font-variation-settings: 'opsz' 144;
+}
+.timer .ctl {
+  display: flex;
+  gap: 10px;
+}
+.timer-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 8px;
+}
+
+/* capture textarea (consistent with Day 1) */
+.capture { margin: 28px 0; }
+.capture textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 22px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 20px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.4;
+}
+.capture textarea:focus {
+  outline: none;
+  border-color: var(--vermillion);
+  background: var(--ivory);
+}
+.capture .hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+  display: block;
+  text-align: left;
+}
+
+/* position progress (six positions, 0–5) */
+.positions {
+  position: fixed;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  align-items: center;
+}
+.positions .step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rule);
+  transition: all 0.3s;
+}
+.positions .step-dot.active {
+  background: var(--vermillion);
+  width: 22px;
+  border-radius: 3px;
+}
+.positions .step-dot.done { background: var(--ink-mute); }
+.positions .label { margin-left: 8px; }
+
+/* witness-debrief / completion card */
+.summary-card {
+  border: 1.5px solid var(--vermillion);
+  padding: 32px 28px;
+  background: var(--ivory-shade);
+  position: relative;
+  margin: 28px 0;
+  text-align: left;
+}
+.summary-card::before {
+  content: 'EHP COMPLETE';
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+.summary-card .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.summary-card .field { margin-bottom: 14px; }
+.summary-card .field .k {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 4px;
+}
+.summary-card .field .v {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+/* modal — grounding overlay */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(14, 10, 5, 0.86);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.modal.show { display: flex; }
+.modal-inner {
+  max-width: 620px;
+  width: 100%;
+  background: var(--ivory);
+  border: 2px solid var(--vermillion);
+  padding: 44px 40px 36px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-inner::before {
+  content: 'GROUNDING · 60 SECONDS';
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.modal-inner h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.modal-inner ol {
+  margin: 0 0 22px 22px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.modal-inner ol li { margin-bottom: 12px; }
+.modal-inner ol li strong { color: var(--ink); }
+.modal-inner .session-paused {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+.modal-inner .modal-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+/* pause-exit overlay */
+.pause-modal-inner {
+  max-width: 540px;
+  background: var(--ivory);
+  border: 2px solid var(--ink);
+  padding: 40px;
+  text-align: center;
+}
+.pause-modal-inner h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.pause-modal-inner p {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+.pause-modal-inner p em { font-style: italic; color: var(--vermillion); }
+
+/* prior sessions banner */
+.return-banner {
+  position: fixed;
+  top: 60px;
+  left: 48px;
+  right: 220px;
+  z-index: 3;
+  display: none;
+  padding: 16px 22px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.return-banner.show { display: flex; }
+.return-banner .label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-right: 10px;
+}
+.return-banner .sentence-mini {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ivory);
+  flex: 1;
+}
+.return-banner button {
+  background: transparent;
+  color: var(--ivory);
+  border: 1px solid var(--ivory);
+  padding: 6px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.return-banner button:hover { background: var(--ivory); color: var(--ink); }
+
+.nav-back {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border 0.2s;
+}
+.nav-back:hover {
+  color: var(--vermillion);
+  border-bottom-color: var(--vermillion);
+}
+
+/* the intensity badge in header */
+.intensity-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+@media (max-width: 720px) {
+  .header { padding: 20px 20px 0; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .header .right { flex-wrap: wrap; }
+  .main { padding: 24px 18px 140px; }
+  .ground-now { top: 16px; right: 16px; padding: 12px 16px; font-size: 11px; }
+  .return-banner { left: 16px; right: 16px; top: 96px; padding: 14px 16px; flex-direction: column; align-items: flex-start; }
+  .pause-bar { bottom: 16px; left: 16px; }
+  .feeling-grid { grid-template-columns: 1fr; }
+  .body-svg { width: 170px; height: 320px; }
+}
+
+/* keyboard focus visibility for custom interactive controls */
+.body-zone:focus-visible {
+  outline: 2px solid var(--vermillion);
+  outline-offset: 2px;
+}
+.feeling-card:focus-visible {
+  outline: 2px solid var(--vermillion);
+  outline-offset: 3px;
+}
+
+/* Reduced motion: neutralize decorative CSS animations/transitions only.
+   The countdown timers are JS setInterval (content), not CSS animation,
+   so they keep running normally. */
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<!-- always-visible safety button -->
+<button class="ground-now" onclick="openGround()">
+  GROUND NOW
+  <span class="small">60-second pause</span>
+</button>
+
+<div class="return-banner" id="returnBanner">
+  <div style="display:flex; align-items:center; flex:1; min-width:0;">
+    <span class="label">Last EHP walk</span>
+    <span class="sentence-mini" id="bannerSentence"></span>
+  </div>
+  <button onclick="hideBanner()">New walk</button>
+</div>
+
+<div class="frame">
+  <div class="header">
+    <div class="left">
+      <span><span class="num">DAY 06</span> / EXPAND THE BOX</span>
+      <span>EHP Walker <span class="intensity-tag">HIGH INTENSITY</span></span>
+    </div>
+    <div class="right">
+      <span id="stepLabel">CONSENT GATE</span>
+      <a href="index.html" class="nav-back">← All Day 6 tools</a>
+    </div>
+  </div>
+
+  <main class="main">
+
+    <!-- STEP 0: Trauma carve-out gate -->
+    <section class="step active" data-step="gate">
+      <div class="eyebrow">Day 6 · Before you begin</div>
+      <h1 class="display">The Emotional Healing Process is in <em>scope</em> for PM.<br>Trauma processing is <em>not.</em></h1>
+      <div class="gate-card">
+        <h3>Read this. Choose honestly. The choice is structural — not soft.</h3>
+        <p>
+          The EHP is the structured PM practice for completing <strong>ordinary stored emotional residue</strong> —
+          the third-grade teacher who shamed you, the friend who broke ranks at sixteen, the parent who could not receive your anger,
+          the dog who died when you were nine. The EHP is built for exactly this material.
+        </p>
+        <p>
+          The EHP is <span class="emph">not</span> trauma processing. If the material you want to work with includes any of the following — pause this tool:
+        </p>
+        <ul>
+          <li>Flashbacks (you are <em>in</em> the original event sensorially, not just remembering it)</li>
+          <li>Dissociation, lost time, or watching yourself from outside</li>
+          <li>Recent acute trauma (within roughly 60 days) or a major loss</li>
+          <li>Anything you currently work on with a trauma-qualified clinician — EMDR, somatic experiencing, TF-CBT, IFS, sensorimotor, equivalent</li>
+          <li>Abuse history, single-incident trauma still producing body memory, sustained developmental trauma</li>
+        </ul>
+        <p>
+          Trauma needs a different room. PM is precise about this carve-out because treating trauma with the EHP can re-traumatize.
+          This is not caution — it is structural.
+        </p>
+      </div>
+      <div class="actions stack">
+        <button class="btn full primary" onclick="gateProceed()">
+          The material I want to work with is ordinary stored emotion
+          <span class="sub">A recurring small irritation, a small old sadness, a low-grade specific fear. Quality of the rep, not size of the material.</span>
+        </button>
+        <button class="btn full refuse" onclick="gateRefuse()">
+          The material involves trauma — I'll use this with my clinician, or not now
+          <span class="sub">The right next move is a qualified trauma clinician with a trauma-built protocol, not this tool.</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- STEP 0b: Refusal (chose trauma path) -->
+    <section class="step" data-step="refuse">
+      <div class="eyebrow">Honest choice · not failure</div>
+      <h1 class="display">That's the <em>right</em> answer.</h1>
+      <div class="refusal">
+        <h3>What to do instead, today.</h3>
+        <p>
+          Trauma is a different kind of injury and needs a different kind of room.
+          The EHP and trauma protocols are different tools — not competing, not interchangeable.
+        </p>
+        <p><strong>Right next moves, in order:</strong></p>
+        <ul>
+          <li><strong>If you have a trauma-qualified clinician</strong> — message them today. Name what came up. Bring it to your next session.</li>
+          <li><strong>If you don't have one</strong> — search for a clinician trained in one of: EMDR, somatic experiencing, TF-CBT, IFS, sensorimotor psychotherapy. Ask their training before booking.</li>
+          <li><strong>Your CM</strong> — message them today. They can offer a referral pathway, and they need to know you paused this module.</li>
+          <li><strong>For the next hour</strong> — ground (top-right button), drink water, do not consume content, do not start a hard conversation.</li>
+        </ul>
+        <p>
+          You did not fail Day 6. You read what the tool was for, you noticed the material you have is not what it's for, and you stopped.
+          That is the protocol working exactly as designed. The course will be here.
+        </p>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" onclick="openGround()">Ground now (60 seconds)</button>
+        <a href="index.html" class="btn">Return to Day 6 tools</a>
+      </div>
+    </section>
+
+    <!-- STEP 1: Witness check -->
+    <section class="step" data-step="witness">
+      <div class="eyebrow">Step I · Witness check</div>
+      <h1 class="display">EHP requires a <em>witness</em> for medium-or-larger material.</h1>
+      <p class="instruction">
+        For small material, solo is OK. For anything beyond that, you need a partner / coach / therapist you can voice-message
+        immediately after this practice. Their job is to witness — not to fix. Before continuing:
+      </p>
+      <div class="actions stack">
+        <button class="btn full primary" onclick="witnessYes()">
+          Yes — I have a partner I'll voice-message after
+          <span class="sub">5–10 minute "after" message within 24 hours. Three things: mixed emotion + components, what moved and what didn't, where you are right now.</span>
+        </button>
+        <button class="btn full" onclick="witnessSmaller()">
+          No witness available — I'll do a smaller version
+          <span class="sub">Smaller-than-planned material. Tidying up edges only. Stop conditions apply more strictly.</span>
+        </button>
+        <a href="index.html" class="btn full ghost">
+          Cancel and come back when I have a witness
+          <span class="sub">The right call for anything beyond the smallest material. The course will be here.</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- STEP 2: Name the mixed emotion -->
+    <section class="step" data-step="name">
+      <div class="eyebrow">Step II · Name it</div>
+      <h1 class="display">Name <em>one</em> mixed emotion you've been carrying.</h1>
+      <p class="instruction center">
+        Short. Specific. Recent. Not the whole story — a sentence that points at it.
+      </p>
+      <div class="capture">
+        <textarea id="mixedEmotionText" aria-label="Name one mixed emotion you have been carrying — a short pointing sentence" placeholder="e.g. I've been feeling collapsed about that meeting yesterday."></textarea>
+        <span class="hint">This stays on this device. Only the date, the structure of your walk, and your closing note are saved — not the content of what you typed here.</span>
+      </div>
+      <p class="cue">Just the pointing sentence. The work is in the body, not the description.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="nameContinue()">I've named it — continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: Locate in body (Position 1 of EHP — modified: contact + locate) -->
+    <section class="step" data-step="locate">
+      <div class="eyebrow">Position 2 · Navigate to liquid state</div>
+      <h1 class="display">Where in your <em>body</em> does it live?</h1>
+      <p class="instruction center">
+        Close your eyes if that helps. Take your time. Specific — not "everywhere."
+        Click the part(s) of the body where you can feel it right now.
+      </p>
+      <div class="body-pick">
+        <svg class="body-svg" viewBox="0 0 200 380" aria-label="Body silhouette">
+          <!-- silhouette outline -->
+          <path class="body-outline" d="M100 8 C112 8 121 18 121 30 C121 42 113 51 100 51 C87 51 79 42 79 30 C79 18 88 8 100 8 Z" />
+          <path class="body-outline" d="M75 56 L125 56 C140 58 152 70 154 86 L168 168 C170 180 162 188 152 184 L150 174 L150 230 L135 230 L130 260 L125 360 L108 360 L106 280 L100 250 L94 280 L92 360 L75 360 L70 260 L65 230 L50 230 L50 174 L48 184 C38 188 30 180 32 168 L46 86 C48 70 60 58 75 56 Z" />
+          <!-- clickable zones -->
+          <ellipse class="body-zone" data-zone="head" cx="100" cy="30" rx="20" ry="22" role="button" tabindex="0" aria-pressed="false" aria-label="Head"/>
+          <rect class="body-zone" data-zone="throat" x="89" y="50" width="22" height="14" rx="3" role="button" tabindex="0" aria-pressed="false" aria-label="Throat"/>
+          <rect class="body-zone" data-zone="chest" x="62" y="68" width="76" height="50" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="Chest · heart"/>
+          <rect class="body-zone" data-zone="belly" x="62" y="122" width="76" height="42" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="Belly · gut"/>
+          <rect class="body-zone" data-zone="hips" x="65" y="168" width="70" height="40" rx="5" role="button" tabindex="0" aria-pressed="false" aria-label="Hips · pelvis"/>
+          <rect class="body-zone" data-zone="legs" x="68" y="212" width="64" height="120" rx="6" role="button" tabindex="0" aria-pressed="false" aria-label="Legs · bones"/>
+          <rect class="body-zone" data-zone="back" x="32" y="74" width="22" height="90" rx="3" opacity="0.92" role="button" tabindex="0" aria-pressed="false" aria-label="Back"/>
+          <text x="42" y="120" font-family="JetBrains Mono" font-size="7" fill="#4a3f30" transform="rotate(-90 42 120)">BACK</text>
+        </svg>
+        <div class="body-zones-key">
+          <div><span class="dot"></span>head</div>
+          <div><span class="dot"></span>back</div>
+          <div><span class="dot"></span>throat</div>
+          <div><span class="dot"></span>chest · heart</div>
+          <div><span class="dot"></span>belly · gut</div>
+          <div><span class="dot"></span>hips · pelvis</div>
+          <div><span class="dot"></span>legs · bones</div>
+        </div>
+      </div>
+      <p class="cue" id="locateCue">Click one or more locations · then continue</p>
+      <div class="actions">
+        <button class="btn primary" id="locateContinueBtn" onclick="locateContinue()" disabled style="opacity:0.45; cursor:not-allowed;">Locations marked — continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: Hand on location — 30s breath -->
+    <section class="step" data-step="contact">
+      <div class="eyebrow">Position 2 continued · Make contact</div>
+      <h1 class="display">Hand on the location. Stay there for <em>30 seconds.</em></h1>
+      <p class="instruction center">
+        Not analyzing it. Not asking what it means. Just present with the sensation.
+        Let it get bigger if it wants to. Let a sound come if one wants to.
+      </p>
+      <div class="breath">
+        <div class="breath-circle"><div class="pulse"></div></div>
+        <div class="breath-label" id="contactPhase">Breathe with the sensation</div>
+        <div class="breath-count" id="contactCount">30</div>
+      </div>
+      <p class="cue">The body's signal precedes language. Sound moves emotion faster than words.</p>
+      <div class="actions">
+        <button class="btn ghost" onclick="contactContinue()">Skip the 30s and continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 5: Identify component feelings (Position 3 — unmix) -->
+    <section class="step" data-step="unmix">
+      <div class="eyebrow">Position 3 · Unmix</div>
+      <h1 class="display">A mixed emotion is made of <em>multiple pure feelings</em> stuck together.</h1>
+      <p class="instruction center">
+        Which of the four pure feelings are in here? Often two or three. Sometimes one disguised as another.
+        There's no wrong answer.
+      </p>
+      <div class="feeling-grid" role="group" aria-label="Pure feelings present in the mixed emotion — multi-select">
+        <div class="feeling-card" data-feeling="anger" role="button" tabindex="0" aria-pressed="false" aria-label="Anger — asks to be made into sound or movement" onclick="toggleFeeling(this)" onkeydown="feelingKey(event, this)">
+          <div class="check"></div>
+          <div class="name">Anger</div>
+          <div class="ask">asks to be made into sound or movement</div>
+        </div>
+        <div class="feeling-card" data-feeling="sadness" role="button" tabindex="0" aria-pressed="false" aria-label="Sadness — asks to be released" onclick="toggleFeeling(this)" onkeydown="feelingKey(event, this)">
+          <div class="check"></div>
+          <div class="name">Sadness</div>
+          <div class="ask">asks to be released</div>
+        </div>
+        <div class="feeling-card" data-feeling="fear" role="button" tabindex="0" aria-pressed="false" aria-label="Fear — asks for presence and preparation" onclick="toggleFeeling(this)" onkeydown="feelingKey(event, this)">
+          <div class="check"></div>
+          <div class="name">Fear</div>
+          <div class="ask">asks for presence and preparation</div>
+        </div>
+        <div class="feeling-card" data-feeling="joy" role="button" tabindex="0" aria-pressed="false" aria-label="Joy — asks to expand" onclick="toggleFeeling(this)" onkeydown="feelingKey(event, this)">
+          <div class="check"></div>
+          <div class="name">Joy</div>
+          <div class="ask">asks to expand</div>
+        </div>
+      </div>
+      <p class="cue" id="unmixCue">Pick at least one · usually two or three</p>
+      <div class="actions">
+        <button class="btn primary" id="unmixContinueBtn" onclick="unmixContinue()" disabled style="opacity:0.45; cursor:not-allowed;">Continue — let each one move</button>
+      </div>
+    </section>
+
+    <!-- STEP 6: Move each feeling individually (Position 3 continued) -->
+    <section class="step" data-step="move">
+      <div class="eyebrow">Position 3 continued · One feeling at a time</div>
+      <h1 class="display">Let it move. <em>Alone</em> — as itself.</h1>
+      <p class="instruction center">
+        Anger as anger. Sadness as sadness. Fear as fear. Joy as joy. Not all at once.
+        The timer is gentle — an invitation, not a requirement.
+      </p>
+      <div id="feelingMoveContainer"></div>
+      <p class="cue" id="moveProgress"></p>
+      <div class="actions" id="moveActions">
+        <button class="btn primary" id="moveNextBtn" onclick="moveNext()">Continue to the next feeling</button>
+      </div>
+    </section>
+
+    <!-- STEP 7: Witness moment (Position 4) -->
+    <section class="step" data-step="witness-now">
+      <div class="eyebrow">Position 4 · Witness moment</div>
+      <h1 class="display">Now — <em>witness.</em></h1>
+      <div class="spoken">
+        If you have a witness available, voice-message them now. <strong>Two minutes maximum.</strong>
+        Three things: what the mixed emotion was, what feelings were in it, what moved.
+        The witness's job is to witness, not fix.
+      </div>
+      <p class="instruction">
+        A feeling does not complete in isolation. It completes in the presence of a being who can be with it without flinching.
+        The energy of being seen <em>is</em> the medicine — that sounds soft, it is not. It is the load-bearing structural element of the EHP.
+      </p>
+      <p class="cue">No advice. No "have you tried." No "I had a similar experience." Witnessing is a different practice.</p>
+      <div class="actions stack">
+        <button class="btn full primary" onclick="witnessRecorded()">
+          I voice-messaged them now
+          <span class="sub">Send the message before continuing. The container needs the witness step to be real, not theoretical.</span>
+        </button>
+        <button class="btn full" onclick="witnessRecorded()">
+          I'll voice-message them within the hour
+          <span class="sub">Set a phone reminder now. The "after" exchange is part of the practice — within 24 hours, no override.</span>
+        </button>
+        <button class="btn full ghost" onclick="witnessSelf()">
+          I'll witness myself for now (smaller version only)
+          <span class="sub">Only OK if you confirmed earlier this is small material. Voice-record yourself a 2-minute summary — speak out loud, not in your head.</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- STEP 8: Completion (Position 5) -->
+    <section class="step" data-step="completion">
+      <div class="eyebrow">Position 5 · Completion</div>
+      <h1 class="display">Notice. Is the stored emotion still as <em>heavy</em> as it was?</h1>
+      <p class="instruction">
+        Often lighter. Sometimes the same — that means more rounds are needed, or a larger witness is required.
+        Neither is failure. The work compounds. It does not "finish" in one session.
+      </p>
+      <p class="instruction">
+        Before you write, stand up. Walk three steps. Drink water. Notice the temperature of the room. You are back.
+      </p>
+      <div class="capture">
+        <textarea id="shiftText" aria-label="What I noticed shifted, or did not — one paragraph, no editing" placeholder="What I noticed shifted (or didn't)…"></textarea>
+        <span class="hint">One paragraph. No editing. This is the only field saved with content — and only on this device.</span>
+      </div>
+      <div class="actions">
+        <button class="btn primary large" onclick="saveSession()">Save this walk</button>
+      </div>
+    </section>
+
+    <!-- STEP 9: Saved confirmation -->
+    <section class="step" data-step="saved">
+      <div class="eyebrow">Saved · on this device only</div>
+      <h1 class="display">The energy that was bound is now <em>available.</em></h1>
+      <div class="summary-card">
+        <div class="row">
+          <span id="savedDate"></span>
+          <span>Day 06 · ETB · EHP walk #<span id="savedNum">1</span></span>
+        </div>
+        <div class="field"><div class="k">Positions traversed</div><div class="v" id="savedPositions"></div></div>
+        <div class="field"><div class="k">Component feelings moved</div><div class="v" id="savedFeelings"></div></div>
+        <div class="field"><div class="k">Witness</div><div class="v" id="savedWitness"></div></div>
+        <div class="field"><div class="k">What shifted</div><div class="v" id="savedShift"></div></div>
+      </div>
+      <p class="instruction">
+        For the next several hours: drink water. Walk. Do not consume content. Do not start a hard conversation.
+        Do not drink alcohol. Do not call the person from the original event.
+      </p>
+      <p class="instruction">
+        Tender for hours is normal. The wound is open before it closes. If you are still tender 6+ hours from now —
+        voice-message your witness. That is what they are for.
+      </p>
+      <div class="actions">
+        <button class="btn ghost" onclick="restart()">Walk another one</button>
+        <a href="index.html" class="btn">Return to Day 6 tools</a>
+      </div>
+    </section>
+
+    <!-- STEP X: Pause-exit (gentle) -->
+    <section class="step" data-step="paused">
+      <div class="eyebrow">Paused · saved</div>
+      <h1 class="display">You're not failing — you're <em>listening</em> to your body.</h1>
+      <p class="instruction center">
+        That is the protocol working exactly as designed. The body's signal precedes language and you noticed it.
+        That noticing is itself a piece of the work.
+      </p>
+      <p class="instruction center">
+        Your walk-so-far is saved. Voice-message your witness if anything is open.
+        If material exceeded the container, contact your clinician today — not next week.
+      </p>
+      <div class="actions">
+        <button class="btn ghost" onclick="openGround()">Ground now (60 seconds)</button>
+        <a href="index.html" class="btn">Return to Day 6 tools</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- pause control (always available except on gate/refuse/saved/paused) -->
+  <div class="pause-bar" id="pauseBar">
+    <button class="pause-btn" onclick="pauseExit()">Pause — I need to stop</button>
+  </div>
+
+  <!-- six-position (0–5) progress (visible after gate) -->
+  <div class="positions" id="positionsBar" style="display:none;">
+    <div class="step-dot" data-pos="0"></div>
+    <div class="step-dot" data-pos="1"></div>
+    <div class="step-dot" data-pos="2"></div>
+    <div class="step-dot" data-pos="3"></div>
+    <div class="step-dot" data-pos="4"></div>
+    <span class="label">Six positions (0–5) of the EHP</span>
+  </div>
+</div>
+
+<!-- modal: grounding -->
+<div class="modal" id="groundModal">
+  <div class="modal-inner">
+    <h2>Ground. <em>Now.</em></h2>
+    <ol>
+      <li><strong>Both feet flat on the floor.</strong> Notice the contact. Press down gently.</li>
+      <li><strong>Name three things you can see</strong> in this room. Out loud is best.</li>
+      <li><strong>Name two things you can hear.</strong> The fridge. Traffic. Your own breath.</li>
+      <li><strong>One slow breath</strong> — in through the nose, out through the mouth, longer on the exhale.</li>
+      <li><strong>Drink water.</strong> Notice the temperature.</li>
+      <li><strong>Say out loud:</strong> "I am [name]. I am here, in this room, now. It is [today's date]."</li>
+    </ol>
+    <p class="session-paused">The EHP walk is paused. Take as long as you need.</p>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="closeGround()">I'm grounded — return to walk</button>
+      <button class="btn ghost" onclick="closeGroundAndPause()">I need to stop the walk</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* -------------------------------- state -------------------------------- */
+let session = {
+  startedAt: null,
+  positionsTraversed: [],
+  mixedEmotionPresent: false,
+  bodyLocations: [],
+  feelings: [],
+  feelingsMoved: [],
+  witness: null,
+  shift: null
+};
+let currentStep = 'gate';
+let moveIndex = 0; // index into session.feelings during Step 6
+const POSITION_MAP = {
+  gate: -1, refuse: -1,
+  witness: 0, name: 1, locate: 2, contact: 2,
+  unmix: 3, move: 3, 'witness-now': 4, completion: 5,
+  saved: 5, paused: -1
+};
+const STEP_LABEL = {
+  gate: 'CONSENT GATE',
+  refuse: 'NOT THE RIGHT CONTAINER',
+  witness: 'STEP I · WITNESS',
+  name: 'STEP II · NAME',
+  locate: 'POSITION 2 · LOCATE',
+  contact: 'POSITION 2 · CONTACT',
+  unmix: 'POSITION 3 · UNMIX',
+  move: 'POSITION 3 · MOVE',
+  'witness-now': 'POSITION 4 · WITNESS',
+  completion: 'POSITION 5 · COMPLETION',
+  saved: 'SAVED',
+  paused: 'PAUSED'
+};
+
+/* -------------------------------- step navigation -------------------------------- */
+function show(stepId) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const target = document.querySelector(`[data-step="${stepId}"]`);
+  if (target) target.classList.add('active');
+  currentStep = stepId;
+  document.getElementById('stepLabel').textContent = STEP_LABEL[stepId] || stepId.toUpperCase();
+  updatePositions(stepId);
+  // pause bar visibility
+  const pauseBar = document.getElementById('pauseBar');
+  const showPause = !['gate', 'refuse', 'saved', 'paused'].includes(stepId);
+  pauseBar.style.display = showPause ? 'flex' : 'none';
+  // positions bar visibility
+  const posBar = document.getElementById('positionsBar');
+  posBar.style.display = (POSITION_MAP[stepId] >= 0 && stepId !== 'witness') ? 'flex' : 'none';
+  // scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // focus management — move focus to the new step's heading so screen-reader
+  // and keyboard users land at the top of each newly-revealed position.
+  if (target) {
+    const heading = target.querySelector('h1.display');
+    if (heading) {
+      heading.setAttribute('tabindex', '-1');
+      setTimeout(() => heading.focus({ preventScroll: true }), 40);
+    }
+  }
+}
+
+function updatePositions(stepId) {
+  const pos = POSITION_MAP[stepId];
+  document.querySelectorAll('.positions .step-dot').forEach((d, idx) => {
+    d.classList.remove('active', 'done');
+    if (pos < 0) return;
+    if (idx === pos) d.classList.add('active');
+    else if (idx < pos) d.classList.add('done');
+  });
+}
+
+/* -------------------------------- step 0: gate -------------------------------- */
+function gateProceed() {
+  session.startedAt = new Date().toISOString();
+  session.positionsTraversed.push(0); // foundation acknowledged
+  show('witness');
+}
+function gateRefuse() { show('refuse'); }
+
+/* -------------------------------- step 1: witness -------------------------------- */
+function witnessYes() {
+  session.witness = 'partner-after';
+  session.positionsTraversed.push(1);
+  show('name');
+}
+function witnessSmaller() {
+  session.witness = 'self-smaller';
+  session.positionsTraversed.push(1);
+  show('name');
+}
+
+/* -------------------------------- step 2: name -------------------------------- */
+function nameContinue() {
+  const t = document.getElementById('mixedEmotionText').value.trim();
+  if (!t) {
+    document.getElementById('mixedEmotionText').focus();
+    return;
+  }
+  session.mixedEmotionPresent = true;
+  if (!session.positionsTraversed.includes(2)) session.positionsTraversed.push(2);
+  show('locate');
+}
+
+/* -------------------------------- step 3: locate -------------------------------- */
+function toggleBodyZone(el) {
+  const zone = el.dataset.zone;
+  el.classList.toggle('picked');
+  if (el.classList.contains('picked')) {
+    el.setAttribute('aria-pressed', 'true');
+    if (!session.bodyLocations.includes(zone)) session.bodyLocations.push(zone);
+  } else {
+    el.setAttribute('aria-pressed', 'false');
+    session.bodyLocations = session.bodyLocations.filter(z => z !== zone);
+  }
+  const btn = document.getElementById('locateContinueBtn');
+  if (session.bodyLocations.length > 0) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    document.getElementById('locateCue').textContent = `${session.bodyLocations.length} location${session.bodyLocations.length === 1 ? '' : 's'} marked · continue when ready`;
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '0.45';
+    btn.style.cursor = 'not-allowed';
+    document.getElementById('locateCue').textContent = 'Click one or more locations · then continue';
+  }
+}
+document.addEventListener('click', (e) => {
+  if (e.target.classList && e.target.classList.contains('body-zone')) {
+    toggleBodyZone(e.target);
+  }
+});
+/* keyboard: Enter/Space activates a focused body zone (same as click) */
+document.addEventListener('keydown', (e) => {
+  if ((e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar')
+      && e.target.classList && e.target.classList.contains('body-zone')) {
+    e.preventDefault();
+    toggleBodyZone(e.target);
+  }
+});
+
+function locateContinue() {
+  if (session.bodyLocations.length === 0) return;
+  show('contact');
+  startContactTimer();
+}
+
+/* -------------------------------- step 4: contact 30s -------------------------------- */
+let contactTimer = null;
+function startContactTimer() {
+  let remaining = 30;
+  document.getElementById('contactCount').textContent = remaining;
+  document.getElementById('contactPhase').textContent = 'Breathe with the sensation';
+  if (contactTimer) clearInterval(contactTimer);
+  contactTimer = setInterval(() => {
+    remaining--;
+    document.getElementById('contactCount').textContent = Math.max(0, remaining);
+    if (remaining <= 0) {
+      clearInterval(contactTimer);
+      contactTimer = null;
+      document.getElementById('contactPhase').textContent = 'Done · continue when ready';
+      setTimeout(() => { if (currentStep === 'contact') contactContinue(); }, 1800);
+    }
+  }, 1000);
+}
+
+function contactContinue() {
+  if (contactTimer) { clearInterval(contactTimer); contactTimer = null; }
+  show('unmix');
+}
+
+/* -------------------------------- step 5: unmix (pick feelings) -------------------------------- */
+/* keyboard activation for feeling cards (Enter / Space) */
+function feelingKey(e, card) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    toggleFeeling(card);
+  }
+}
+function toggleFeeling(card) {
+  card.classList.toggle('picked');
+  const f = card.dataset.feeling;
+  if (card.classList.contains('picked')) {
+    card.setAttribute('aria-pressed', 'true');
+    if (!session.feelings.includes(f)) session.feelings.push(f);
+  } else {
+    card.setAttribute('aria-pressed', 'false');
+    session.feelings = session.feelings.filter(x => x !== f);
+  }
+  const btn = document.getElementById('unmixContinueBtn');
+  if (session.feelings.length > 0) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    document.getElementById('unmixCue').textContent = `${session.feelings.length} feeling${session.feelings.length === 1 ? '' : 's'} named · continue when ready`;
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '0.45';
+    btn.style.cursor = 'not-allowed';
+    document.getElementById('unmixCue').textContent = 'Pick at least one · usually two or three';
+  }
+}
+
+function unmixContinue() {
+  if (session.feelings.length === 0) return;
+  // order them in the canonical order: anger, sadness, fear, joy
+  const order = ['anger', 'sadness', 'fear', 'joy'];
+  session.feelings.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  moveIndex = 0;
+  show('move');
+  renderFeelingMove();
+}
+
+/* -------------------------------- step 6: move each feeling -------------------------------- */
+const FEELING_INVITATIONS = {
+  anger: {
+    name: 'Anger',
+    invitation: '<em>Anger</em> asks to be made into sound or movement. Let it move for 60 seconds. Push, growl, shake, make a fist. Alone — not at anyone. Just the energy moving.',
+    cue: 'Jaw setting, arms wanting to push, bones solid. As itself, not at a person.'
+  },
+  sadness: {
+    name: 'Sadness',
+    invitation: '<em>Sadness</em> asks to be released. Tears if they come. Soft sound. Hands on chest. 60 seconds.',
+    cue: 'Chest softening, throat thickening, tears if they come. In waves — arrival, peak, release.'
+  },
+  fear: {
+    name: 'Fear',
+    invitation: '<em>Fear</em> asks for presence and preparation. Notice. Sense the room. Slow breath. Where is the danger now, in this room? Often nowhere. 60 seconds.',
+    cue: 'Skin prickling, breath shallow, attention sharpening. Eyes open, scan the room.'
+  },
+  joy: {
+    name: 'Joy',
+    invitation: '<em>Joy</em> asks to expand. Smile if it\'s there. Body opens. 60 seconds.',
+    cue: 'Chest opening, eyes brightening, breath easier. Let it take the space it wants.'
+  }
+};
+
+let moveActiveTimer = null;
+let moveActiveRemaining = 60;
+let moveActiveRunning = false;
+
+function renderFeelingMove() {
+  // clear any active timer from previous feeling
+  if (moveActiveTimer) { clearInterval(moveActiveTimer); moveActiveTimer = null; }
+  moveActiveRunning = false;
+  moveActiveRemaining = 60;
+
+  const container = document.getElementById('feelingMoveContainer');
+  if (moveIndex >= session.feelings.length) {
+    // all feelings processed
+    container.innerHTML = '';
+    document.getElementById('moveProgress').textContent = `All ${session.feelings.length} feelings invited to move · continue to witnessing`;
+    document.getElementById('moveNextBtn').textContent = 'Continue to witness moment';
+    document.getElementById('moveNextBtn').onclick = () => {
+      if (!session.positionsTraversed.includes(4)) session.positionsTraversed.push(4);
+      show('witness-now');
+    };
+    return;
+  }
+
+  const f = session.feelings[moveIndex];
+  const info = FEELING_INVITATIONS[f];
+  document.getElementById('moveProgress').textContent =
+    `Feeling ${moveIndex + 1} of ${session.feelings.length} · "Not present today" is a valid answer`;
+  document.getElementById('moveNextBtn').textContent =
+    moveIndex < session.feelings.length - 1 ? 'Continue to the next feeling' : 'Continue to witness moment';
+  document.getElementById('moveNextBtn').onclick = moveNext;
+
+  const circumference = 2 * Math.PI * 36;
+  container.innerHTML = `
+    <div class="feeling-move">
+      <div class="label">Now moving</div>
+      <div class="name">${info.name}</div>
+      <div class="invitation">${info.invitation}</div>
+      <div class="timer">
+        <div class="timer-arc">
+          <svg viewBox="0 0 80 80">
+            <circle class="track" cx="40" cy="40" r="36"/>
+            <circle id="arcFill_${f}" class="fill" cx="40" cy="40" r="36"
+                    stroke-dasharray="${circumference}" stroke-dashoffset="0"/>
+          </svg>
+          <div class="num" id="arcNum_${f}">60</div>
+        </div>
+        <div class="ctl">
+          <button class="btn primary" id="startBtn_${f}" onclick="startMoveTimer('${f}')">Start 60s</button>
+          <button class="btn ghost" onclick="markFeelingNotPresent()">Not present today · skip</button>
+        </div>
+      </div>
+      <div class="timer-status" id="timerStatus_${f}">Take your time before starting · the timer is an invitation</div>
+      <p class="cue" style="margin-top:14px;">${info.cue}</p>
+    </div>
+  `;
+}
+
+function startMoveTimer(f) {
+  if (moveActiveRunning) return;
+  moveActiveRunning = true;
+  moveActiveRemaining = 60;
+  const circumference = 2 * Math.PI * 36;
+  const arcFill = document.getElementById(`arcFill_${f}`);
+  const arcNum = document.getElementById(`arcNum_${f}`);
+  const startBtn = document.getElementById(`startBtn_${f}`);
+  const statusEl = document.getElementById(`timerStatus_${f}`);
+  if (startBtn) startBtn.style.display = 'none';
+  if (statusEl) statusEl.textContent = 'Moving · 60 seconds';
+
+  if (moveActiveTimer) clearInterval(moveActiveTimer);
+  moveActiveTimer = setInterval(() => {
+    moveActiveRemaining--;
+    if (arcNum) arcNum.textContent = Math.max(0, moveActiveRemaining);
+    if (arcFill) {
+      const offset = circumference * (1 - moveActiveRemaining / 60);
+      arcFill.style.strokeDashoffset = offset;
+    }
+    if (moveActiveRemaining <= 0) {
+      clearInterval(moveActiveTimer);
+      moveActiveTimer = null;
+      moveActiveRunning = false;
+      if (statusEl) statusEl.textContent = 'Complete · continue when ready';
+      // record this feeling as moved
+      if (!session.feelingsMoved.find(x => x.feeling === f && x.outcome === 'moved')) {
+        session.feelingsMoved.push({ feeling: f, outcome: 'moved' });
+      }
+    }
+  }, 1000);
+}
+
+function markFeelingNotPresent() {
+  const f = session.feelings[moveIndex];
+  session.feelingsMoved.push({ feeling: f, outcome: 'not-present' });
+  moveIndex++;
+  renderFeelingMove();
+}
+
+function moveNext() {
+  if (moveActiveTimer) { clearInterval(moveActiveTimer); moveActiveTimer = null; moveActiveRunning = false; }
+  // if current feeling's timer never ran, record as "invited" (not skipped, not fully moved)
+  const f = session.feelings[moveIndex];
+  if (f && !session.feelingsMoved.find(x => x.feeling === f)) {
+    session.feelingsMoved.push({ feeling: f, outcome: 'invited' });
+  }
+  moveIndex++;
+  if (moveIndex >= session.feelings.length) {
+    if (!session.positionsTraversed.includes(4)) session.positionsTraversed.push(4);
+    show('witness-now');
+  } else {
+    renderFeelingMove();
+  }
+}
+
+/* -------------------------------- step 7: witness moment -------------------------------- */
+function witnessRecorded() {
+  session.witness = (session.witness === 'self-smaller') ? 'self-smaller-recorded' : 'partner-recorded';
+  if (!session.positionsTraversed.includes(4)) session.positionsTraversed.push(4);
+  show('completion');
+}
+function witnessSelf() {
+  session.witness = 'self-only';
+  if (!session.positionsTraversed.includes(4)) session.positionsTraversed.push(4);
+  show('completion');
+}
+
+/* -------------------------------- step 8: completion + save -------------------------------- */
+function saveSession() {
+  const shift = document.getElementById('shiftText').value.trim();
+  if (!shift) {
+    document.getElementById('shiftText').focus();
+    return;
+  }
+  session.shift = shift;
+  session.completedAt = new Date().toISOString();
+  if (!session.positionsTraversed.includes(5)) session.positionsTraversed.push(5);
+
+  // load existing sessions
+  let all = [];
+  try {
+    const existing = localStorage.getItem('etb_day06_ehp_sessions');
+    if (existing) all = JSON.parse(existing);
+  } catch (e) { all = []; }
+
+  // structure only — no body of mixed-emotion text, no body of feeling-move details
+  const record = {
+    date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    iso: session.completedAt,
+    positionsTraversed: [...new Set(session.positionsTraversed)].sort((a, b) => a - b),
+    feelings: session.feelings,
+    feelingsMoved: session.feelingsMoved,
+    bodyLocations: session.bodyLocations,
+    witness: session.witness,
+    shift: shift
+  };
+  all.push(record);
+  // cap stored sessions at 25 to keep localStorage modest
+  if (all.length > 25) all = all.slice(-25);
+  try { localStorage.setItem('etb_day06_ehp_sessions', JSON.stringify(all)); } catch (e) {}
+
+  // render saved view
+  document.getElementById('savedDate').textContent = record.date;
+  document.getElementById('savedNum').textContent = all.length;
+  document.getElementById('savedPositions').textContent =
+    record.positionsTraversed.map(p => `Position ${p}`).join(' · ');
+  document.getElementById('savedFeelings').textContent =
+    record.feelingsMoved.length === 0 ? '—' :
+    record.feelingsMoved.map(x => `${x.feeling} (${x.outcome === 'moved' ? 'moved' : x.outcome === 'not-present' ? 'not present today' : 'invited'})`).join(' · ');
+  const witnessLabel = {
+    'partner-after': 'Partner — to message after',
+    'partner-recorded': 'Partner — message recorded',
+    'self-smaller': 'Self only (smaller version)',
+    'self-smaller-recorded': 'Self-recorded (smaller version)',
+    'self-only': 'Self-witnessing only'
+  }[record.witness] || record.witness;
+  document.getElementById('savedWitness').textContent = witnessLabel;
+  document.getElementById('savedShift').textContent = '"' + record.shift + '"';
+
+  show('saved');
+}
+
+/* -------------------------------- pause / exit -------------------------------- */
+function pauseExit() {
+  // save partial session structure (no content)
+  try {
+    let all = [];
+    const existing = localStorage.getItem('etb_day06_ehp_sessions');
+    if (existing) all = JSON.parse(existing);
+    all.push({
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      iso: new Date().toISOString(),
+      paused: true,
+      pausedAt: STEP_LABEL[currentStep] || currentStep,
+      positionsTraversed: [...new Set(session.positionsTraversed)].sort((a, b) => a - b),
+      feelings: session.feelings,
+      witness: session.witness
+    });
+    if (all.length > 25) all = all.slice(-25);
+    localStorage.setItem('etb_day06_ehp_sessions', JSON.stringify(all));
+  } catch (e) {}
+  // clear running timers
+  if (contactTimer) { clearInterval(contactTimer); contactTimer = null; }
+  if (moveActiveTimer) { clearInterval(moveActiveTimer); moveActiveTimer = null; moveActiveRunning = false; }
+  show('paused');
+}
+
+/* -------------------------------- grounding modal -------------------------------- */
+function openGround() {
+  // pause running timers (don't lose them, just pause)
+  if (moveActiveTimer) { clearInterval(moveActiveTimer); moveActiveTimer = null; moveActiveRunning = false; }
+  if (contactTimer) { clearInterval(contactTimer); contactTimer = null; }
+  document.getElementById('groundModal').classList.add('show');
+}
+function closeGround() {
+  document.getElementById('groundModal').classList.remove('show');
+}
+function closeGroundAndPause() {
+  document.getElementById('groundModal').classList.remove('show');
+  pauseExit();
+}
+
+/* close modal on ESC */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('groundModal');
+    if (modal.classList.contains('show')) closeGround();
+  }
+});
+
+/* -------------------------------- restart -------------------------------- */
+function restart() {
+  session = {
+    startedAt: null,
+    positionsTraversed: [],
+    mixedEmotionPresent: false,
+    bodyLocations: [],
+    feelings: [],
+    feelingsMoved: [],
+    witness: null,
+    shift: null
+  };
+  moveIndex = 0;
+  // reset form fields
+  document.getElementById('mixedEmotionText').value = '';
+  document.getElementById('shiftText').value = '';
+  // reset body zones
+  document.querySelectorAll('.body-zone').forEach(z => { z.classList.remove('picked'); z.setAttribute('aria-pressed', 'false'); });
+  // reset feeling cards
+  document.querySelectorAll('.feeling-card').forEach(c => { c.classList.remove('picked'); c.setAttribute('aria-pressed', 'false'); });
+  // reset disabled buttons
+  const lb = document.getElementById('locateContinueBtn');
+  lb.disabled = true; lb.style.opacity = '0.45'; lb.style.cursor = 'not-allowed';
+  const ub = document.getElementById('unmixContinueBtn');
+  ub.disabled = true; ub.style.opacity = '0.45'; ub.style.cursor = 'not-allowed';
+  document.getElementById('locateCue').textContent = 'Click one or more locations · then continue';
+  document.getElementById('unmixCue').textContent = 'Pick at least one · usually two or three';
+  hideBanner();
+  show('gate');
+}
+
+/* -------------------------------- prior-session banner -------------------------------- */
+function hideBanner() { document.getElementById('returnBanner').classList.remove('show'); }
+
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const existing = localStorage.getItem('etb_day06_ehp_sessions');
+    if (existing) {
+      const all = JSON.parse(existing);
+      if (all && all.length > 0) {
+        const last = all[all.length - 1];
+        const completed = !last.paused;
+        const label = completed
+          ? `${all.length} walk${all.length === 1 ? '' : 's'} · last: ${last.date}`
+          : `Last walk paused at ${last.pausedAt} · ${last.date}`;
+        document.getElementById('bannerSentence').textContent = label;
+        document.getElementById('returnBanner').classList.add('show');
+      }
+    }
+  } catch (e) {}
+  show('gate');
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

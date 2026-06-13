@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 04 · Feedback, Coaching, Rapid Learning, Experiments · Expand the Box</title>
+<meta name="description" content="Module 04 of the Expand the Box course: Feedback, Coaching, Rapid Learning, Experiments.">
+<meta name="generator" content="ETB build.py — generated page, do not hand-edit. Source: Days/Day 04 - Feedback, Coaching, Rapid Learning, Experiments.md">
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root{
+  --ivory:#f4ecdc; --ivory-shade:#ece2c8; --ivory-deep:#e3d7b9;
+  --ink:#0e0a05; --ink-soft:#2a221a; --ink-mute:#4a3f30; --rule:#b8a98a;
+  --vermillion:#c43b1c; --vermillion-deep:#962a13; --mustard:#d8b04a;
+  --mustard-text:#b8902c; --sky:#4a6b7c; --green:#1d4d3a;
+  --display:'Fraunces','EB Garamond',Georgia,serif;
+  --body:'EB Garamond',Georgia,serif;
+  --mono:'JetBrains Mono','Courier New',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--body); background:var(--ivory); color:var(--ink);
+  font-size:18px; line-height:1.62; -webkit-font-smoothing:antialiased;
+  min-height:100vh; position:relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216,176,74,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196,59,28,0.04) 0%, transparent 50%);
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a.skip-link{position:absolute;left:-9999px;top:8px;z-index:200;background:var(--ink);
+  color:var(--ivory);font-family:var(--mono);font-size:12px;letter-spacing:0.12em;
+  text-transform:uppercase;padding:12px 18px;text-decoration:none;}
+a.skip-link:focus{left:8px;}
+.wrap{max-width:820px;margin:0 auto;padding:36px 48px 90px;position:relative;z-index:2;}
+
+header.top{
+  display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-mute);padding-bottom:32px;border-bottom:1px solid var(--rule);flex-wrap:wrap;}
+header.top .num{color:var(--vermillion);font-weight:600;}
+header.top a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px;transition:all 0.2s;}
+header.top a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+header.top a:focus-visible{outline:2px solid var(--vermillion);outline-offset:3px;}
+
+.module-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--vermillion);margin:48px 0 14px;}
+
+/* rendered markdown prose */
+.prose{margin-top:8px;}
+.prose h1{font-family:var(--display);font-weight:350;
+  font-size:clamp(40px,6vw,72px);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;
+  line-height:1.0;letter-spacing:-0.025em;margin:0 0 28px;color:var(--ink);}
+.prose h2{font-family:var(--display);font-weight:400;
+  font-size:clamp(26px,3.2vw,38px);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;
+  line-height:1.08;letter-spacing:-0.015em;margin:52px 0 16px;color:var(--ink);
+  padding-top:8px;border-top:1px solid var(--rule);}
+.prose h3{font-family:var(--display);font-weight:500;font-size:24px;
+  font-variation-settings:'opsz' 144,'SOFT' 50;line-height:1.15;margin:36px 0 12px;color:var(--ink);}
+.prose h4{font-family:var(--mono);font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--mustard-text);font-weight:600;margin:28px 0 10px;}
+.prose p{margin:0 0 18px;color:var(--ink-soft);}
+.prose strong{color:var(--ink);font-weight:600;}
+.prose em{color:var(--ink);font-style:italic;}
+.prose a{color:var(--vermillion-deep);text-decoration:none;
+  border-bottom:1px solid rgba(150,42,19,0.35);transition:all 0.2s;}
+.prose a:hover{border-bottom-color:var(--vermillion);color:var(--vermillion);}
+.prose a:focus-visible{outline:2px solid var(--vermillion);outline-offset:2px;}
+.prose ul,.prose ol{margin:0 0 20px 26px;color:var(--ink-soft);}
+.prose li{margin-bottom:9px;}
+.prose blockquote{margin:24px 0;padding:20px 28px;background:var(--ivory-shade);
+  border-left:4px solid var(--vermillion);font-style:italic;color:var(--ink-soft);}
+.prose blockquote p:last-child{margin-bottom:0;}
+.prose hr{border:none;border-top:1px dashed var(--rule);margin:40px 0;}
+.prose code{font-family:var(--mono);font-size:0.86em;background:var(--ivory-shade);
+  padding:2px 6px;color:var(--vermillion-deep);border:1px solid var(--rule);}
+.prose pre{background:var(--ink);color:var(--ivory);padding:22px 24px;overflow-x:auto;
+  margin:0 0 22px;border-left:4px solid var(--vermillion);}
+.prose pre code{background:none;border:none;color:var(--ivory);padding:0;font-size:14px;
+  line-height:1.6;}
+.prose img{max-width:100%;height:auto;display:block;margin:28px auto;border:1px solid var(--rule);
+  background:var(--ivory-shade);padding:12px;box-shadow:0 14px 40px rgba(14,10,5,0.14);}
+.prose table{width:100%;border-collapse:collapse;margin:0 0 26px;font-size:16px;}
+.prose th,.prose td{border:1px solid var(--rule);padding:10px 14px;text-align:left;
+  vertical-align:top;color:var(--ink-soft);}
+.prose th{background:var(--ivory-shade);font-family:var(--mono);font-size:11px;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);font-weight:600;}
+.prose sub{font-size:12px;color:var(--ink-mute);line-height:1.6;}
+.prose sub a{color:var(--ink-mute);}
+
+/* module nav */
+nav.module-nav{display:flex;justify-content:space-between;gap:16px;margin:56px 0 0;
+  padding-top:28px;border-top:1px solid var(--rule);flex-wrap:wrap;}
+nav.module-nav a,nav.module-nav span{font-family:var(--mono);font-size:11px;
+  letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:var(--ink-mute);
+  border:1.5px solid var(--rule);padding:12px 18px;transition:all 0.2s;max-width:46%;}
+nav.module-nav a:hover{color:var(--vermillion);border-color:var(--vermillion);}
+nav.module-nav a:focus-visible{outline:2px solid var(--vermillion);outline-offset:3px;}
+nav.module-nav .nn-label{display:block;font-size:9px;letter-spacing:0.2em;color:var(--vermillion);
+  margin-bottom:4px;}
+nav.module-nav .disabled{opacity:0.4;}
+nav.module-nav .next{text-align:right;margin-left:auto;}
+
+footer.bottom{margin-top:60px;padding-top:30px;border-top:1px solid var(--rule);}
+footer.bottom .nav-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-mute);}
+footer.bottom .nav-row a{color:var(--ink-mute);text-decoration:none;
+  border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s;}
+footer.bottom .nav-row a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+footer.bottom .license{margin-top:24px;font-family:var(--mono);font-size:10px;line-height:1.7;
+  letter-spacing:0.04em;color:var(--ink-mute);max-width:760px;}
+footer.bottom .license a{color:var(--ink-mute);text-decoration:underline;}
+footer.bottom .license a:hover{color:var(--vermillion);}
+footer.bottom .license .cc{color:var(--ink-soft);font-weight:600;letter-spacing:0.06em;}
+.build-stamp{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-mute);margin-top:18px;opacity:0.7;}
+
+@media (max-width:760px){
+  .wrap{padding:24px 20px 60px;}
+  nav.module-nav a,nav.module-nav span{max-width:100%;}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important;}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to module</a>
+<div class="wrap">
+  <header class="top">
+    <div><span class="num">EXPAND THE BOX</span> · Module 04 of 11</div>
+    <div><a href="../index.html">← Course front door</a></div>
+  </header>
+
+  <div class="module-eyebrow">Course · Module 04</div>
+
+  <article class="prose" id="main">
+<h1>Module 04 · Feedback, Coaching, Rapid Learning, Experiments</h1>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><strong>Intensity</strong></td><td>Low</td></tr><tr><td><strong>Sittings</strong></td><td>2 (the break point is marked in the module)</td></tr><tr><td><strong>Partner check-in</strong></td><td>No</td></tr><tr><td><strong>Tools for this module</strong></td><td>Study the map: <a href="../Map%20Atlas/M25%20-%20Feedback%20and%20Coaching.html">M25 Feedback and Coaching</a> · <a href="../Map%20Atlas/M26%20-%20Rapid%20Learning.html">M26 Rapid Learning</a> — Run the practice: <a href="../Interactive%20Tools/Day%2004/experiment-designer.html">experiment designer</a></td></tr></tbody></table>
+<p><strong>Daily spine:</strong> Phase A — Beep! Book morning capture (3-5 min). See <a href="../Practice/Daily%20Practice%20Spine.md">Daily Practice Spine</a>.</p>
+<p><strong>Videos:</strong> The written module is complete on its own. Videos are optional enrichment; see the <a href="../Resources/Video%20Manifest.md">Video Manifest</a>. (Module 4 has no numbered lecture video. It is reconstructed from the live ETB transcripts, the Sparks corpus, and Clinton Callahan's <em>Conscious Feelings</em>.)</p>
+<hr>
+<h2>Before you start — recall (5 minutes)</h2>
+<p>Close the files. On a blank page, redraw Module 3's equipment map (M07) from memory: center, grounding cord, bubble, golden cube, in their places. Say Module 3's core distinction out loud: what a liquid state is, and why it is transformative only inside a holding context. Then open <a href="../Map%20Notes/M07%20-%20Center%2C%20Grounding%20Cord%2C%20Bubble%2C%20Golden%20Cube.md">M07</a> and check your drawing against the map. Gaps are normal; finding them is the point of the warm-up.</p>
+<hr>
+<h2>Purpose</h2>
+<p>To install the operating system that the rest of this course runs on.</p>
+<p>You have a context (Module 1), you know thoughtware can be upgraded (Module 2), and you have an emerging map of liquid state and the five bodies (Module 3). What you do not yet have is the <em>loop</em>: the procedure by which a person on this path upgrades thoughtware in their ordinary life, without a trainer in the room.</p>
+<p>The loop has four parts: <strong>feedback, coaching, rapid learning, experiments.</strong> Most people coming from school, work, or self-help carry distorted versions of all four. Module 4 strips those versions and installs the PM versions. Low intensity, but the distinctions land hard, because they contradict things you have been told your whole life. If Module 1 was the red pill, Module 4 is the toolkit you need to actually use it on yourself, repeatedly, for the rest of your life.</p>
+<p>One more thing happens today, and it is an upgrade rather than a beginning. Your <strong>Beep! Book</strong> has been running since Module 0: every morning capture you have made is already in it. Today the book learns its full grammar, <strong>Go! / Beep! / Shift!</strong>, and every line you write in it from now on uses that grammar. The habit was installed first; the language arrives now, on purpose, so it lands on a practice that already exists instead of on good intentions.</p>
+<hr>
+<h2>Core PM concepts</h2>
+<ul>
+<li><strong>Feedback (PM-grade).</strong> Information about <em>how a person was</em> when they did what they did, not what they said. Sourced from the witness. Given only to people who actually want change.</li>
+<li><strong>Coaching (PM-grade).</strong> Offering possibilities the client could try in the future to create different results. Not solving the client's problem.</li>
+<li><strong>The three sources.</strong> Feedback → <strong>witness</strong>. Criticism → <strong>gremlin</strong>. Advice → <strong>rescuer</strong>. The same sentence can be any of the three; the receiver can feel the difference.</li>
+<li><strong>Praise vs positive feedback.</strong> Praise carries a hidden agenda to control future behavior; positive feedback is the neutral report <em>that worked</em>. (Spark 034.)</li>
+<li><strong>Go! / Beep! / Shift! Go!</strong> The canonical rapid-learning loop. <strong>Go!</strong> means an action that worked: continue. <strong>Beep!</strong> means an action that did not work as planned: design data, not a verdict on the actor. <strong>Shift!</strong> means change one specific thing. Then the do-over: Go! again. Both Go! and Beep! are feedback; the loop dies when only Beep! is recorded.</li>
+<li><strong>Beep Swamp.</strong> When Beep! collapses into "I am bad," the loop stops. The exit: say "thanks for the feedback," write the Beep! as design data in the Beep! Book, and return to the loop.</li>
+<li><strong>The Beep! Book.</strong> A literal notebook. Engineering log, not journal. Beeps go in; Gos go in; Shifts go in. Yours has been open since Module 0; today it gains the grammar.</li>
+<li><strong>Rapid learning.</strong> Learning at the speed the universe is already giving you feedback; what happens when you stop the protective slowdowns.</li>
+<li><strong>Experiment.</strong> Small, specific, time-bounded test of new thoughtware in real life. <em>What I will do / by when / what I will notice.</em> Reps compound.</li>
+</ul>
+<hr>
+<h2>Learning outcomes</h2>
+<p>By the end of this module you will:</p>
+<ol>
+<li>State the PM distinction between <strong>feedback, criticism, and advice</strong>, and tell which one you are giving (and receiving) in a specific moment.</li>
+<li>State the PM distinction between <strong>feedback and coaching</strong> (past-oriented vs future-oriented) and use both forms with your partner.</li>
+<li>Have given your partner one round of PM-grade feedback about their voice messages so far, on <strong>presence, honesty, and body-state</strong>, not on content.</li>
+<li>Have run your own <strong>Go · Beep · Shift</strong> loop on one personal item, and written the loop into your Beep! Book in the full grammar.</li>
+<li>Have designed and started one structured <strong>experiment</strong> in the form <em>what I will do / by when / what I will notice.</em></li>
+</ol>
+<hr>
+<h2>Module flow</h2>
+<table><thead><tr><th>Step</th><th>Time</th><th>What you do</th></tr></thead><tbody><tr><td>0</td><td>5 min</td><td>Run Script 2 (5 min centering) from the <a href="../Resources/Solo%20Centering%20and%20Grounding%20Scripts.md">Solo Centering and Grounding Scripts</a>. Then open the module.</td></tr><tr><td>1</td><td>10 min</td><td>Recall warm-up (above), read this header</td></tr><tr><td>2</td><td>30 min</td><td>Read <strong>Concept teaching notes</strong> slowly, studying each map where it sits</td></tr><tr><td>3</td><td>5 min</td><td>Open your Beep! Book to a fresh page. Title it <strong>Go! / Beep! / Shift!</strong> — the upgrade page (instructions in the teaching notes)</td></tr><tr><td>4</td><td>15 min</td><td><strong>Embodied practice (solo) — replay one moment</strong></td></tr><tr><td>5</td><td>25 min</td><td><strong>Partner exchange — feedback on voice messages so far.</strong> Record + send.</td></tr><tr><td>6</td><td>—</td><td>Receive partner's feedback within 24 hours; record your reply back</td></tr><tr><td>7</td><td>15 min</td><td><strong>Design your experiment</strong> in the <a href="../Interactive%20Tools/Day%2004/experiment-designer.html">experiment designer</a> or directly in the Beep! Book</td></tr><tr><td>8</td><td>2–3 days</td><td><strong>Run the experiment</strong> in ordinary life</td></tr><tr><td>9</td><td>15 min</td><td><strong>Reflection prompts</strong> in the Beep! Book</td></tr><tr><td>10</td><td>5 min</td><td>Close the loop · post one line to the cohort feed</td></tr></tbody></table>
+<p>The whole module spreads across ~3 days and two sittings. Reading + design is ~90 minutes. The exchange and the experiment take ordinary life-time.</p>
+<hr>
+<h2>Concept teaching notes</h2>
+<h3>Feedback and coaching point in opposite directions in time</h3>
+<p><img src="../Maps/M25.png" alt="Feedback and Coaching — Possibility Management map" loading="lazy"></p>
+<p><em>▶ <a href="../Map%20Atlas/M25%20-%20Feedback%20and%20Coaching.html">Study M25 in the Map Atlas →</a></em></p>
+<p>Study the map before reading on. One page, split down the middle. Left half: <strong>Feedback</strong>. Right half: <strong>Coaching</strong>. Each half carries an <strong>Old Map</strong> (the distorted version you arrived with) and a <strong>New Map</strong>, the PM version, with the central sentence sitting in the middle of each half. Feedback's center: <em>Feedback is about the PAST</em>. What happened, what worked, what did not. Coaching's center: <em>Coaching is about the FUTURE</em>. Possibilities, experiments, "here's an option…", "what about…?" That single axis, past versus future, is the whole map. Everything else hangs off it.</p>
+<p>The cut is <strong>time, not tone.</strong> You can deliver either move warmly or coldly; warmth does not make a sentence feedback or coaching. The <em>direction in time</em> does. Feedback faces backward, at what already happened. Coaching faces forward, at what could be tried next. Most people collapse the two into one blurred move, which is why so much "feedback" is actually disguised advice and so much "coaching" is actually disguised judgement. Hold the axis and the rest of the day follows.</p>
+<h3>Feedback in PM is about <em>how you were</em>, not <em>what you said</em></h3>
+<p>In school, at work, in most "feedback cultures," feedback is about content: <em>the slide is too busy, your argument has a gap.</em> PM has nothing against that; it just does not call it feedback. It calls it <strong>content notes</strong>.</p>
+<p>PM feedback is about something else. From the Day 1 live training: <em>"No feedback on the content. This is feedback on how they say it. Were they radically honest? Did you really feel them? Were they mostly in their heads? Somewhere else? Not really present? Did their communication land in you as really honest? Or did they just stay at the surface?"</em></p>
+<p>That is the unit. Presence, body-state, honesty, location-of-self while speaking. <em>Were you there?</em> Five-body language: which body was the source, which were switched off. You already know how to give content notes. What you do not yet know is how to register the location someone was speaking from and reflect it back.</p>
+<p>Why all this weight on one skill? Spark 021: <em>"Feedback is gold."</em> A map is useless until it carries the small x that says YOU ARE HERE, and feedback is the only place the x comes from. The same Spark: <em>"The world is a giant feedback generator."</em> Every move you make or do not make, the world answers. Your health, your relationships, your bank balance: all of it is feedback you have been receiving without reading. The course trains you to read it.</p>
+<h3>Feedback is given only to people who actually want change</h3>
+<p>PM is a <strong>culture of transformation</strong>. People inside it agreed to be in it: to be seen, registered, reflected back. Inside that container, feedback is precious; it is the only mirror you have. Outside it (your colleague who did not sign up, your parent who did not sign up) your PM-grade feedback is hostile no matter how skillfully delivered, because from inside their context it <em>is</em> an attack. The trainer: <em>"If you give feedback to them, you are forcing a confrontation with reality they did not consent to. The only way they have to protect themselves is to not talk to you anymore."</em></p>
+<p>The rule is operational. Inside this course, with your partner: feedback flows. With everyone else: ask first, and if the answer is no or unclear, do not give it.</p>
+<h3>Feedback vs criticism vs advice — three different sources</h3>
+<p>Three sentences can look identical on the page and be doing three different things. Which one a sentence <em>is</em> depends on where, inside the speaker, it was sourced from.</p>
+<table><thead><tr><th>Form</th><th>Sourced from</th><th>What it wants</th></tr></thead><tbody><tr><td><strong>Feedback</strong></td><td>The <strong>witness</strong> — the part that just observed</td><td>The other to have accurate information about themselves</td></tr><tr><td><strong>Criticism</strong></td><td>The <strong>gremlin</strong> — feeds on superiority and being right</td><td>The other to feel smaller, so the speaker can feel bigger</td></tr><tr><td><strong>Advice</strong></td><td>The <strong>rescuer</strong> — cannot tolerate someone else's discomfort</td><td>The speaker's own discomfort to stop, by fixing the other</td></tr></tbody></table>
+<p>You can hear the difference in your body. Criticism contracts you. Advice bypasses you. Feedback lands cleanly: <em>true, useful, mine to do something with or not.</em> When a learner says <em>"I'm scared of being inaccurate, I'm scared of the other person reacting,"</em> that fear is mostly gremlin and rescuer trying to grab the pen. The cure is not more courage; it is more presence with what you actually witnessed.</p>
+<p>A fourth costume hides on the "positive" side. Spark 034: <em>"There is a difference between positive feedback and praise. Praise is conditioning."</em> "Good job!" can be a clean report that something worked, or it can be a treat dispensed to keep a behavior coming: dog training in word form. Praise and blame both try to take over the other person's responsibility for choosing what to do next. Clean positive feedback hands it back: <em>that worked.</em> Watch for this one with children especially.</p>
+<p>This is the <strong>Old Map of feedback</strong> that M25 names on its left side: distance, judgement, right/wrong, a power move, manipulation. The other person treated as <em>under threat</em>, the room thick with anger and fear. The <strong>New Map</strong> is the clean version: accurate information about the past, sourced from the witness. Most people, most of the time, are running the Old Map while sincerely believing they are giving feedback. The footer of the map holds the whole thing together: real feedback comes from <strong>care, clarity, and connection</strong>, never from superiority or threat. If the move is sourced from the need to be right or bigger, it has already fallen off the map no matter how accurate the words are.</p>
+<h3>Coaching is not solving the client's problem</h3>
+<p>Where feedback looks at what just happened, coaching looks at what could be tried. From Day 1: <em>"Feedback is what just happened. Coaching is what we'd like to see in the future. What could this person practice to create a different result?"</em></p>
+<p>PM coaching does not solve the client's problem. The job is to offer <strong>possibilities</strong>, small concrete experiments the client could run, and let the client pick. In the Day 4 live session, when one learner asked for <em>"possibilities to heal the buzzing in my ears,"</em> the coach answered with a flood of specifics: <em>go to the woods and squish your feet into mud. Sleep under the stars. Listen with your eyes closed. Ask the next child you see this question and write down what they say.</em> Nothing was "the answer." Each was a doorway.</p>
+<p>A coach who tells you the answer has made themselves your authority and undone the work. A coach who hands you fifteen things to try has handed you back your own life. Almost every learner arriving here has been trained to coach by fixing. Module 4 is where you stop.</p>
+<p>The right side of the M25 map names the <strong>Old Map of coaching</strong> the same way: advice from superiority (<em>I know better, you should do this</em>), hidden agenda, no real connection. The <strong>New Map</strong> is the offer: <em>here's an option, what about…?, here's something to experiment with</em>, and then the choice handed back. The test is simple: does the move hand the choice back to them, or take it away? If it takes the choice away, it is old-map coaching, no matter how kindly phrased.</p>
+<p><strong>Knowing which move to make</strong> is the other half of the map. Reach for <strong>feedback</strong> when there is agreement on goals, the person is asking, and you care enough to be honest: the same gate as before, now stated as a positive. Reach for <strong>coaching</strong> when you are exploring options, creating new possibility, or encouraging growth. Two questions sort almost everything before you open your mouth: <em>Am I pointing at the past or the future?</em> and <em>Where in me is this coming from: witness, gremlin, or rescuer?</em></p>
+<p><strong>Common misunderstandings about feedback and coaching.</strong></p>
+<ul>
+<li><em>"Feedback and coaching are basically the same: different words for helping someone improve."</em> They point in opposite directions in time. Feedback reports the past; coaching opens the future. Collapsing them is the single most common error on this map, and it is why so much "feedback" is disguised advice and so much "coaching" is disguised judgement.</li>
+<li><em>"Good feedback includes my advice on what they should do about it."</em> That is coaching smuggled inside feedback, usually old-map coaching sourced from <em>I know better.</em> Feedback reports the past cleanly and stops. Options for the future are a separate move, offered only if they are asking. Welding your <em>should</em> onto your observation contaminates both.</li>
+<li><em>"I should give everyone honest feedback, because honesty is good."</em> The gate has three conditions and all must be present: agreement on goals, the person is asking, you care enough to be honest. Unrequested feedback to someone who did not ask is not courage. It is an old-map power move, and the only protection the other person has is to stop talking to you.</li>
+<li><em>"A good coach figures out the client's problem and tells them the solution."</em> PM coaching does not solve the client's problem. It offers possibilities and hands the choice back. The instant you deliver <em>the answer</em>, you install yourself as their authority and undo the work.</li>
+<li><em>"If I source the words carefully, feedback vs. criticism vs. advice is just semantics."</em> The receiver registers the source in their body before they can name it. Witness → feedback (lands clean). Gremlin → criticism (contracts). Rescuer → advice (bypasses). The same sentence is a different act depending on where inside you it came from.</li>
+</ul>
+<h3>Go · Beep · Shift — the rapid-learning loop</h3>
+<p><img src="../Maps/M26.png" alt="Map of Rapid Learning — Possibility Management map" loading="lazy"></p>
+<p><em>▶ <a href="../Map%20Atlas/M26%20-%20Rapid%20Learning.html">Study M26 in the Map Atlas →</a></em></p>
+<p>Stop here and take the map in. Shape first, labels second. It is a loop, not a line and not a ladder: three stations on a wheel that keeps turning. <strong>GO!</strong> at the top: you act, you try the thing. → <strong>BEEP!</strong>: something did not work as planned. → <strong>SHIFT!</strong>: you change one specific thing and run it again. → arrow back up to <strong>GO!</strong> That last arrow is a <strong>do-over</strong>, and the do-over is the whole point. You were never meant to get it right on the first turn. You were meant to keep the wheel turning, because reps install thoughtware and insight does not.</p>
+<p>PM's name for the loop that upgrades thoughtware:</p>
+<blockquote><p><strong>Go.</strong> You act. You try the thing. <strong>Beep!</strong> Something does not work. The Beep is <em>information</em>, not verdict — a precise design specification for what to change. <strong>Shift.</strong> Change one specific thing — not your whole self. <strong>Go.</strong> Try again.</p></blockquote>
+<p>Both <strong>Go!</strong> and <strong>Beep!</strong> are feedback, and the wheel needs both. Go! is an action that worked: continue. Beep! is an action that did not work as planned. A learner who only records Beeps (or only Gos) has broken the instrument. A run of Beeps is not a losing streak. It means the universe is handing you design data fast, which is the loop working at speed, not against you. The map captions the <strong>BEEP!</strong> box directly: <em>This is NOT a failure.</em> That box carries the whole map.</p>
+<p>Three common ways learners break the loop:</p>
+<ol>
+<li><strong>Not Go-ing.</strong> Sitting in your head considering whether the thing might work is not Go. The actual conversation, the actual message, the actual rep is Go.</li>
+<li><strong>Treating the Beep as a verdict.</strong> <em>I tried, it failed, therefore I am bad at this</em> is the gremlin reading the Beep for you. The Beep does not say <em>you are bad</em>. It says <em>that specific thing did not produce that specific result.</em></li>
+<li><strong>Shifting vaguely.</strong> <em>I'll be better next time</em> is not a Shift. <em>Next time I will say the same sentence with my feet on the floor and my eyes on hers</em> is a Shift.</li>
+</ol>
+<h4>The Beep Swamp — the failure mode</h4>
+<p>The map draws the failure mode explicitly: off <strong>BEEP!</strong> there is a trap-door (<em>"Uh, I'm just in the swamp!"</em>) dropping into a red cloud, the <strong>Feedback Swamp</strong>, captioned with everything the swamp tells you: <em>Oh no · I can't do anything right · No, you are wrong · I am not good enough · they are attacking me · I feel alone.</em> Around the edges, the noise of the wheel jamming: <em>Bang! Boing!</em> When the Beep! lands and instead of <em>that didn't work, here's the Shift</em> you hear that red-cloud chorus, you have fallen into the swamp. You are no longer learning; you are drowning in self-verdict.</p>
+<p>The swamp is a <em>location</em> you fell into, not a feeling to push through, and there is a one-sentence exit: <strong>"Thank you for the feedback."</strong> Said out loud or under your breath. The sentence turns a verdict back into data. (Spark 034 trains the same sentence for praise: receive "you were wonderful" and "that didn't work" with the same flat <em>thanks for the feedback</em>, and you become reliable to receive both.) Then open the Beep! Book, write the Beep! as flat design lines, name one Shift!, and step back onto the wheel.</p>
+<h4>The Beep! Book upgrade</h4>
+<p>You have had the book since Module 0, and you have been making the morning capture in it for four modules. Today the capture keeps its steps and gains the full grammar. From now on:</p>
+<ul>
+<li>A line that worked gets written as a <strong>Go!</strong> line: <em>what I did · what happened.</em></li>
+<li>A line that did not work as planned gets written as a <strong>Beep!</strong> line, in the engineer's register, no verdicts.</li>
+<li><strong>Every Beep! line gets a Shift! line under it</strong>: one specific change for the next rep. Not "I'll be better next time." One variable.</li>
+</ul>
+<p>That is the whole upgrade. Same book, same sit, same chair. The reason the book came first and the grammar second is pedagogical and deliberate: a habit that already runs can absorb an upgrade in one morning, while a concept without a habit evaporates in a week. (Full instrument spec: <a href="../Practice/Beep%20Book%20Guide.md">Beep! Book Guide</a>.)</p>
+<p><strong>Common misunderstandings about Rapid Learning.</strong></p>
+<ul>
+<li><em>"A Beep! means I failed. I did something wrong."</em> A Beep! is design data: an approach did not produce the result you wanted. It says nothing about your worth. Collapsing it into <em>"I'm bad"</em> is not honesty about failure; it <em>is</em> the Beep Swamp. The map literally captions the box <em>This is NOT a failure.</em></li>
+<li><em>"If I get a Beep!, I should feel bad, apologize, or explain myself."</em> The clean response is <em>"Thank you for the feedback,"</em> then Shift!. Feeling bad does not convert the data; it jams the wheel. Write the Beep!, name the Shift!, Go! again.</li>
+<li><em>"Go! is the win and Beep! is the loss: I want more Gos and fewer Beeps."</em> Both are feedback; the wheel needs both. A learner who only counts Gos is keeping score, not running experiments.</li>
+<li><em>"I'll Shift! by being more present / trying harder / doing better next time."</em> That is a New Year's resolution, not a Shift!. A Shift! is one specific, observable change to a single variable: <em>feet flat, eyes up, the same sentence.</em> Vague Shifts produce vague Beeps and the wheel spins without traction.</li>
+</ul>
+<h3>Rapid learning and experiments</h3>
+<p><em>Rapid learning</em> is not learning faster than is natural. It is what happens when you stop the things you do to <em>prevent</em> learning: defending against Beeps, dressing up Shifts as identity crises, refusing to Go because Go is uncomfortable.</p>
+<p>Spark 098: <em>"There are two kinds of learning: defensive and expansive."</em> Defensive learning fits each new piece into the puzzle you have already assembled, and silently discards whatever does not fit; you can only learn about what you already know about. Expansive learning lets a new piece exist in you before it fits anywhere, and it feels disorderly, because it is. Most of this course will not fit your existing puzzle. That sensation of standing on less-solid ground is what expansive learning feels like from inside, and it is the sensation to stay with rather than to fix.</p>
+<p>Go · Beep · Shift is the <strong>fast inner loop</strong>: seconds to minutes, the move you make inside a single conversation. It is one half of a pair. The <strong>slow outer loop</strong> is the <a href="../Map%20Notes/M19%20-%20Learning%20Spiral.md">Learning Spiral</a> (M19): the same distinction returning on a deeper lap over weeks, months, years. You run a thousand fast loops inside one turn of the spiral. Module 4 installs the fast loop; Module 9 installs the slow one. Confusing them makes you expect a single Shift! to do the work that only the spiral does over time. The thing the loop upgrades is <a href="../Map%20Notes/M02%20-%20Map%20of%20Thoughtware.md">thoughtware</a> (M02, Module 2).</p>
+<p>PM distinguishes three states relative to any piece of thoughtware: <em>I read about it</em> (cognitive only, worth roughly nothing on its own), <em>I tried it</em> (you ran an experiment, got a Beep or a Go), <em>it changed how I am</em> (reps have compounded; the thoughtware now runs when you are not looking, which is what the course is for). Most learners spend years parked at <em>I read about it.</em> Module 4 pushes you to <em>I tried it</em> every week, on something specific. And one more Spark belongs here, because it names where this course is heading: Spark 037, <em>"The best way to learn something is to teach it."</em> At Module 6 you will explain these maps to your partner out loud, from memory. Knowing that now changes how you read.</p>
+<p>An <strong>experiment</strong> is the operational unit, a thing with structure:</p>
+<blockquote><p><em>What I will do.</em> One specific behavior, in a real situation. Not "be more present" — <em>"Sunday's call with my father, when he starts on politics, I say one sentence: 'Dad, I'm not in this conversation today,' then change the subject."</em> <em>By when.</em> A specific window — <em>"Sunday 6–7 pm."</em> <em>What I will notice.</em> The data — <em>"what happened in my body; what he said back; whether I went numb afterwards."</em></p></blockquote>
+<p>One rep. Reps compound. Thirty in a row change how you are with your father, even when any single rep looks like a failure. Insight does not install thoughtware. Reps do. The between-module experiments this course has been asking you to run since Module 1 are themselves running examples of this principle: today you learn the discipline they were already teaching you.</p>
+<hr>
+<p><strong>SITTING BREAK</strong> — stop here if you need to. When you return: one breath, re-read your last Beep! Book line, continue with Sitting 2 of 2.</p>
+<hr>
+<h2>Embodied practice (solo) — Replay one moment</h2>
+<p>A feedback practice with one person in the room: you. ~15 minutes. Sit on a chair, feet flat, hands on thighs (neutral PM posture). Beep! Book and pen.</p>
+<blockquote><p><strong>Script.</strong></p>
+<p>Pick <strong>one specific moment from the past week.</strong> Not a whole day. Not "things at work." One moment, five minutes long at most. You can see the room; you remember who was there.</p>
+<p>Close your eyes. Replay it slowly, one breath per beat. Then ask, in order, writing each answer in one short sentence. <em>Do not explain. Do not justify. Register.</em></p>
+<p><strong>1. Which body was I in?</strong> Intellectual / emotional / physical / energetic / archetypal. Which was the source? Which were switched off? <strong>2. Was I present?</strong> Yes or no. If no — where was I? Past, future, performing, hiding, planning my next sentence, watching myself from outside? <strong>3. Was I radically honest?</strong> With myself first. If no — what did I leave out, soften, or dress up? <strong>4. Whose voice was speaking inside me?</strong> Box, gremlin, rescuer, witness, being. If you can't tell yet, write <em>don't know</em>. <strong>5. What was the Beep?</strong> <em>"I went numb halfway through."</em> <em>"I said yes when my body said no."</em> <strong>6. What is the Shift?</strong> One specific thing. <em>"Next time, before I open my mouth, both feet on the floor; check which body I'm in."</em></p>
+<p>Open your eyes. Close the Beep! Book.</p></blockquote>
+<p>You just gave yourself PM-grade feedback. If what came out was <em>I was so stupid, I always do this, I am the worst</em>, that was the gremlin grabbing the pen. Ground (60-second script, <a href="../Interactive%20Tools/ground.html">ground.html</a>), then run the script again with the witness in the chair.</p>
+<blockquote><p><strong>Variation A — the do-over out loud (≤12 min).</strong> To drill the swamp exit in your body, run one full turn of the wheel <em>aloud</em>. Take one thing you attempted recently that did not work: one specific attempt, not a bad week. (1) Name the <strong>Go!</strong> flat: <em>"I tried to tell my partner I was overwhelmed during dinner."</em> (2) Name the <strong>Beep!</strong> as an engineer reads an instrument, no self-judgment: <em>"It came out as an attack and they got defensive. Beep."</em> If what comes out is <em>"I always do this, I ruin everything,"</em> stop. That is the sound of the swamp; ground and run this station again with the witness in the chair. (3) Say <strong>"Thank you for the feedback"</strong> out loud, and notice what changes in your chest. (4) Name one <strong>Shift!</strong>, one specific variable: <em>"Next time I say it before dinner, sitting down, starting with 'I need thirty seconds.'"</em> Write all four lines in the Beep! Book in the upgraded grammar. Then say both versions of the same moment out loud, first <em>"I failed,"</em> then <em>"Beep. Here's the Shift."</em> Feel the difference where it actually lives: the first drops you toward the swamp (heavier, smaller, alone); the second keeps you on the wheel (lighter, specific, still moving). That bodily difference <em>is</em> the distinction.</p></blockquote>
+<blockquote><p><strong>Variation B — write it both ways (10–15 min).</strong> To drill the feedback/coaching axis directly, take one thing a person actually did in the last week (one specific action you have an opinion about) and write it two ways. First, write it as clean <strong>Feedback (about the PAST)</strong>: two or three sentences staying strictly behind the line of what already happened. What worked, what did not, no <em>should</em>, no <em>next time</em>. If a sentence points at the future, cross it out and move it down. Read it back and feel which part of you wrote it; if it sounds superior, the gremlin grabbed the pen: ground and rewrite from the witness. Then write it as clean <strong>Coaching (about the FUTURE)</strong>: one possibility and one experiment, framed as the map frames them — <em>here's an option…</em>, <em>what about…?</em> Offer, do not prescribe; rewrite every <em>you should</em> as <em>one thing you could try is.</em> Read both aloud and feel how different they are: one closes a past, one opens a future. Then the real data: which one did you reach for first? <em>I default to feedback that is secretly advice / coaching that is secretly judgement / both collapsed into one blurred move.</em> The one you default to tells you something about your Box.</p></blockquote>
+<hr>
+<h2>Partner exchange (async) — Feedback on the voice messages so far</h2>
+<p>The first round of PM-grade feedback in this course. You and your partner have a small corpus of voice messages by now. Today you give each other feedback on <em>how the other has been</em> in those messages. (Solo path: run the same structure on your own recordings. Listen back to two of your voice memos from Modules 1–3 and write the three feedback points about yourself, witness in the chair. The skill builds either way.)</p>
+<p><strong>Ground rules.</strong></p>
+<ul>
+<li><strong>Feedback only. Not advice. Not coaching. Not content notes.</strong> Not the topics they raised: <em>how they were</em> while raising them.</li>
+<li><strong>Five-body language.</strong> Which body they were in, whether they were present, whether they were radically honest. Avoid corporate vocabulary (<em>clear, articulate, well-organized</em>). Use <em>grounded, present, in your body, in your head, hiding, performing.</em></li>
+<li><strong>Specific, not global.</strong> Not <em>"you were guarded."</em> Try <em>"In your second message, when you talked about your father, I heard your intellectual body running the show: you knew the right words about sadness but I did not feel the sadness."</em></li>
+<li><strong>No praise.</strong> If you catch yourself dispensing "you were great!" treats, re-read the Spark 034 paragraph and restate it as a neutral report of what worked.</li>
+<li><strong>Ask consent first.</strong> At the top of your recording: <em>"Are you open to PM-grade feedback right now? If not, just send back 'not today.'"</em></li>
+</ul>
+<p><strong>Prompt to record (4–8 minutes).</strong> After the consent check:</p>
+<ol>
+<li><strong>One thing that worked.</strong> <em>"In your Module 3 message, when you talked about the grounding cord, I felt you in your body. That landed as real."</em></li>
+<li><strong>One thing that was off, in five-body terms.</strong> <em>"In your Module 1 message, I heard your performing voice, the one that sounds credible. I did not feel you."</em></li>
+<li><strong>One question</strong>, open, not advice. <em>"What would change in your next message if you sent it from your body and not your head?"</em></li>
+</ol>
+<p><strong>Receiving.</strong> Listen all the way through before reacting. If your gremlin starts producing rebuttals before they finish, notice that and let them finish anyway. Sit with it for at least an hour before replying.</p>
+<p>When you record your reply: (1) <em>What I heard you say</em>: paraphrase in one sentence. (2) <em>What landed</em>: what was true. (3) <em>What I will do with it</em>: one specific experiment you will run before Module 5. <em>"I'll record my Module 5 message standing up, feet on the floor, and say one true sentence even if I don't know how to dress it up first."</em></p>
+<p>No defending. No "yeah but…" If a piece feels off, just note it: <em>"I'm not sure that one landed yet, I'll sit with it."</em> You do not have to accept feedback that does not fit. You also do not have to argue with it. If your partner does not consent to receiving feedback today, wait.</p>
+<hr>
+<h2>Between-module experiment</h2>
+<p>Run <strong>one</strong> experiment with full structure before Module 5. Write it on a fresh Beep! Book page in this exact format (or build it in the <a href="../Interactive%20Tools/Day%2004/experiment-designer.html">experiment designer</a> and copy it in).</p>
+<blockquote><p><strong>Experiment #1</strong> <em>What I will do:</em> (one specific behavior, in a real situation) <em>By when:</em> (specific window — date and time, not "this week") <em>What I will notice:</em> (the data you will write down afterwards)</p></blockquote>
+<p>One at a time. Two parallel experiments compete for noticing bandwidth and you end up running neither cleanly. The topic is your choice. Suggestions:</p>
+<ol>
+<li><strong>The one-sentence experiment.</strong> Pick one conversation this week that would normally go a particular way. Plan one sentence: true, short, sourced from your body. Say it. Notice what happened in your body, in the other person, in the room.</li>
+<li><strong>The Beep capture experiment.</strong> For three days, each time something does not work the way you expected, write the Beep within ten minutes. <em>What you did, what happened, what the Beep was, what the Shift would be.</em> Do not yet act on the Shifts; capture. By Module 5: 6–20 Beeps in the book, each with its Shift! line under it.</li>
+<li><strong>The feedback-asked experiment.</strong> Ask one person <em>in</em> a transformational context with you (your partner, a PM-aware friend, a coach) for PM-grade feedback on one specific thing about how you are. Script: <em>"I'm running an experiment. I want PM-grade feedback on one thing: \[name it\]. What did you actually witness?"</em> Receive without rebuttal. Write what they said. (The full-strength version of this experiment exists in the Sparks corpus as Spark 021's enemies-feedback experiment; the version here is the course-scale rep.)</li>
+</ol>
+<p><strong>Capture within ten minutes</strong> of the moment, in the Beep! Book, in the upgraded grammar: Go! or Beep!, flat lines, and a Shift! line under every Beep!. A failed experiment is a Beep!, and Beeps go in the book. That is the loop working, not the loop failing. After running it, write 3 sentences: <em>what I did, what happened, what the next experiment is.</em> You will use this in the reflection prompts and in your Module 5 partner exchange.</p>
+<p><strong>Callback rep (Module 03's instrument):</strong> before you run the experiment (in the minute before the conversation, before the message, before the rep) center, drop a grounding cord, set a bubble (Script 3, shortened). The experiment is the test; the equipment is what lets you stay present enough to collect the data.</p>
+<hr>
+<h2>Reflection prompts</h2>
+<p>Write longhand in the Beep! Book if you can.</p>
+<ol>
+<li>Which of the three sources (witness, gremlin, rescuer) most often takes the chair when I give someone "feedback"? How can I tell, in my body, while it is happening?</li>
+<li>Which is most often speaking inside my head about <em>myself</em>? If it is the gremlin or rescuer, what I am calling self-feedback is not feedback. What would the witness be saying instead?</li>
+<li>From the <em>replay</em> practice: was I in fact present in that moment, or somewhere else? If somewhere else, <em>where</em>?</li>
+<li>When my partner gave me feedback, what part of me wanted to defend, explain, or counter-feedback them? What did that part want to protect? (That is the Box, doing its job.)</li>
+<li>Where do I praise instead of giving positive feedback, and who taught me that praise was kindness?</li>
+<li>The experiment I ran: what was the Beep? What is the Shift? When and on what will experiment #2 run?</li>
+<li>Where in my life am I parked at <em>I read about it</em>? What would <em>I tried it</em> look like for that specific item, this week?</li>
+</ol>
+<hr>
+<h2>Safety callouts for this module</h2>
+<p>Module 4 is Low intensity. The risk is not destabilization; it is the opposite: that the module lands as <em>concepts I now know about</em> rather than as a loop you actually run. Two notes:</p>
+<ul>
+<li><strong>PM-grade feedback can feel sharper than expected the first time</strong>, especially if you are used to corporate "positive feedback sandwich" culture. If your partner's feedback contracts you: pause, ground (Script 1 or <a href="../Interactive%20Tools/ground.html">ground.html</a>), notice which part of you contracted. If you are still contracted 24 hours later, voice-message your partner one clarifying question. Do not re-litigate it in your head alone for a week; that is the gremlin running with it.</li>
+<li><strong>Giving feedback can surface old material</strong> about times you were given criticism dressed up as feedback: school, parents, hierarchies that used "I'm telling you this for your own good" as a vehicle for shame. If that surfaces while recording, stop and ground. Reach out to your partner or the CM if needed. The course is not asking you to push through that material; it is asking you to notice it is there.</li>
+</ul>
+<p>The 60-second universal grounding script stands ready at <a href="../Interactive%20Tools/ground.html">ground.html</a> and as Script 1 of the <a href="../Resources/Solo%20Centering%20and%20Grounding%20Scripts.md">Solo Centering and Grounding Scripts</a>. This course is not therapy. If old material around criticism is bigger than this module is built to hold, use the <a href="../Resources/Referral%20List.md">Referral List</a>.</p>
+<hr>
+<h2>Cohort feed post (suggested)</h2>
+<p>One line each, no more (solo or witness path: same lines, into the Beep! Book):</p>
+<ul>
+<li>The Beep I captured this week: …</li>
+<li>The Shift I'm trying: …</li>
+<li>(Optional) one question for the group: …</li>
+</ul>
+<hr>
+<h2>Glossary additions</h2>
+<ul>
+<li><strong>Feedback (PM).</strong> Information about <em>how a person was</em> (presence, body-state, honesty, location-of-self); sourced from the witness; given inside a consenting transformational container</li>
+<li><strong>Criticism.</strong> Sentence shaped like feedback but sourced from the gremlin; wants the other smaller</li>
+<li><strong>Advice.</strong> Sentence shaped like feedback but sourced from the rescuer; wants the speaker's discomfort to stop by fixing the other</li>
+<li><strong>Praise.</strong> Sentence shaped like positive feedback but carrying a hidden agenda to control future behavior; conditioning, not information (Spark 034)</li>
+<li><strong>Coaching (PM).</strong> Future-oriented offer of possibilities the client could try; does not solve their problem</li>
+<li><strong>Witness.</strong> Inner location feedback is sourced from; the part that observed without verdict</li>
+<li><strong>Beep!</strong> Information that something did not work; design specification for the next Shift, not a verdict on the person</li>
+<li><strong>Shift.</strong> One specific change between two Goes; not an identity overhaul</li>
+<li><strong>Go.</strong> Actually doing the thing; the part of the loop most often skipped</li>
+<li><strong>Go · Beep · Shift.</strong> The rapid-learning loop</li>
+<li><strong>Beep! Book.</strong> The literal notebook you have kept since Module 0; today upgraded with the full Go!/Beep!/Shift! grammar</li>
+<li><strong>Beep Swamp.</strong> The failure mode: Beep! collapsed into self-verdict; exit sentence: "Thank you for the feedback"</li>
+<li><strong>Rapid learning.</strong> Learning at the speed the universe is already giving you feedback</li>
+<li><strong>Defensive vs expansive learning.</strong> Fitting new pieces into the known puzzle vs letting the unknown exist in you before it fits (Spark 098)</li>
+<li><strong>Experiment.</strong> Small, specific, time-bounded test of new thoughtware; <em>what / by when / what I will notice</em>; the operational unit of PM practice</li>
+</ul>
+<hr>
+<h2>Close the loop (5 minutes)</h2>
+<p>On the three-word scale from the <a href="../Resources/Learning%20Self-Assessment.md">Learning Self-Assessment</a> (<em>not yet / starting / landed in my body</em>), rate yourself on two statements, honestly in the direction of "not yet": <em>"I can tell, in a live moment, whether a sentence I am about to say is feedback, criticism, or advice"</em> and <em>"I can write a Beep! as flat design data and name one specific Shift! without falling into the swamp."</em> No score, no pass. The rating tells you whether to re-run a practice before Module 5.</p>
+<p>Add today's one-distinction entry to <a href="../Practice/My%20Map%20Book.md">My Map Book</a>: one distinction from this module in your own words, plus one lived example from this week.</p>
+<p>If you drift away from the course after this module, return through <a href="../Practice/Coming%20Back.md">Coming Back</a>. Returning is a rep.</p>
+<hr>
+<sub>🄯 <strong>World Copyleft 2026</strong> · <em>Expand the Box (Digital)</em> · licensed <strong><a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></strong>, consistent with the spirit of World Copyleft · re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community · this course is an independent re-presentation, <strong>not an official Possibility Management training</strong> · please share, share-alike · Powered by Possibility Management (<a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>) · full terms: <code>LICENSE.md</code> in the course root</sub>
+  </article>
+
+  <nav class="module-nav" aria-label="Module navigation">
+    <a class="prev" href="module-03.html"><span class="nn-label">← Module 03</span>Liquid State, Center-Ground-Bubble, Five Bodies</a>
+    <a class="next" href="module-05.html"><span class="nn-label">Module 05 →</span>Feelings vs Emotions, Old Map of Feelings, Numbness Bar</a>
+  </nav>
+
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="../index.html">← Course front door</a>
+      <a href="../Map%20Atlas/index.html">Map Atlas →</a>
+      <a href="../Interactive%20Tools/index.html">Interactive Tools →</a>
+    </div>
+    <p class="license"><span class="cc">🄯 World Copyleft 2026 · Expand the Box (Digital).</span> Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>, consistent with the spirit of World Copyleft. Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. This course is an independent re-presentation, <strong>not an official Possibility Management training</strong>. Please share, share-alike. Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>. Full terms: <code>LICENSE.md</code> in the course root.</p>
+    <p class="build-stamp">Generated by build.py · 2026-06-12 · do not hand-edit · source: Days/Day 04 - Feedback, Coaching, Rapid Learning, Experiments.md</p>
+  </footer>
+</div>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. This course is an independent re-presentation, not an official Possibility Management training. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

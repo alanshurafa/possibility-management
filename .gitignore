@@ -9,3 +9,5 @@ desktop.ini
 # Local preview scratch
 .playwright-mcp/
 *.jpeg
+
+.vercel

@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Box Inventory · ETB Day 2</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #5c4f3d;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap { max-width: 1280px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero { margin: 56px 0 32px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(48px, 7vw, 96px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 760px;
+  font-style: italic;
+}
+
+/* preamble call-out */
+.disid {
+  margin: 36px 0 8px;
+  padding: 20px 26px;
+  border-left: 3px solid var(--vermillion);
+  background: var(--vermillion-soft);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 920px;
+}
+.disid strong {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.disid em {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--ink);
+}
+
+/* main workbench */
+.workbench {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 56px;
+  margin: 56px 0 32px;
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .workbench { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* left column: SVG diagram */
+.diagram-col {
+  position: sticky;
+  top: 24px;
+}
+@media (max-width: 980px) {
+  .diagram-col { position: static; }
+}
+
+.diagram-frame {
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--ink);
+  padding: 28px 24px 24px;
+  position: relative;
+}
+.diagram-frame::before {
+  content: 'YOUR BOX';
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  background: var(--ivory);
+  padding: 2px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--vermillion);
+  font-weight: 600;
+}
+
+.box-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 580px;
+}
+
+/* layer rectangles inside SVG are styled via classes the SVG renders directly */
+.layer-rect {
+  fill: var(--ivory);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: fill 0.3s, stroke 0.3s;
+}
+.layer-rect:hover { fill: var(--ivory-deep); }
+.layer-rect.active { fill: var(--vermillion-soft); stroke: var(--vermillion); stroke-width: 2; }
+.layer-rect.filled { fill: var(--mustard-soft); stroke: var(--mustard); }
+.layer-rect.filled.active { fill: var(--vermillion-soft); stroke: var(--vermillion); }
+
+.layer-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  fill: var(--ink-mute);
+  pointer-events: none;
+  font-weight: 500;
+}
+.layer-label.active { fill: var(--vermillion); }
+
+.layer-num {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 400;
+  fill: var(--ink-mute);
+  pointer-events: none;
+}
+.layer-num.active { fill: var(--vermillion); }
+
+.layer-item-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  fill: var(--ink-soft);
+  pointer-events: none;
+}
+
+/* layer legend below diagram */
+.layer-legend {
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+.layer-legend .row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px dashed var(--rule);
+}
+.layer-legend .row:first-child { border-top: none; }
+.layer-legend .row .sw {
+  width: 10px; height: 10px;
+  border: 1.5px solid var(--ink);
+  background: var(--ivory);
+  flex-shrink: 0;
+  position: relative;
+  top: 1px;
+}
+.layer-legend .row.filled-eg .sw { background: var(--mustard-soft); border-color: var(--mustard); }
+.layer-legend .row.active-eg .sw { background: var(--vermillion-soft); border-color: var(--vermillion); }
+
+/* right column: panel */
+.panel {
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--ink);
+  padding: 36px 38px 36px;
+  position: relative;
+  min-height: 540px;
+}
+.panel::before {
+  content: 'LAYER DETAIL';
+  position: absolute;
+  top: -10px;
+  left: 28px;
+  background: var(--ivory);
+  padding: 2px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--vermillion);
+  font-weight: 600;
+}
+
+.panel-empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--ink-mute);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+
+.panel-content { display: none; }
+.panel-content.show { display: block; animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.panel-head .layer-tag { color: var(--vermillion); font-weight: 600; }
+
+.panel h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 44px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1;
+  margin: 6px 0 18px;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+.panel h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+
+.panel-function {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-bottom: 18px;
+}
+
+.panel-examples {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--ink-mute);
+  line-height: 1.7;
+  padding: 14px 18px;
+  background: var(--ivory);
+  border-left: 3px solid var(--rule);
+  margin-bottom: 28px;
+}
+.panel-examples .ex-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.panel-examples .ex-item { display: block; padding: 3px 0; }
+.panel-examples .ex-item::before { content: '· '; color: var(--vermillion); }
+
+.inv-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.inv-label .count {
+  font-family: var(--display);
+  font-size: 12px;
+  color: var(--ink-mute);
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-style: italic;
+}
+
+.inv-inputs { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+
+.inv-row {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.inv-row .marker {
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--vermillion);
+  line-height: 1.5;
+  padding-top: 6px;
+}
+.inv-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: none;
+  line-height: 1.4;
+  min-height: 44px;
+}
+.inv-input:focus {
+  outline: none;
+  border-color: var(--vermillion);
+  background: #fff8e8;
+}
+
+.grammar-reminder {
+  margin-top: 4px;
+  padding: 12px 16px;
+  border-top: 1px dashed var(--rule);
+  border-bottom: 1px dashed var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+.grammar-reminder strong {
+  color: var(--vermillion);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+}
+
+/* survival consent overlay */
+.consent-shield {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(244, 236, 220, 0.97);
+  padding: 56px 40px;
+  z-index: 5;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+.consent-shield.show { display: flex; }
+.consent-shield .c-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.consent-shield h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.15;
+  margin-bottom: 22px;
+  color: var(--ink);
+}
+.consent-shield h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.consent-shield p {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  max-width: 480px;
+}
+.consent-shield p em { color: var(--ink); font-style: italic; }
+.consent-shield .c-actions { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+
+/* buttons */
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+
+/* reflection block */
+.reflect {
+  margin: 64px 0 32px;
+  padding: 44px 48px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+}
+.reflect .r-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+.reflect h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 36px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  color: var(--ivory);
+  letter-spacing: -0.015em;
+}
+.reflect h3 em {
+  font-style: italic;
+  color: var(--mustard);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+.reflect .r-instr {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ivory-shade);
+  margin-bottom: 22px;
+  font-style: italic;
+  max-width: 640px;
+}
+.reflect textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 20px 22px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 20px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ink-soft);
+  color: var(--ivory);
+  border: 1.5px solid var(--ink-mute);
+  resize: vertical;
+  line-height: 1.4;
+}
+.reflect textarea::placeholder { color: var(--ink-mute); }
+.reflect textarea:focus {
+  outline: none;
+  border-color: var(--mustard);
+  background: #1a1410;
+}
+.reflect .r-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.reflect .save-state {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.reflect .save-state.show { opacity: 1; }
+
+.reflect-btn {
+  background: transparent;
+  color: var(--ivory);
+  border-color: var(--ivory);
+}
+.reflect-btn:hover { background: var(--ivory); color: var(--ink); border-color: var(--ivory); }
+.reflect-btn.mustard { color: var(--mustard); border-color: var(--mustard); }
+.reflect-btn.mustard:hover { background: var(--mustard); color: var(--ink); border-color: var(--mustard); }
+
+/* progress strip */
+.progress-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 32px 0 0;
+  padding: 14px 22px;
+  background: var(--ivory-shade);
+  border: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.progress-strip .ps-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.progress-strip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ivory);
+  border: 1.5px solid var(--ink-mute);
+}
+.progress-strip .dot.done { background: var(--mustard); border-color: var(--mustard); }
+
+footer.bottom {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* toast */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9;
+  padding: 14px 22px;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-left: 3px solid var(--mustard);
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+@media (max-width: 900px) {
+  .wrap { padding: 24px 20px 60px; }
+  .reflect { padding: 32px 28px; }
+  .panel { padding: 28px 26px; }
+  header.top { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+.layer-rect:focus-visible, .layer-label:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 02</span> · EXPAND THE BOX · Box Inventory
+    </div>
+    <a href="index.html">← All Day 2 tools</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Day 2 · Embodied Practice · M04 Anatomy of the Box</div>
+    <h1 class="display">Your <em>Box.</em><br>Three layers.<br>Name what's in each.</h1>
+    <p class="lede">
+      The Box is the survival-and-protection thoughtware you assembled in childhood.
+      It kept you alive then. You cannot tell it from yourself unless you step back far enough to look at it.
+      Click a layer. Look at it. Name what's there. The Box is not on trial — it is being seen.
+    </p>
+  </section>
+
+  <div class="disid">
+    <strong>Disidentification grammar</strong>
+    As you write each item, the verb is the work: <em>I have this. I am not this.</em>
+    Surface items are habits you <em>have</em>, not selves you <em>are</em>. The small distance between
+    <em>am</em> and <em>have</em> is the doorway the rest of this course walks through.
+  </div>
+
+  <section class="workbench">
+
+    <!-- LEFT: diagram -->
+    <div class="diagram-col">
+      <div class="diagram-frame">
+        <svg class="box-svg" viewBox="0 0 460 560" xmlns="http://www.w3.org/2000/svg" id="boxSvg">
+          <!-- Outer / Surface layer (largest) -->
+          <g class="layer-group" data-layer="surface">
+            <rect class="layer-rect" id="rectSurface"
+              x="20" y="20" width="420" height="520"
+              rx="3" ry="3"
+              transform="rotate(-0.4 230 280)"
+              role="button" tabindex="0" aria-label="Layer I, Surface — behaviors and habits. Select to name your items." />
+            <text class="layer-num" x="38" y="46" aria-hidden="true">I</text>
+            <text class="layer-label" id="labelSurface" x="58" y="46" aria-hidden="true">Surface — behaviors, habits</text>
+            <g id="itemsSurface"></g>
+          </g>
+
+          <!-- Story layer (middle) -->
+          <g class="layer-group" data-layer="story">
+            <rect class="layer-rect" id="rectStory"
+              x="68" y="120" width="324" height="320"
+              rx="3" ry="3"
+              transform="rotate(0.6 230 280)"
+              role="button" tabindex="0" aria-label="Layer II, Story — beliefs and rules. Select to name your items." />
+            <text class="layer-num" x="86" y="146" aria-hidden="true">II</text>
+            <text class="layer-label" id="labelStory" x="106" y="146" aria-hidden="true">Story — beliefs, rules</text>
+            <g id="itemsStory"></g>
+          </g>
+
+          <!-- Survival layer (innermost) -->
+          <g class="layer-group" data-layer="survival">
+            <rect class="layer-rect" id="rectSurvival"
+              x="130" y="220" width="200" height="160"
+              rx="3" ry="3"
+              transform="rotate(-0.3 230 300)"
+              role="button" tabindex="0" aria-label="Layer III, Survival — identity-level commitments. Select to name your items; a consent prompt appears first." />
+            <text class="layer-num" x="146" y="246" aria-hidden="true">III</text>
+            <text class="layer-label" id="labelSurvival" x="164" y="246" aria-hidden="true">Survival</text>
+            <g id="itemsSurvival"></g>
+          </g>
+
+          <!-- crosshair at center, very faint -->
+          <line x1="225" y1="295" x2="235" y2="305" stroke="#b8a98a" stroke-width="0.8" opacity="0.5" aria-hidden="true"/>
+          <line x1="235" y1="295" x2="225" y2="305" stroke="#b8a98a" stroke-width="0.8" opacity="0.5" aria-hidden="true"/>
+        </svg>
+
+        <div class="layer-legend">
+          <div class="row">
+            <span class="sw"></span>
+            <span>Default — waiting for you</span>
+          </div>
+          <div class="row active-eg">
+            <span class="sw"></span>
+            <span>Active — selected, being named</span>
+          </div>
+          <div class="row filled-eg">
+            <span class="sw"></span>
+            <span>Filled — your items live in this layer</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-strip" id="progressStrip">
+        <div class="ps-item"><span class="dot" id="dotSurface"></span>Surface</div>
+        <div class="ps-item"><span class="dot" id="dotStory"></span>Story</div>
+        <div class="ps-item"><span class="dot" id="dotSurvival"></span>Survival</div>
+        <div class="ps-item" id="dotReflectWrap"><span class="dot" id="dotReflect"></span>Reflection</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: panel -->
+    <div class="panel" id="panel">
+      <div class="panel-empty" id="panelEmpty">
+        Click a layer to begin.<br>
+        <span style="font-size: 14px; font-family: var(--mono); font-style: normal; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); display: block; margin-top: 18px;">Start at Surface — most visible.</span>
+      </div>
+
+      <div class="panel-content" id="panelContent">
+        <div class="panel-head">
+          <span class="layer-tag" id="panelTag">LAYER I · OUTER</span>
+          <span id="panelLayerNum">I · OF III</span>
+        </div>
+        <h2 id="panelTitle"></h2>
+        <p class="panel-function" id="panelFunction"></p>
+        <div class="panel-examples" id="panelExamples">
+          <div class="ex-label">What lives here</div>
+          <div id="panelExamplesItems"></div>
+        </div>
+
+        <div class="inv-label">
+          <span>Name 3 of yours from this layer</span>
+          <span class="count" id="invCount">0 / 3</span>
+        </div>
+        <div class="inv-inputs" id="invInputs"></div>
+
+        <div class="grammar-reminder">
+          <strong>REMEMBER</strong><br>
+          I HAVE this. I AM NOT this.
+        </div>
+      </div>
+
+      <!-- Survival consent overlay -->
+      <div class="consent-shield" id="consentShield">
+        <div class="c-eyebrow">Layer III · Pause</div>
+        <h3>Survival is <em>identity-level.</em></h3>
+        <p>
+          Survival-layer Box content is identity-level — commitments formed in childhood in response to threat.
+          You don't have to dig deep here.
+        </p>
+        <p>
+          Even surfacing <em>one</em> item is real work. Day 2 stays at surface and story on purpose.
+          Survival material reaches further than this module was built to hold without the rest of the course.
+        </p>
+        <p>
+          Three breaths. Then: <em>stop when your body says stop.</em>
+        </p>
+        <div class="c-actions">
+          <button class="btn primary" onclick="acceptConsent()">I understand — proceed</button>
+          <button class="btn ghost" onclick="declineConsent()">Stay at story for now</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Reflection -->
+  <section class="reflect">
+    <div class="r-eyebrow">After looking — one sentence</div>
+    <h3>What I <em>notice</em>.</h3>
+    <p class="r-instr">
+      One sentence. Not a plan. Not an explanation. Just what surfaced in the body when you looked at your Box.
+      You will read this back on Day 9.
+    </p>
+    <textarea id="reflectText" aria-label="What I notice — one sentence reflection after looking at my Box" placeholder="When I looked at my box, I noticed…"></textarea>
+    <div class="r-actions">
+      <button class="btn reflect-btn" onclick="saveAll()">Save inventory + reflection</button>
+      <button class="btn reflect-btn mustard" onclick="clearAll()">Clear everything</button>
+      <span class="save-state" id="saveState">Saved · on this device only</span>
+    </div>
+  </section>
+
+  <footer class="bottom">
+    <div>Box Inventory · ETB Day 2 · Map M04 · Anatomy of the Box</div>
+    <div>Source: Day 02 module + M04 Map Note</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const LAYERS = {
+  surface: {
+    ord: 'I',
+    name: 'Surface',
+    italic: 'behaviors, habits, automatic moves.',
+    tag: 'LAYER I · OUTERMOST',
+    function: 'The visible layer. What you do without deciding. The reactions, tics, and habits that happen before thought. Easiest to see once pointed out — and most learners are stunned by how much Box becomes visible here.',
+    examples: [
+      'I laugh when someone is angry',
+      'I check my phone the second a silence starts',
+      'I say "I\'m fine" before I check',
+      'I take on the work nobody asked me to take on',
+      'I make a joke when the room gets sincere'
+    ],
+    placeholders: [
+      'One automatic move I make…',
+      'A sentence that comes out of me unbidden…',
+      'A reaction I have without deciding to have it…'
+    ]
+  },
+  story: {
+    ord: 'II',
+    name: 'Story',
+    italic: 'beliefs, rules, conclusions.',
+    tag: 'LAYER II · MIDDLE',
+    function: 'The unwritten rules underneath the surface behaviors. Semi-visible — findable with some looking. The "of course" statements the Box treats as facts about how the world is.',
+    examples: [
+      'If I disagree, they will leave',
+      'I have to be useful to be loved',
+      'It is not safe to need things',
+      'I cannot afford to be wrong',
+      'Other people\'s feelings are my job'
+    ],
+    placeholders: [
+      'A rule I follow without remembering deciding to…',
+      'A belief that runs underneath my reactions…',
+      'A conclusion the Box treats as fact…'
+    ]
+  },
+  survival: {
+    ord: 'III',
+    name: 'Survival',
+    italic: 'identity-level commitments.',
+    tag: 'LAYER III · DEEPEST',
+    function: 'Commitments formed in childhood in response to threat. Identity-level — where the Box says, often without words, "if I let this go I will die." Reach for these only with care. Day 2 stays at surface and story on purpose.',
+    examples: [
+      'I will never let myself be that small again',
+      'I have to stay in control or something terrible happens',
+      'If I am seen, I am in danger',
+      'I do not get to want what I want'
+    ],
+    placeholders: [
+      'An old commitment I sense underneath the story…',
+      'Something I built early to stay safe…',
+      'A line I will not cross — without knowing why…'
+    ]
+  }
+};
+
+const STORE_KEY = 'etb_day02_box_inventory';
+const REFLECT_KEY = 'etb_day02_reflection';
+
+let currentLayer = null;
+let inventory = { surface: ['', '', ''], story: ['', '', ''], survival: ['', '', ''] };
+/* Survival-layer consent is intentionally per-visit: it lives only in memory
+   and is never persisted to localStorage. Every page load re-arms the gate. */
+let consentGiven = false;
+
+/* fire the element's click on Enter/Space for keyboard operability */
+function keyActivate(el){ el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } }); }
+
+/* ---------- load ---------- */
+function load() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+    if (stored && stored.surface && stored.story && stored.survival) {
+      inventory = stored;
+    }
+  } catch (e) {}
+  try {
+    const r = localStorage.getItem(REFLECT_KEY);
+    if (r) document.getElementById('reflectText').value = r;
+  } catch (e) {}
+  /* consent is deliberately NOT loaded from storage — per-visit only */
+}
+
+/* ---------- save (debounced) ---------- */
+let saveTimer;
+function persist() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem(STORE_KEY, JSON.stringify(inventory));
+    localStorage.setItem(REFLECT_KEY, document.getElementById('reflectText').value);
+    flashSave();
+  }, 350);
+}
+
+function flashSave() {
+  const el = document.getElementById('saveState');
+  el.classList.add('show');
+  clearTimeout(flashSave._t);
+  flashSave._t = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+/* ---------- layer selection ---------- */
+function selectLayer(layer, focusPanel = true) {
+  if (layer === 'survival' && !consentGiven) {
+    showConsent();
+    pendingLayer = 'survival';
+    return;
+  }
+  currentLayer = layer;
+  document.getElementById('panelEmpty').style.display = 'none';
+  document.getElementById('panelContent').classList.add('show');
+  document.getElementById('consentShield').classList.remove('show');
+  renderPanel(layer);
+  updateLayerVisual();
+  if (focusPanel) {
+    const heading = document.getElementById('panelTitle');
+    heading.setAttribute('tabindex', '-1');
+    heading.focus({ preventScroll: true });
+  }
+}
+
+let pendingLayer = null;
+function showConsent() {
+  document.getElementById('panelEmpty').style.display = 'none';
+  document.getElementById('panelContent').classList.remove('show');
+  document.getElementById('consentShield').classList.add('show');
+  // light up the survival layer rect in active state
+  ['surface', 'story', 'survival'].forEach(l => {
+    const rect = document.getElementById('rect' + cap(l));
+    const label = document.getElementById('label' + cap(l));
+    rect.classList.remove('active');
+    label.classList.remove('active');
+    if (hasContent(l)) rect.classList.add('filled');
+    else rect.classList.remove('filled');
+  });
+  document.getElementById('rectSurvival').classList.add('active');
+  document.getElementById('labelSurvival').classList.add('active');
+  const heading = document.querySelector('#consentShield h3');
+  if (heading) {
+    heading.setAttribute('tabindex', '-1');
+    heading.focus({ preventScroll: true });
+  }
+}
+
+function acceptConsent() {
+  consentGiven = true; /* in-memory only; never written to localStorage */
+  selectLayer(pendingLayer || 'survival');
+  pendingLayer = null;
+}
+function declineConsent() {
+  pendingLayer = null;
+  document.getElementById('consentShield').classList.remove('show');
+  // return to story if any, else empty state
+  if (currentLayer && currentLayer !== 'survival') {
+    selectLayer(currentLayer);
+  } else {
+    document.getElementById('panelEmpty').style.display = 'block';
+    document.getElementById('panelContent').classList.remove('show');
+    currentLayer = null;
+    updateLayerVisual();
+  }
+}
+
+function renderPanel(layer) {
+  const L = LAYERS[layer];
+  document.getElementById('panelTag').textContent = L.tag;
+  document.getElementById('panelLayerNum').textContent = `${L.ord} · OF III`;
+  document.getElementById('panelTitle').innerHTML = `${L.name} <em>— ${L.italic}</em>`;
+  document.getElementById('panelFunction').textContent = L.function;
+  document.getElementById('panelExamplesItems').innerHTML =
+    L.examples.map(e => `<span class="ex-item">${escapeHtml(e)}</span>`).join('');
+
+  // build inputs
+  const inputs = document.getElementById('invInputs');
+  inputs.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const row = document.createElement('div');
+    row.className = 'inv-row';
+    row.innerHTML = `
+      <div class="marker" aria-hidden="true">${i + 1}.</div>
+      <textarea
+        class="inv-input"
+        data-slot="${i}"
+        rows="1"
+        aria-label="${L.name} layer — item ${i + 1} of 3"
+        placeholder="${L.placeholders[i]}"
+        oninput="onItemInput(this)"
+      >${escapeHtml(inventory[layer][i] || '')}</textarea>
+    `;
+    inputs.appendChild(row);
+  }
+  // auto-grow existing
+  inputs.querySelectorAll('textarea').forEach(autoGrow);
+  updateInvCount();
+}
+
+function onItemInput(el) {
+  if (!currentLayer) return;
+  const slot = parseInt(el.dataset.slot, 10);
+  inventory[currentLayer][slot] = el.value;
+  autoGrow(el);
+  updateInvCount();
+  renderLayerItems(currentLayer);
+  updateLayerVisual();
+  updateProgressDots();
+  persist();
+}
+
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.max(44, el.scrollHeight) + 'px';
+}
+
+function updateInvCount() {
+  if (!currentLayer) return;
+  const filled = inventory[currentLayer].filter(v => v.trim()).length;
+  document.getElementById('invCount').textContent = `${filled} / 3`;
+}
+
+/* ---------- diagram visualization ---------- */
+function hasContent(layer) {
+  return inventory[layer].some(v => v.trim());
+}
+
+function updateLayerVisual() {
+  ['surface', 'story', 'survival'].forEach(l => {
+    const rect = document.getElementById('rect' + cap(l));
+    const label = document.getElementById('label' + cap(l));
+    rect.classList.remove('active', 'filled');
+    label.classList.remove('active');
+    if (hasContent(l)) rect.classList.add('filled');
+    if (l === currentLayer) {
+      rect.classList.add('active');
+      label.classList.add('active');
+    }
+  });
+}
+
+/* render the item labels INSIDE the SVG rect for the given layer */
+function renderLayerItems(layer) {
+  const g = document.getElementById('items' + cap(layer));
+  g.innerHTML = '';
+  const items = inventory[layer].filter(v => v.trim());
+  // positions depend on layer rect geometry
+  // Surface rect: x=20-440, y=20-540 — fill space around the inner rects (top band & bottom band & side strips)
+  // Story rect:   x=68-392, y=120-440
+  // Survival rect:x=130-330, y=220-380
+  const positions = {
+    surface: [
+      { x: 230, y: 78, anchor: 'middle' },
+      { x: 230, y: 488, anchor: 'middle' },
+      { x: 230, y: 510, anchor: 'middle' }
+    ],
+    story: [
+      { x: 230, y: 178, anchor: 'middle' },
+      { x: 230, y: 410, anchor: 'middle' },
+      { x: 230, y: 428, anchor: 'middle' }
+    ],
+    survival: [
+      { x: 230, y: 295, anchor: 'middle' },
+      { x: 230, y: 326, anchor: 'middle' },
+      { x: 230, y: 348, anchor: 'middle' }
+    ]
+  };
+  items.forEach((txt, i) => {
+    const pos = positions[layer][i] || positions[layer][positions[layer].length - 1];
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('class', 'layer-item-text');
+    t.setAttribute('x', pos.x);
+    t.setAttribute('y', pos.y);
+    t.setAttribute('text-anchor', pos.anchor);
+    // limit text length for SVG legibility
+    const display = txt.length > 48 ? txt.slice(0, 46) + '…' : txt;
+    t.textContent = '"' + display + '"';
+    g.appendChild(t);
+  });
+}
+
+function renderAllItems() {
+  ['surface', 'story', 'survival'].forEach(renderLayerItems);
+}
+
+/* ---------- progress dots ---------- */
+function updateProgressDots() {
+  ['surface', 'story', 'survival'].forEach(l => {
+    document.getElementById('dot' + cap(l)).classList.toggle('done', hasContent(l));
+  });
+  const r = document.getElementById('reflectText').value.trim();
+  document.getElementById('dotReflect').classList.toggle('done', r.length > 0);
+}
+
+/* ---------- bulk actions ---------- */
+function saveAll() {
+  clearTimeout(saveTimer);
+  localStorage.setItem(STORE_KEY, JSON.stringify(inventory));
+  localStorage.setItem(REFLECT_KEY, document.getElementById('reflectText').value);
+  showToast('Saved · on this device only');
+  flashSave();
+}
+
+function clearAll() {
+  if (!confirm('Clear all inventory and reflection from this device? This cannot be undone.')) return;
+  inventory = { surface: ['', '', ''], story: ['', '', ''], survival: ['', '', ''] };
+  document.getElementById('reflectText').value = '';
+  localStorage.removeItem(STORE_KEY);
+  localStorage.removeItem(REFLECT_KEY);
+  if (currentLayer) renderPanel(currentLayer);
+  renderAllItems();
+  updateLayerVisual();
+  updateProgressDots();
+  showToast('Cleared');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ---------- utils ---------- */
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+/* ---------- wire up ---------- */
+window.addEventListener('DOMContentLoaded', () => {
+  load();
+
+  // attach handlers to layer rectangles AND labels
+  ['surface', 'story', 'survival'].forEach(l => {
+    const rect = document.getElementById('rect' + cap(l));
+    const label = document.getElementById('label' + cap(l));
+    rect.addEventListener('click', () => selectLayer(l));
+    keyActivate(rect);
+    label.addEventListener('click', () => selectLayer(l));
+    label.style.cursor = 'pointer';
+  });
+
+  // reflection auto-save
+  document.getElementById('reflectText').addEventListener('input', () => {
+    updateProgressDots();
+    persist();
+  });
+
+  // initial state: render any pre-filled items in their layers
+  renderAllItems();
+  updateLayerVisual();
+  updateProgressDots();
+
+  // if there's prior content, open whichever layer was last filled — else stay on empty state
+  const lastFilled = ['survival', 'story', 'surface'].find(hasContent);
+  if (lastFilled) {
+    selectLayer(lastFilled, false);
+  }
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

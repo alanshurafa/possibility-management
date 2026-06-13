@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ego State Locator · ETB Day 9</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --mustard-deep: #b8902c;
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* the five ego-state accents */
+  --parent: #b8902c;        /* mustard, deepened for legibility */
+  --adult: #4a6b7c;         /* sky / clear blue */
+  --child: #8a6a3f;         /* warm brown */
+  --gremlin: #c43b1c;       /* vermillion */
+  --demon: #1a1410;         /* deep ink */
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+/* consent block, HIGH intensity */
+.consent {
+  margin: 36px 0 32px;
+  border: 1.5px solid var(--ink);
+  background: var(--ivory-deep);
+  padding: 28px 32px 26px;
+  position: relative;
+}
+.consent::before {
+  content: 'HIGH INTENSITY · CONSENT REQUIRED';
+  position: absolute;
+  top: -11px;
+  left: 24px;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  padding: 4px 12px;
+  font-weight: 600;
+}
+.consent h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 24px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 14px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.consent h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.consent p {
+  font-family: var(--body);
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+.consent p strong { color: var(--ink); font-weight: 600; }
+.consent ul {
+  margin: 12px 0 18px 4px;
+  padding-left: 0;
+}
+.consent ul li {
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  padding: 4px 0 4px 22px;
+  position: relative;
+  list-style: none;
+}
+.consent ul li::before {
+  content: '·';
+  position: absolute;
+  left: 8px;
+  color: var(--vermillion);
+  font-weight: 700;
+}
+.consent .warn-callout {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: var(--vermillion-soft);
+  border-left: 3px solid var(--vermillion);
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.consent .warn-callout strong {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.consent .consent-action {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.consent .consent-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  user-select: none;
+}
+.consent .consent-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--vermillion);
+  cursor: pointer;
+}
+
+.gated {
+  opacity: 0.35;
+  pointer-events: none;
+  filter: grayscale(0.4);
+  transition: opacity 0.35s, filter 0.35s;
+}
+.gated.open {
+  opacity: 1;
+  pointer-events: auto;
+  filter: none;
+}
+
+/* hero */
+.hero { margin: 56px 0 32px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 720px;
+  font-style: italic;
+}
+
+/* input area — sentence */
+.input-area {
+  margin: 48px 0 32px;
+  padding: 36px 40px;
+  background: var(--ivory-shade);
+  border-left: 4px solid var(--vermillion);
+  position: relative;
+}
+.input-area .prompt {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.input-area h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+.input-area h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+textarea.main-input {
+  width: 100%;
+  padding: 22px 26px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 24px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.4;
+}
+textarea.main-input:focus {
+  outline: none;
+  border-color: var(--ink);
+  background: white;
+}
+.input-area .note {
+  margin-top: 14px;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-mute);
+  line-height: 1.5;
+}
+
+/* step heading */
+.step-head {
+  margin: 56px 0 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.step-head .num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 500;
+}
+.step-head h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 36px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.step-head h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.step-head .sub {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-mute);
+  margin-left: auto;
+}
+
+/* the SVG map */
+.map-wrap {
+  margin: 8px 0 8px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  align-items: center;
+}
+@media (max-width: 900px) { .map-wrap { grid-template-columns: 1fr; } }
+
+.svg-frame {
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--rule);
+  padding: 20px;
+  position: relative;
+  min-height: 480px;
+}
+.svg-frame::before {
+  content: 'M17 · the five states';
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+#ego-map { width: 100%; height: auto; display: block; }
+
+.map-key {
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.map-key h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 24px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 14px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.map-key h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.map-key p { margin-bottom: 10px; }
+.map-key p:last-child { margin-bottom: 0; }
+.map-key em { color: var(--ink); font-style: italic; }
+.map-key .key-quote {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+/* SVG node states */
+.node-circle {
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.node-group:hover .node-circle,
+.node-group.active .node-circle {
+  stroke-width: 4;
+  filter: drop-shadow(0 4px 10px rgba(14, 10, 5, 0.18));
+}
+.node-group.active .node-label {
+  font-weight: 700;
+}
+.node-label {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px;
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  pointer-events: none;
+  text-anchor: middle;
+}
+.node-stance {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 11px;
+  font-style: italic;
+  fill: rgba(14, 10, 5, 0.6);
+  pointer-events: none;
+  text-anchor: middle;
+}
+.connector {
+  stroke: rgba(184, 169, 138, 0.55);
+  stroke-width: 0.8;
+  stroke-dasharray: 3 3;
+  fill: none;
+}
+.center-glyph {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  fill: var(--ink-mute);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* state cards */
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 24px;
+  margin: 36px 0;
+}
+
+.state-card {
+  background: var(--ivory);
+  border: 1.5px solid var(--ink);
+  padding: 30px 28px 26px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+.state-card.highlighted {
+  background: var(--ivory-shade);
+  box-shadow: 0 12px 32px rgba(14, 10, 5, 0.14);
+  transform: translateY(-2px);
+}
+.state-card .state-tag {
+  position: absolute;
+  top: -10px;
+  left: 22px;
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+  color: var(--ivory);
+}
+.state-card[data-state="parent"] .state-tag { background: var(--parent); }
+.state-card[data-state="adult"] .state-tag { background: var(--adult); }
+.state-card[data-state="child"] .state-tag { background: var(--child); }
+.state-card[data-state="gremlin"] .state-tag { background: var(--gremlin); }
+.state-card[data-state="demon"] .state-tag { background: var(--demon); }
+
+.state-card .state-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  margin-bottom: 4px;
+}
+.state-card h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 36px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+.state-card h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+.state-card[data-state="parent"] h3 em { color: var(--parent); }
+.state-card[data-state="adult"] h3 em { color: var(--adult); }
+.state-card[data-state="child"] h3 em { color: var(--child); }
+.state-card[data-state="gremlin"] h3 em { color: var(--gremlin); }
+.state-card[data-state="demon"] h3 em { color: var(--demon); }
+
+.state-card .flavors {
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink-mute);
+  font-style: italic;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.state-card .flavors strong { color: var(--ink); font-weight: 600; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.state-card .stance {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.state-card .section-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.state-card .markers {
+  margin-bottom: 20px;
+}
+.state-card .markers li {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.35;
+  list-style: none;
+  padding: 4px 0;
+  padding-left: 18px;
+  position: relative;
+}
+.state-card .markers li::before {
+  content: '\201C';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  font-size: 22px;
+  color: var(--rule);
+  font-style: normal;
+}
+
+.state-card .body-cues {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: var(--ivory-shade);
+  border-left: 3px solid var(--ink-mute);
+}
+.state-card[data-state="parent"] .body-cues { border-left-color: var(--parent); }
+.state-card[data-state="adult"] .body-cues { border-left-color: var(--adult); }
+.state-card[data-state="child"] .body-cues { border-left-color: var(--child); }
+.state-card[data-state="gremlin"] .body-cues { border-left-color: var(--gremlin); }
+.state-card[data-state="demon"] .body-cues { border-left-color: var(--demon); }
+.state-card .body-cues .section-title { margin-bottom: 6px; }
+.state-card .body-cues li {
+  font-family: var(--body);
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.45;
+  list-style: none;
+  padding: 2px 0;
+}
+.state-card .body-cues li::before {
+  content: '— ';
+  color: var(--ink-mute);
+}
+
+.state-card .rephrase-area {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+.state-card .rephrase-area .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+}
+.state-card .rephrase-area textarea {
+  width: 100%;
+  min-height: 64px;
+  padding: 12px 14px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.4;
+}
+.state-card[data-state="parent"] .rephrase-area textarea:focus { border-color: var(--parent); outline: none; background: var(--ivory); }
+.state-card[data-state="adult"] .rephrase-area textarea:focus { border-color: var(--adult); outline: none; background: var(--ivory); }
+.state-card[data-state="child"] .rephrase-area textarea:focus { border-color: var(--child); outline: none; background: var(--ivory); }
+.state-card[data-state="gremlin"] .rephrase-area textarea:focus { border-color: var(--gremlin); outline: none; background: var(--ivory); }
+.state-card[data-state="demon"] .rephrase-area textarea:focus { border-color: var(--demon); outline: none; background: var(--ivory); }
+
+/* Demon card — special tone */
+.state-card[data-state="demon"] {
+  background: #1a1410;
+  color: var(--ivory);
+  border-color: var(--demon);
+}
+.state-card[data-state="demon"]::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 16px;
+  height: 16px;
+  background: var(--mustard);
+}
+.state-card[data-state="demon"] h3 { color: var(--ivory); }
+.state-card[data-state="demon"] h3 em { color: var(--mustard); }
+.state-card[data-state="demon"] .stance,
+.state-card[data-state="demon"] .markers li,
+.state-card[data-state="demon"] .body-cues li { color: var(--ivory); }
+.state-card[data-state="demon"] .flavors { color: rgba(244, 236, 220, 0.7); }
+.state-card[data-state="demon"] .flavors strong { color: var(--mustard); }
+.state-card[data-state="demon"] .stance { border-bottom-color: rgba(184, 169, 138, 0.25); }
+.state-card[data-state="demon"] .section-title { color: rgba(244, 236, 220, 0.55); }
+.state-card[data-state="demon"] .markers li::before { color: rgba(184, 169, 138, 0.45); }
+.state-card[data-state="demon"] .body-cues {
+  background: rgba(244, 236, 220, 0.06);
+  border-left-color: var(--mustard);
+}
+.state-card[data-state="demon"] .body-cues li::before { color: rgba(244, 236, 220, 0.45); }
+.state-card[data-state="demon"] .rephrase-area { border-top-color: rgba(184, 169, 138, 0.25); }
+.state-card[data-state="demon"] .rephrase-area .label { color: rgba(244, 236, 220, 0.55); }
+.state-card[data-state="demon"] .rephrase-area textarea {
+  background: rgba(244, 236, 220, 0.06);
+  color: var(--ivory);
+  border-color: rgba(184, 169, 138, 0.3);
+}
+.state-card[data-state="demon"] .rephrase-area textarea:focus {
+  background: rgba(244, 236, 220, 0.12);
+  border-color: var(--mustard);
+}
+.state-card[data-state="demon"] .rephrase-area textarea::placeholder { color: rgba(244, 236, 220, 0.4); }
+.state-card[data-state="demon"] .state-num { color: rgba(244, 236, 220, 0.55); }
+
+/* PICK STEP — single-select */
+.pick-step {
+  margin: 24px 0;
+  padding: 32px 36px;
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--ink);
+  position: relative;
+}
+.pick-step h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 26px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.pick-step h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.pick-step .nudge {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 15.5px;
+  color: var(--ink-mute);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.pick-options {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 8px;
+}
+@media (max-width: 720px) {
+  .pick-options { grid-template-columns: repeat(2, 1fr); }
+}
+.pick-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 16px 12px;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.pick-btn:hover { border-color: var(--ink); }
+.pick-btn.selected[data-state="parent"] { background: var(--parent); border-color: var(--parent); color: var(--ivory); }
+.pick-btn.selected[data-state="adult"] { background: var(--adult); border-color: var(--adult); color: var(--ivory); }
+.pick-btn.selected[data-state="child"] { background: var(--child); border-color: var(--child); color: var(--ivory); }
+.pick-btn.selected[data-state="gremlin"] { background: var(--gremlin); border-color: var(--gremlin); color: var(--ivory); }
+.pick-btn.selected[data-state="demon"] { background: var(--demon); border-color: var(--demon); color: var(--mustard); }
+
+.adult-spotlight {
+  display: none;
+  margin: 24px 0 4px;
+  padding: 28px 30px;
+  background: var(--ivory);
+  border: 1.5px solid var(--adult);
+  border-left: 6px solid var(--adult);
+}
+.adult-spotlight.show { display: block; }
+.adult-spotlight .ack {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--adult);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.adult-spotlight h4 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 10px;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.adult-spotlight h4 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--adult);
+}
+.adult-spotlight .stance {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+.adult-spotlight .markers {
+  margin-bottom: 18px;
+}
+.adult-spotlight .markers li {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.4;
+  list-style: none;
+  padding: 4px 0 4px 18px;
+  position: relative;
+}
+.adult-spotlight .markers li::before {
+  content: '\201C';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  font-size: 22px;
+  color: var(--adult);
+  font-style: normal;
+  opacity: 0.5;
+}
+.adult-spotlight .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+.adult-spotlight textarea {
+  width: 100%;
+  min-height: 76px;
+  padding: 14px 16px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.4;
+}
+.adult-spotlight textarea:focus { outline: none; border-color: var(--adult); background: white; }
+
+/* save / actions */
+.actions-row {
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  align-items: center;
+  margin: 36px 0 16px;
+  flex-wrap: wrap;
+}
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+
+.save-note {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-mute);
+  line-height: 1.5;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+/* log */
+.log {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  display: none;
+}
+.log.show { display: block; }
+.log h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+.log .lead {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-mute);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.log-item {
+  padding: 18px 0;
+  border-bottom: 1px dashed var(--rule);
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  .log-item { grid-template-columns: 1fr; gap: 8px; }
+}
+.log-item .when {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-top: 4px;
+}
+.log-item .content .said {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.log-item .content .said::before { content: '\201C'; color: var(--rule); margin-right: 2px; }
+.log-item .content .said::after { content: '\201D'; color: var(--rule); margin-left: 2px; }
+.log-item .content .from {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.log-item .content .from .pill {
+  display: inline-block;
+  padding: 3px 10px;
+  color: var(--ivory);
+  font-weight: 600;
+}
+.log-item .content .from .pill[data-state="parent"] { background: var(--parent); }
+.log-item .content .from .pill[data-state="adult"] { background: var(--adult); }
+.log-item .content .from .pill[data-state="child"] { background: var(--child); }
+.log-item .content .from .pill[data-state="gremlin"] { background: var(--gremlin); }
+.log-item .content .from .pill[data-state="demon"] { background: var(--demon); color: var(--mustard); }
+.log-item .content .adult-said {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  background: var(--ivory-shade);
+  border-left: 3px solid var(--adult);
+  padding: 8px 12px;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+.log-item .content .adult-said::before {
+  content: 'Adult \2192 ';
+  font-family: var(--mono);
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--adult);
+  margin-right: 4px;
+}
+.log-item .del {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.log-item .del:hover { color: var(--vermillion); }
+
+.pattern-summary {
+  margin-top: 20px;
+  padding: 16px 18px;
+  background: var(--ivory-deep);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.pattern-summary strong { color: var(--ink); font-weight: 600; }
+.pattern-summary .tally {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  display: inline-block;
+  margin-right: 14px;
+  margin-top: 8px;
+}
+.pattern-summary .tally span {
+  display: inline-block;
+  padding: 2px 8px;
+  color: var(--ivory);
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+/* demon note — special bounded footer */
+.demon-note {
+  margin: 56px 0 0;
+  padding: 32px 36px;
+  background: #1a1410;
+  color: var(--ivory);
+  border: 1.5px solid var(--demon);
+  position: relative;
+}
+.demon-note::before {
+  content: 'DEMON · BOUNDED NOTE';
+  position: absolute;
+  top: -11px;
+  left: 24px;
+  background: var(--mustard);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  padding: 4px 12px;
+  font-weight: 700;
+}
+.demon-note h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 26px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  color: var(--ivory);
+}
+.demon-note h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--mustard);
+}
+.demon-note p {
+  font-family: var(--body);
+  font-size: 16px;
+  color: rgba(244, 236, 220, 0.88);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.demon-note p:last-child { margin-bottom: 0; }
+.demon-note strong { color: var(--mustard); font-weight: 500; }
+.demon-note .crisis {
+  margin-top: 18px;
+  padding: 14px 18px;
+  background: rgba(196, 59, 28, 0.18);
+  border-left: 3px solid var(--vermillion);
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ivory);
+  line-height: 1.55;
+}
+.demon-note .crisis strong {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* PM voice block */
+.pm-voice {
+  margin: 56px 0 8px;
+  padding: 28px 32px;
+  background: var(--ivory-shade);
+  border-left: 4px solid var(--mustard);
+}
+.pm-voice .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard-deep);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+.pm-voice blockquote {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--ink);
+  line-height: 1.5;
+  padding: 6px 0;
+  border-left: none;
+  margin: 0;
+}
+.pm-voice blockquote + blockquote { padding-top: 10px; border-top: 1px dashed var(--rule); margin-top: 10px; }
+
+footer.bottom {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .wrap { padding: 24px 20px 60px; }
+  .input-area { padding: 24px 20px; }
+  .pick-step { padding: 24px 20px; }
+  .demon-note { padding: 24px 22px; }
+  .pm-voice { padding: 22px 20px; }
+  h1.display { font-size: clamp(36px, 8vw, 64px); }
+}
+
+/* ============================================================
+   SAFETY — GROUND NOW affordance + grounding modal
+   (pattern adapted from Day 7 drama-detector, Day 9 tokens)
+   ============================================================ */
+
+/* GROUND NOW — floating safety button (visible from the gate screen, the whole visit) */
+.ground-now {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  background: var(--vermillion);
+  color: var(--ivory);
+  border: 2px solid var(--vermillion-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 22px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(196, 59, 28, 0.28);
+  transition: all 0.25s ease;
+  line-height: 1.1;
+  display: none;
+}
+.ground-now.show { display: block; }
+.ground-now:hover {
+  background: var(--vermillion-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(196, 59, 28, 0.36);
+}
+.ground-now:focus-visible { outline: 3px solid var(--ivory); outline-offset: 2px; }
+.ground-now .small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* modal — grounding overlay */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(14, 10, 5, 0.86);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.modal.show { display: flex; }
+.modal-inner {
+  max-width: 620px;
+  width: 100%;
+  background: var(--ivory);
+  border: 2px solid var(--vermillion);
+  padding: 44px 40px 36px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-inner::before {
+  content: 'GROUNDING · 60 SECONDS';
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.modal-inner h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.modal-inner ol {
+  margin: 0 0 22px 22px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.modal-inner ol li { margin-bottom: 12px; }
+.modal-inner ol li strong { color: var(--ink); }
+.modal-inner .session-paused {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+.modal-inner .modal-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+@media (max-width: 900px) {
+  .ground-now { top: 16px; right: 16px; padding: 12px 16px; font-size: 11px; }
+  .modal-inner { padding: 36px 24px 28px; }
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<!-- floating safety button — revealed once the tool body is unlocked -->
+<button class="ground-now show" id="groundNowBtn" onclick="openGround()" aria-label="Ground now — open a 60-second grounding pause">
+  GROUND NOW
+  <span class="small">60-second pause</span>
+</button>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 09</span> · EXPAND THE BOX · Ego State Locator
+    </div>
+    <a href="index.html">All Day 9 tools</a>
+  </header>
+
+  <!-- HIGH consent prompt -->
+  <section class="consent" id="consentBlock">
+    <h2>Before you <em>begin.</em></h2>
+    <p>
+      This tool engages <strong>ego state material</strong> directly — including the Gremlin and the Demon.
+      Material that has been managed by performance, identification, or denial may surface.
+    </p>
+    <div class="warn-callout">
+      <strong>Particular caution</strong>
+      Archetypal and ego-state language can amplify <em>mania, psychosis, or spiritual emergency</em>. If you have
+      any history of those — diagnosed or suspected — work with a clinician alongside this tool. The Demon section here is
+      deliberately small and bounded. <em>Do not expand the Demon work solo.</em>
+    </div>
+    <p>Before continuing, confirm to yourself:</p>
+    <ul>
+      <li>My partner is reachable today and tomorrow.</li>
+      <li>I have at least 30 uninterrupted minutes ahead of me.</li>
+      <li>I am not in acute crisis or under the influence right now.</li>
+      <li>I know how to ground — and the GROUND NOW button (top right) is there the whole time.</li>
+      <li>I know how to reach the Course Manager if I need to.</li>
+      <li>If the intake mania/psychosis screen applied to me, my clinician has confirmed in writing that I may do Day 9 work.</li>
+    </ul>
+    <div class="consent-action">
+      <label class="consent-check">
+        <input type="checkbox" id="consentBox" onchange="onConsent()">
+        I have read the above. I am choosing to continue.
+      </label>
+      <button class="btn ghost" onclick="window.location.href='index.html'">Step back</button>
+    </div>
+  </section>
+
+  <div id="toolBody" class="gated" inert>
+
+    <section class="hero">
+      <div class="eyebrow">Day 9 · Interactive Practice · the five-state lens</div>
+      <h1 class="display">Five <em>states.</em> One sentence.<br>Where did it come from?</h1>
+      <p class="lede">
+        Take something you said — out loud or in your head — and locate which ego state it came from.
+        The tool gives you the linguistic markers and the body cues for each. Honest answers are usually surprising.
+      </p>
+    </section>
+
+    <!-- STEP 1: the sentence -->
+    <div class="step-head">
+      <div class="num">Step 1</div>
+      <h2>The <em>sentence.</em></h2>
+    </div>
+    <div class="input-area">
+      <div class="prompt">What you said</div>
+      <h2>Type something you said — out loud or in your head — <em>recently.</em></h2>
+      <textarea class="main-input" id="mainInput" aria-label="Type something you said, out loud or in your head, recently" placeholder="e.g. They should know better than to put this on me." rows="2"></textarea>
+      <p class="note">
+        One sentence is enough. The shorter and more honest, the easier to locate.
+        If nothing comes to mind, listen to the next five minutes of your own internal monologue and write down one line.
+      </p>
+    </div>
+
+    <!-- STEP 2: the five-state map -->
+    <div class="step-head">
+      <div class="num">Step 2</div>
+      <h2>The five-state <em>map.</em></h2>
+      <div class="sub">click a node to highlight its card below</div>
+    </div>
+
+    <div class="map-wrap">
+      <div class="svg-frame">
+        <svg id="ego-map" viewBox="0 0 560 520" xmlns="http://www.w3.org/2000/svg" aria-label="Five ego states arranged in a circle with connecting lines">
+          <!-- connectors: every node to every other node (suggests possible switching) -->
+          <g id="connectors"></g>
+
+          <!-- center caption -->
+          <text class="center-glyph" x="280" y="252">which state</text>
+          <text class="center-glyph" x="280" y="266">is on the line</text>
+          <text class="center-glyph" x="280" y="280">right now?</text>
+
+          <!-- node groups injected by JS -->
+          <g id="nodes"></g>
+        </svg>
+      </div>
+
+      <div class="map-key">
+        <h3>Five <em>locations,</em> not personality types.</h3>
+        <p>You move in and out of all five — sometimes within a single sentence. The map is the lens that lets you notice <em>which one is on the line right now</em>.</p>
+        <p>Parent at the top. Adult to the right. Child below. Gremlin at the lower left. Demon at the left — small, bounded, named on purpose.</p>
+        <div class="key-quote">
+          The point of the lens is not to be in Adult all the time. No one is. The point is to <em>see</em> which state is here, so you can decide whether to speak from it.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: the 5 cards -->
+    <div class="step-head">
+      <div class="num">Step 3</div>
+      <h2>The <em>markers.</em></h2>
+      <div class="sub">read each. fill the rephrase boxes you actually use.</div>
+    </div>
+
+    <div class="state-grid" id="stateGrid"><!-- populated by JS --></div>
+
+    <!-- STEP 4: pick + adult re-rephrase -->
+    <div class="step-head">
+      <div class="num">Step 4</div>
+      <h2>Pick the <em>actual</em> state.</h2>
+    </div>
+    <div class="pick-step">
+      <h3>Which state did your sentence <em>actually</em> come from?</h3>
+      <p class="nudge">
+        Be honest. Most learners think they're in Adult when they're in Critical Parent or Gremlin.
+        The body knows. Ask your body, not your story about yourself.
+        <em>The Adult is the rarest of the five.</em>
+      </p>
+      <div class="pick-options" id="pickOptions"><!-- populated by JS --></div>
+
+      <div class="adult-spotlight" id="adultSpotlight">
+        <div class="ack" id="ackText">Noticed. Now — what state would Adult say it from?</div>
+        <h4>Adult <em>rephrase.</em></h4>
+        <p class="stance">
+          Present-time grown human. Plain voice. Takes responsibility for what's yours, asks the other to take responsibility for what's theirs.
+          The posture is the least dramatic of the five.
+        </p>
+        <div class="section-title" style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 10px;">Adult sounds like —</div>
+        <ul class="markers">
+          <li>I am here. I can think clearly about this.</li>
+          <li>I am willing to take responsibility for my part.</li>
+          <li>I am asking you to take responsibility for yours.</li>
+          <li>Here is what I will do. Here is what I won't.</li>
+        </ul>
+        <div class="label">Now rephrase the same sentence from <em>Adult</em> →</div>
+        <textarea id="adultRephrase" aria-label="Rephrase the same sentence from Adult" placeholder="Same content. Plain voice. I-statement. Owns what's mine, asks for what I need."></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 5: save -->
+    <div class="step-head">
+      <div class="num">Step 5</div>
+      <h2><em>Log</em> the catch.</h2>
+    </div>
+    <div class="actions-row">
+      <p class="save-note">
+        Saved on this device only — never sent anywhere. The pattern emerges over weeks of catching yourself.
+        One sentence today is one rep. Twenty reps and you'll start seeing your default state from the outside.
+      </p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn primary" onclick="saveCatch()">Save this catch</button>
+        <button class="btn ghost" onclick="toggleLog()" id="logToggle">Show my state log</button>
+      </div>
+    </div>
+
+    <div class="log" id="logArea">
+      <h3>My state log <span style="font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--ink-mute); font-weight: 400;">— this device only</span></h3>
+      <p class="lead">Pattern emerges over weeks. Re-read this list after twenty catches and ask: which state is my default?</p>
+      <div id="logList"></div>
+      <div class="pattern-summary" id="patternSummary" style="display:none;"></div>
+    </div>
+
+    <!-- PM voice -->
+    <section class="pm-voice">
+      <div class="label">PM voice · keep these near</div>
+      <blockquote>"These are <em>locations</em> to speak from, not personality types."</blockquote>
+      <blockquote>"You don't <em>have</em> a Demon. You <em>can</em> speak from Demon. It's a place. The work is to know where you are when you're speaking."</blockquote>
+      <blockquote>"Most learners think they're in Adult when they're in Critical Parent or Gremlin. <em>The body knows. Ask your body.</em>"</blockquote>
+    </section>
+
+    <!-- Bounded Demon note -->
+    <section class="demon-note">
+      <h3>If your sentence came from <em>Demon</em> —</h3>
+      <p>
+        Notice it. The Demon is the part with the capacity for real harm. <strong>Not metaphor.</strong>
+        Every adult has one. The work in PM is not to integrate it, claim it, or perform it. The work is to <strong>know</strong> it.
+      </p>
+      <p>
+        If you have identified Demon today: <strong>name it.</strong> That is enough for this tool. Log it.
+        Voice-message your partner that you saw it. Ground. Drink water. Move on with your day.
+      </p>
+      <p>
+        Demon work that goes any further than naming requires a <strong>PM trainer or trauma-qualified clinician</strong> — see your referral list.
+        The <strong>GT Gremlin Transformation</strong> training is the longer container designed for this work. The Ego State Locator is the lens, not the journey.
+      </p>
+      <div class="crisis">
+        <strong>If the Demon is stirring action</strong>
+        If naming the Demon surfaces actual urges toward self-harm or harm to another person —
+        apply the buddy immediate-danger protocol (Doc 03 Section F) and the partner agreement (Doc 04 Section B). Crisis lines are in your referral packet.
+        Use them. The Demon being known is the work. The Demon driving action is the cue to reach for outside help, immediately, with no shame.
+      </div>
+    </section>
+
+  </div><!-- /toolBody -->
+
+  <footer class="bottom">
+    <div>Ego State Locator · ETB Day 9 · Map M17</div>
+    <div>Source: 16 - EgoStates_EN.mp4</div>
+  </footer>
+</div>
+
+<!-- modal: grounding (60-second sequence) -->
+<div class="modal" id="groundModal" role="dialog" aria-modal="true" aria-labelledby="groundModalTitle">
+  <div class="modal-inner">
+    <h2 id="groundModalTitle">Ground. <em>Now.</em></h2>
+    <ol>
+      <li><strong>Stop.</strong> Stand up — both feet on the floor. Feel the contact.</li>
+      <li><strong>Breathe out longer than in</strong> — three slow exhales, each longer than the in-breath.</li>
+      <li><strong>Name three things you can see</strong> in this room. Out loud is best.</li>
+      <li><strong>Name one thing you can hear.</strong> The fridge. Traffic. Your own breath.</li>
+      <li><strong>One hand on your sternum, one on your belly</strong> — notice your body is here.</li>
+      <li><strong>Then decide:</strong> continue, pause 10 minutes, or stop for today. Any of the three is fine.</li>
+    </ol>
+    <p class="session-paused">The locator is paused. Take as long as you need.</p>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="closeGround()">I'm grounded — continue</button>
+      <button class="btn ghost" onclick="window.location.href='index.html'">Stop — return to Day 9 tools</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   The five ego states — content
+   ========================================================================= */
+const STATES = [
+  {
+    key: 'parent',
+    num: 'I',
+    name: 'Parent',
+    italic: 'voice',
+    flavors: 'Critical Parent (judges) / Nurturing Parent (takes care of)',
+    stance: 'The internalized voices of authority — your literal parents plus every teacher, religion, culture, boss whose voice you absorbed. Useful in their place; tyrannical when the only state available.',
+    markers: [
+      "You should know better than that.",
+      "Good people don't do that.",
+      "That's not how this is done.",
+      "Let me take care of that for you."
+    ],
+    bodyCues: [
+      "Spine up, chin slightly raised, hands on hips or one finger pointing.",
+      "Jaw set; voice drops a register; eye contact becomes evaluation."
+    ],
+    angle: 270  /* top — 12 o'clock */
+  },
+  {
+    key: 'adult',
+    num: 'III',
+    name: 'Adult',
+    italic: 'home',
+    flavors: 'No flavors — one plain present-time state',
+    stance: 'The present-time grown human. Holds distinctions, contracts, chooses on purpose, takes responsibility. The state from which PM is practiced. When you cannot find your Adult, you cannot do PM.',
+    markers: [
+      "I am here. I can think clearly about this.",
+      "I am willing to take responsibility for my part.",
+      "Here is what I can do; here is what I can't.",
+      "I am asking you to take responsibility for yours."
+    ],
+    bodyCues: [
+      "Both feet on the floor. Knees soft. Shoulders down. Weight even. Eye level. Hands easy at your sides.",
+      "Breath is unforced. The posture is the least dramatic of the five — no performance."
+    ],
+    angle: 342  /* right, slightly above */
+  },
+  {
+    key: 'child',
+    num: 'II',
+    name: 'Child',
+    italic: 'self',
+    flavors: 'Free Child (spontaneous) / Adapted Child (performing safety)',
+    stance: 'Your actual childhood self, still alive in your nervous system. Free Child plays, delights, sulks, dances without shame. Adapted Child learned that being itself was unsafe — so it performs, complies, pleases, hides, or rebels.',
+    markers: [
+      "It's not fair. Why is this happening to me?",
+      "It's okay, I don't need anything.",
+      "I'm sorry, is that all right?",
+      "I want — let's — that looks fun."
+    ],
+    bodyCues: [
+      "Chin drops; shoulders round; weight comes down or you curl slightly inward.",
+      "Voice climbs in pitch; you feel suddenly small or much younger than your age."
+    ],
+    angle: 54  /* lower right */
+  },
+  {
+    key: 'gremlin',
+    num: 'IV',
+    name: 'Gremlin',
+    italic: 'food',
+    flavors: 'No flavors — distinct from the other four; eats drama, suffering, righteousness, distraction',
+    stance: 'Wants gremlin food. Speaks sotto voce — quieter than normal, almost muttered, conspiratorial. The voice passes for thought, for insight, for "what I really feel." It is none of those.',
+    markers: [
+      "They never appreciate you.",
+      "You're not actually going to do this, are you?",
+      "You're better than them anyway.",
+      "Just one more. Just give up. What's the point."
+    ],
+    bodyCues: [
+      "Slight hunch; one shoulder turned away; leaning in like at a bar telling a secret you shouldn't.",
+      "A small charge of pleasure — that is gremlin food. Notice it without indulging it."
+    ],
+    angle: 126  /* lower left */
+  },
+  {
+    key: 'demon',
+    num: 'V',
+    name: 'Demon',
+    italic: 'capacity',
+    flavors: 'No flavors — the part with the capacity for real harm. Known, not denied. Not romanticized as creative force.',
+    stance: 'The part of you with the capacity for real harm to self or others. Not metaphor. Every adult has one. The work is to know it, not integrate, claim, or perform it. A known Demon is far safer than an unknown one.',
+    markers: [
+      "I could destroy this and not regret it.",
+      "Part of me wants them to suffer for what they did.",
+      "I want to hurt them in the place I know it lands.",
+      "I could just disappear. They wouldn't even know."
+    ],
+    bodyCues: [
+      "Coldness, tightness, a strange calm, or no sensation at all — that absence is also data.",
+      "A specific stillness; the part of you that knows precisely where to put the knife, in the literal or the metaphorical sense."
+    ],
+    angle: 198  /* left, slightly below */
+  }
+];
+
+/* keep canonical render order = top, right, bottom-right, bottom-left, left */
+const RENDER_ORDER = ['parent', 'adult', 'child', 'gremlin', 'demon'];
+
+/* =========================================================================
+   Render the SVG five-state ring
+   ========================================================================= */
+function buildMap() {
+  const svg = document.getElementById('ego-map');
+  const nodesG = document.getElementById('nodes');
+  const connG = document.getElementById('connectors');
+
+  const cx = 280, cy = 260, r = 175;
+
+  // compute positions
+  const pos = {};
+  STATES.forEach(s => {
+    const rad = (s.angle * Math.PI) / 180;
+    pos[s.key] = { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  });
+
+  // connectors: every node to every other node — suggests switching
+  const keys = STATES.map(s => s.key);
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = i + 1; j < keys.length; j++) {
+      const a = pos[keys[i]], b = pos[keys[j]];
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('class', 'connector');
+      line.setAttribute('x1', a.x);
+      line.setAttribute('y1', a.y);
+      line.setAttribute('x2', b.x);
+      line.setAttribute('y2', b.y);
+      connG.appendChild(line);
+    }
+  }
+
+  // nodes
+  STATES.forEach(s => {
+    const p = pos[s.key];
+    const colorVar = `var(--${s.key})`;
+    const fill = s.key === 'demon' ? '#1a1410' : 'var(--ivory)';
+    const strokeColor = colorVar;
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'node-group');
+    g.setAttribute('data-state', s.key);
+    g.setAttribute('id', 'node-' + s.key);
+    g.setAttribute('role', 'button');
+    g.setAttribute('tabindex', '0');
+    g.setAttribute('aria-label', s.name + ' — highlight its card below');
+    g.style.cursor = 'pointer';
+    g.addEventListener('click', () => highlightCard(s.key));
+    g.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        highlightCard(s.key);
+      }
+    });
+    g.addEventListener('mouseenter', () => previewCard(s.key, true));
+    g.addEventListener('mouseleave', () => previewCard(s.key, false));
+
+    // outer ring
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('class', 'node-circle');
+    circle.setAttribute('cx', p.x);
+    circle.setAttribute('cy', p.y);
+    circle.setAttribute('r', s.key === 'demon' ? 46 : 52);
+    circle.setAttribute('fill', fill);
+    circle.setAttribute('stroke', strokeColor);
+    circle.setAttribute('stroke-width', 2.5);
+    g.appendChild(circle);
+
+    // demon gets a small mustard fleck
+    if (s.key === 'demon') {
+      const fleck = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      fleck.setAttribute('cx', p.x + 22);
+      fleck.setAttribute('cy', p.y - 22);
+      fleck.setAttribute('r', 4.5);
+      fleck.setAttribute('fill', 'var(--mustard)');
+      g.appendChild(fleck);
+    }
+
+    // name
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('class', 'node-label');
+    label.setAttribute('x', p.x);
+    label.setAttribute('y', p.y + 2);
+    label.setAttribute('fill', s.key === 'demon' ? 'var(--mustard)' : 'var(--ink)');
+    label.textContent = s.name;
+    g.appendChild(label);
+
+    // tiny stance line below name
+    const stance = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    stance.setAttribute('class', 'node-stance');
+    stance.setAttribute('x', p.x);
+    stance.setAttribute('y', p.y + 18);
+    stance.setAttribute('fill', s.key === 'demon' ? 'rgba(244, 236, 220, 0.6)' : 'rgba(14, 10, 5, 0.55)');
+    const shortStance = {
+      parent: 'authority voices',
+      adult: 'present-time, plain',
+      child: 'old self, still here',
+      gremlin: 'sotto voce',
+      demon: 'capacity for harm'
+    }[s.key];
+    stance.textContent = shortStance;
+    g.appendChild(stance);
+
+    nodesG.appendChild(g);
+  });
+}
+
+/* =========================================================================
+   Build the five state cards
+   ========================================================================= */
+function buildCards() {
+  const grid = document.getElementById('stateGrid');
+  // render in canonical order: Parent, Child, Adult, Gremlin, Demon
+  const cardOrder = ['parent', 'child', 'adult', 'gremlin', 'demon'];
+
+  grid.innerHTML = cardOrder.map(key => {
+    const S = STATES.find(s => s.key === key);
+    return `
+    <div class="state-card" data-state="${S.key}" id="card-${S.key}">
+      <div class="state-tag">${S.num} · ${S.name.toUpperCase()}</div>
+      <div class="state-num">State ${S.num}</div>
+      <h3>${S.name} <em>${S.italic}</em></h3>
+      <div class="flavors"><strong>Flavors</strong> &nbsp; ${escapeHtml(S.flavors)}</div>
+      <p class="stance">${escapeHtml(S.stance)}</p>
+
+      <div class="section-title">Linguistic markers — what it says</div>
+      <ul class="markers">
+        ${S.markers.map(m => `<li>${escapeHtml(m)}</li>`).join('')}
+      </ul>
+
+      <div class="body-cues">
+        <div class="section-title">Body cues — what your body does</div>
+        <ul>
+          ${S.bodyCues.map(b => `<li>${escapeHtml(b)}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div class="rephrase-area">
+        <div class="label">If your sentence came from ${S.name}, what would the rephrase be? →</div>
+        <textarea id="rephrase-${S.key}" aria-label="If your sentence came from ${S.name}, what would the rephrase be?" placeholder="Your sentence as it would sound from ${S.name}…"></textarea>
+      </div>
+    </div>
+    `;
+  }).join('');
+}
+
+/* =========================================================================
+   Build the pick-one buttons
+   ========================================================================= */
+function buildPickOptions() {
+  const wrap = document.getElementById('pickOptions');
+  const order = ['parent', 'child', 'adult', 'gremlin', 'demon'];
+  wrap.innerHTML = order.map(key => {
+    const S = STATES.find(s => s.key === key);
+    return `<button class="pick-btn" data-state="${S.key}" onclick="pickState('${S.key}')">${S.name}</button>`;
+  }).join('');
+}
+
+/* =========================================================================
+   Interactions
+   ========================================================================= */
+let currentPick = null;
+
+function highlightCard(key) {
+  document.querySelectorAll('.state-card').forEach(c => c.classList.remove('highlighted'));
+  document.querySelectorAll('.node-group').forEach(n => n.classList.remove('active'));
+  const card = document.getElementById('card-' + key);
+  if (card) {
+    card.classList.add('highlighted');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  document.getElementById('node-' + key).classList.add('active');
+}
+
+function previewCard(key, on) {
+  // gentle preview on hover — does not steal active state if user clicked
+  const node = document.getElementById('node-' + key);
+  if (!node) return;
+  if (on) node.classList.add('active');
+  else if (currentPick !== key) node.classList.remove('active');
+}
+
+function pickState(key) {
+  currentPick = key;
+  document.querySelectorAll('.pick-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`.pick-btn[data-state="${key}"]`).classList.add('selected');
+  document.querySelectorAll('.node-group').forEach(n => n.classList.remove('active'));
+  document.getElementById('node-' + key).classList.add('active');
+
+  const spot = document.getElementById('adultSpotlight');
+  const ack = document.getElementById('ackText');
+
+  if (key === 'adult') {
+    ack.innerHTML = 'Interesting. Adult is the rarest of the five. Read its markers again — and ask your body whether the sentence really sat there, or whether the story-about-yourself is in front of the felt sense. If it really was Adult, you can leave the rephrase below empty.';
+  } else if (key === 'demon') {
+    ack.innerHTML = 'Noticed. Naming the Demon is the work for this tool — that is enough. Read the bounded note at the bottom before going further. Now — what would the same content sound like from <em>Adult</em>?';
+  } else {
+    const S = STATES.find(s => s.key === key);
+    ack.innerHTML = `Noticed — ${S.name}. Now — what would the same content sound like from <em>Adult</em>?`;
+  }
+  spot.classList.add('show');
+  spot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* =========================================================================
+   Save / load / log
+   ========================================================================= */
+const STORAGE_KEY = 'etb_day09_catches';
+
+function saveCatch() {
+  const sentence = document.getElementById('mainInput').value.trim();
+  if (!sentence) {
+    document.getElementById('mainInput').focus();
+    document.getElementById('mainInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  if (!currentPick) {
+    alert('Pick which state your sentence actually came from (Step 4) before saving.');
+    document.getElementById('pickOptions').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  const adultRephrase = document.getElementById('adultRephrase').value.trim();
+  const perStateRephrases = {};
+  STATES.forEach(S => {
+    const v = document.getElementById('rephrase-' + S.key);
+    if (v && v.value.trim()) perStateRephrases[S.key] = v.value.trim();
+  });
+
+  const catches = loadCatches();
+  catches.unshift({
+    date: new Date().toISOString(),
+    sentence,
+    state: currentPick,
+    adultRephrase,
+    perStateRephrases
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(catches.slice(0, 50)));
+
+  renderLog();
+  document.getElementById('logArea').classList.add('show');
+  document.getElementById('logToggle').textContent = 'Hide my state log';
+  document.getElementById('logArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // soft reset
+  document.getElementById('mainInput').value = '';
+  document.getElementById('adultRephrase').value = '';
+  STATES.forEach(S => {
+    const v = document.getElementById('rephrase-' + S.key);
+    if (v) v.value = '';
+  });
+  document.querySelectorAll('.pick-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.state-card').forEach(c => c.classList.remove('highlighted'));
+  document.querySelectorAll('.node-group').forEach(n => n.classList.remove('active'));
+  document.getElementById('adultSpotlight').classList.remove('show');
+  currentPick = null;
+}
+
+function loadCatches() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch (e) { return []; }
+}
+
+function toggleLog() {
+  const area = document.getElementById('logArea');
+  const btn = document.getElementById('logToggle');
+  if (area.classList.contains('show')) {
+    area.classList.remove('show');
+    btn.textContent = 'Show my state log';
+  } else {
+    renderLog();
+    area.classList.add('show');
+    btn.textContent = 'Hide my state log';
+    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function renderLog() {
+  const catches = loadCatches();
+  const list = document.getElementById('logList');
+  const summary = document.getElementById('patternSummary');
+
+  if (!catches.length) {
+    list.innerHTML = '<p style="font-family: var(--body); font-style: italic; color: var(--ink-mute); padding: 20px 0;">No catches yet. Start with one sentence.</p>';
+    summary.style.display = 'none';
+    return;
+  }
+
+  list.innerHTML = catches.map((c, idx) => {
+    const S = STATES.find(s => s.key === c.state);
+    return `
+      <div class="log-item">
+        <div class="when">${formatDate(c.date)}</div>
+        <div class="content">
+          <div class="said">${escapeHtml(c.sentence)}</div>
+          <div class="from"><span class="pill" data-state="${c.state}">${S.name}</span></div>
+          ${c.adultRephrase ? `<div class="adult-said">${escapeHtml(c.adultRephrase)}</div>` : ''}
+        </div>
+        <button class="del" onclick="deleteCatch(${idx})" title="delete this catch">remove</button>
+      </div>
+    `;
+  }).join('');
+
+  // pattern summary — show only after 3+ catches
+  if (catches.length >= 3) {
+    const tally = {};
+    STATES.forEach(S => tally[S.key] = 0);
+    catches.forEach(c => { tally[c.state] = (tally[c.state] || 0) + 1; });
+    const sorted = Object.entries(tally).sort((a, b) => b[1] - a[1]);
+    const top = sorted[0];
+    const topState = STATES.find(s => s.key === top[0]);
+    const adultCount = tally.adult || 0;
+    const adultPct = Math.round((adultCount / catches.length) * 100);
+
+    summary.style.display = 'block';
+    summary.innerHTML = `
+      <strong>Pattern after ${catches.length} ${catches.length === 1 ? 'catch' : 'catches'}.</strong>
+      Your most-caught state is <strong>${topState.name}</strong>. Your Adult appears in ${adultPct}% of the catches you've logged.
+      ${adultPct < 20 ? 'That matches what most learners discover — Adult is the rarest of the five. The lens is the practice; the rep is the work.' : (adultPct > 50 ? 'Worth a second look — Adult is genuinely rare. Ask your body whether the story-about-yourself is in front of the felt sense.' : 'Keep going. Twenty reps is when the default really shows.')}
+      <div style="margin-top:10px;">
+        ${STATES.map(S => `<span class="tally"><span style="background: var(--${S.key}); ${S.key === 'demon' ? 'color: var(--mustard);' : ''}">${tally[S.key]}</span>${S.name}</span>`).join('')}
+      </div>
+    `;
+  } else {
+    summary.style.display = 'none';
+  }
+}
+
+function deleteCatch(idx) {
+  const catches = loadCatches();
+  catches.splice(idx, 1);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(catches));
+  renderLog();
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  const opts = { month: 'short', day: 'numeric' };
+  const date = d.toLocaleDateString(undefined, opts);
+  const time = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  return `${date} · ${time}`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+/* =========================================================================
+   Consent gating
+   ========================================================================= */
+function onConsent() {
+  const checked = document.getElementById('consentBox').checked;
+  const body = document.getElementById('toolBody');
+  // GROUND NOW stays visible the whole visit, including on the gate screen
+  if (checked) {
+    body.classList.add('open');
+    body.removeAttribute('inert');          // make the gated body real for keyboard / AT
+    // scroll past consent gently
+    setTimeout(() => {
+      document.querySelector('.hero').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const firstInput = document.getElementById('mainInput');
+      if (firstInput) firstInput.focus({ preventScroll: true });
+    }, 200);
+  } else {
+    body.classList.remove('open');
+    body.setAttribute('inert', '');         // re-gate if consent is unchecked
+  }
+}
+
+/* grounding modal — always-available exit for a flooded learner */
+let _groundReturnFocus = null;
+function openGround() {
+  _groundReturnFocus = document.activeElement;
+  const modal = document.getElementById('groundModal');
+  modal.classList.add('show');
+  // focus the first action so the modal is keyboard-operable immediately
+  const firstBtn = modal.querySelector('.btn');
+  if (firstBtn) firstBtn.focus();
+}
+function closeGround() {
+  document.getElementById('groundModal').classList.remove('show');
+  if (_groundReturnFocus && typeof _groundReturnFocus.focus === 'function') {
+    _groundReturnFocus.focus();
+  }
+}
+/* ESC closes the grounding modal */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('groundModal');
+    if (modal.classList.contains('show')) closeGround();
+  }
+});
+
+/* keep the gate armed on every load — never auto-open from storage */
+window.addEventListener('DOMContentLoaded', () => {
+  const box = document.getElementById('consentBox');
+  if (box) box.checked = false;
+  const body = document.getElementById('toolBody');
+  if (body) { body.classList.remove('open'); body.setAttribute('inert', ''); }
+  // GROUND NOW remains visible on the gate screen — it must be reachable before consent
+});
+
+/* =========================================================================
+   Boot
+   ========================================================================= */
+window.addEventListener('DOMContentLoaded', () => {
+  buildMap();
+  buildCards();
+  buildPickOptions();
+  // restore consent state on reload — don't force re-acceptance per session, but default closed
+  // (intentionally do NOT persist consent across loads; HIGH gating means re-confirm each visit)
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

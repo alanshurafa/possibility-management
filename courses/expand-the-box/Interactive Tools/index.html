@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Tools · Expand the Box</title>
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+  --green: #1d4d3a;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.05) 0%, transparent 55%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.55;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap { max-width: 1240px; margin: 0 auto; padding: 48px 56px 80px; position: relative; z-index: 2; }
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 600; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero {
+  margin: 88px 0 64px;
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 64px;
+  align-items: end;
+}
+@media (max-width: 900px) { .hero { grid-template-columns: 1fr; gap: 32px; } }
+.hero .eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(60px, 9vw, 132px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.hero .right {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-style: italic;
+  border-left: 3px solid var(--vermillion);
+  padding-left: 24px;
+  margin-bottom: 8px;
+}
+
+/* Phase divider */
+.phase-divider {
+  margin: 56px 0 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 22px;
+}
+.phase-divider .phase-num {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 64px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 0;
+  color: var(--vermillion);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+.phase-divider .phase-meta {
+  flex: 1;
+}
+.phase-divider .phase-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 4px;
+}
+.phase-divider .phase-name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.phase-divider .phase-name em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.phase-divider .phase-line {
+  flex: 0 0 auto;
+  width: 80px;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* Day row */
+.day-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 200px;
+  gap: 32px;
+  padding: 28px 0;
+  border-bottom: 1px dashed var(--rule);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  position: relative;
+  align-items: baseline;
+}
+.day-row:first-of-type { border-top: 1px dashed var(--rule); }
+.day-row:hover {
+  padding-left: 16px;
+  background: linear-gradient(to right, var(--ivory-shade), transparent);
+}
+.day-row .day-num {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: 88px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  color: var(--ink);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+}
+.day-row:hover .day-num { color: var(--vermillion); }
+.day-row .day-content .day-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 26px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.15;
+  letter-spacing: -0.012em;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.day-row .day-content .day-title em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.day-row .day-content .day-tool {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+}
+.day-row .day-content .day-tool .arrow {
+  display: inline-block;
+  margin-right: 6px;
+  color: var(--vermillion);
+}
+.day-row .day-content .day-one-liner {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 64ch;
+}
+.day-row .day-meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.day-row .intensity {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  font-weight: 600;
+}
+.intensity.low { background: var(--ivory-shade); color: var(--ink-mute); border: 1px solid var(--rule); }
+.intensity.medium { background: var(--mustard); color: var(--ink); }
+.intensity.high { background: var(--vermillion); color: var(--ivory); }
+.day-row .open {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+/* quiet per-day completion dot — presence indicator only, no scoring */
+.day-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 4px;
+}
+.day-dot .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rule);
+  display: inline-block;
+}
+.day-dot .dot.present { background: var(--mustard); border-color: var(--mustard-text); }
+
+/* journal + ground utility row */
+.utility-row {
+  margin: 72px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.utility-row a {
+  display: block;
+  padding: 24px 28px;
+  background: var(--ivory-shade);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--vermillion);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s;
+}
+.utility-row a:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(14,10,5,0.14); }
+.utility-row .ut-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 8px;
+}
+.utility-row .ut-name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.utility-row .ut-name em { font-style: italic; color: var(--vermillion); }
+.utility-row .ut-desc { font-size: 15px; color: var(--ink-soft); line-height: 1.5; }
+.dots-legend {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 44px 0 -16px;
+}
+
+/* tiny ascii arrow rendered */
+.flow {
+  margin: 16px 0;
+  padding-left: 142px;
+  display: none;
+}
+
+/* about + footer */
+.about {
+  margin: 80px 0 48px;
+  padding: 48px 56px;
+  background: var(--ivory-shade);
+  border-left: 4px solid var(--vermillion);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+}
+@media (max-width: 800px) { .about { grid-template-columns: 1fr; gap: 24px; padding: 32px 28px; } }
+.about h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 14px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.about h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.about p {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+.about p em { font-style: italic; color: var(--ink); }
+footer.bottom {
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 800px) {
+  .wrap { padding: 24px 20px 60px; }
+  .day-row { grid-template-columns: 80px 1fr; gap: 20px; padding: 24px 0; }
+  .day-row .day-num { font-size: 60px; }
+  .day-row .day-meta { grid-column: 1 / -1; align-items: flex-start; flex-direction: row; gap: 14px; padding-top: 12px; }
+  .day-row .day-content { padding-right: 0; }
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">EXPAND THE BOX</span> · Interactive Tools · 10 days · 10 signature practices
+    </div>
+    <div>
+      Practice suite · v2.0
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="left">
+      <div class="eyebrow">Possibility Management · the async online course</div>
+      <h1 class="display">Ten <em>days.</em><br>One tool each.<br>For your body.</h1>
+    </div>
+    <div class="right">
+      Each Day module has a written file (read it first). Each module also has an interactive tool — the embodied companion. These are <em>not</em> replacements. They are the practices that make the distinctions land. Use them after reading the day.
+    </div>
+  </section>
+
+  <p class="dots-legend">A filled dot beside a day means this device holds a saved record from that day's tool — a quiet presence indicator, not a score.</p>
+
+  <!-- PHASE 1: Container & frame -->
+  <div class="phase-divider">
+    <div class="phase-num">I</div>
+    <div class="phase-meta">
+      <div class="phase-tag">Phase one · Days 1–2</div>
+      <div class="phase-name">Container <em>&amp;</em> frame</div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+
+  <a href="Day 01/index.html" class="day-row">
+    <div class="day-num">01</div>
+    <div class="day-content">
+      <div class="day-title">Orientation · New Context · Radical <em>Responsibility</em></div>
+      <div class="day-tool"><span class="arrow">→</span>3 tools · the Chain · Four Levels · Red-Pill Ceremony</div>
+      <div class="day-one-liner">Container day. The chain. Levels of responsibility. The commitment ceremony that puts the learner in the work.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity low">Low</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="01"></span>Record</span>
+    </div>
+  </a>
+
+  <a href="Day 02/index.html" class="day-row">
+    <div class="day-num">02</div>
+    <div class="day-content">
+      <div class="day-title">Thoughtware · Thoughtmaps · <em>Box</em> Technology</div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · Box Inventory · 3-layer interactive diagram</div>
+      <div class="day-one-liner">The Box becomes visible. Three layers (surface · story · survival), inventoried in your own voice. Disidentification grammar throughout.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity low">Low</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="02"></span>Record</span>
+    </div>
+  </a>
+
+  <!-- PHASE 2: Embodiment infrastructure -->
+  <div class="phase-divider">
+    <div class="phase-num">II</div>
+    <div class="phase-meta">
+      <div class="phase-tag">Phase two · Days 3–4</div>
+      <div class="phase-name">Embodiment <em>infrastructure</em></div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+
+  <a href="Day 03/index.html" class="day-row">
+    <div class="day-num">03</div>
+    <div class="day-content">
+      <div class="day-title">Liquid State · Center-Ground-Bubble · Five <em>Bodies</em></div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · Centering Practice · guided 6-step sequence</div>
+      <div class="day-one-liner">The energetic-body practices PM rests on. Centering, grounding cord, bubble, golden cube — each with breath pacing and a body silhouette.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity low">Low</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="03"></span>Record</span>
+    </div>
+  </a>
+
+  <a href="Day 04/index.html" class="day-row">
+    <div class="day-num">04</div>
+    <div class="day-content">
+      <div class="day-title">Feedback · Coaching · Rapid Learning · <em>Experiments</em></div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · Experiment Designer · what / by when / what I will notice</div>
+      <div class="day-one-liner">The scaffold for designing real experiments. Template library, status tracking, printable cards. Reps compound.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity low">Low</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="04"></span>Record</span>
+    </div>
+  </a>
+
+  <!-- PHASE 3: Emotional body -->
+  <div class="phase-divider">
+    <div class="phase-num">III</div>
+    <div class="phase-meta">
+      <div class="phase-tag">Phase three · Days 5–6 · HIGH intensity</div>
+      <div class="phase-name">Emotional <em>body</em></div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+
+  <a href="Day 05/index.html" class="day-row">
+    <div class="day-num">05</div>
+    <div class="day-content">
+      <div class="day-title">Feelings vs Emotions · Old Map · <em>Numbness Bar</em></div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · Feeling Locator · body silhouette + 4-feeling match</div>
+      <div class="day-one-liner">Locate a sensation in your body. Match it to one of the four pure feelings. Take the action it asks for. Partner-required.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity high">High</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="05"></span>Record</span>
+    </div>
+  </a>
+
+  <a href="Day 06/index.html" class="day-row">
+    <div class="day-num">06</div>
+    <div class="day-content">
+      <div class="day-title">Mixed Emotions · Emotional <em>Healing Process</em></div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · EHP Walker · six positions (0–5), full safety scaffolding</div>
+      <div class="day-one-liner">The structured PM practice for stored emotional residue. NOT trauma processing — explicit gate refuses trauma material with clinician referral.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity high">High</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="06"></span>Record</span>
+    </div>
+  </a>
+
+  <!-- PHASE 4: Relational body -->
+  <div class="phase-divider">
+    <div class="phase-num">IV</div>
+    <div class="phase-meta">
+      <div class="phase-tag">Phase four · Days 7–8</div>
+      <div class="phase-name">Relational <em>body</em></div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+
+  <a href="Day 07/index.html" class="day-row">
+    <div class="day-num">07</div>
+    <div class="day-content">
+      <div class="day-title">Low Drama · Gremlin Food · Shifting to <em>Responsible Game</em></div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · Drama Position Detector · triangle + responsible-move builder</div>
+      <div class="day-one-liner">Pick a recent drama. Identify your position. Name the gremlin food. Construct the responsible-game move. Pattern emerges over weeks.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity high">High</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="07"></span>Record</span>
+    </div>
+  </a>
+
+  <a href="Day 08/index.html" class="day-row">
+    <div class="day-num">08</div>
+    <div class="day-content">
+      <div class="day-title">Listening · Speaking · Communication · <em>Completion Loops</em></div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · Completion Loop Builder · templates + roadblock check</div>
+      <div class="day-one-liner">A conversation that hasn't ended. Build the loop that completes it. Roadblock-scrubbed. Print-ready. The old debt finishes.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity medium">Medium</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="08"></span>Record</span>
+    </div>
+  </a>
+
+  <!-- PHASE 5: Integration -->
+  <div class="phase-divider">
+    <div class="phase-num">V</div>
+    <div class="phase-meta">
+      <div class="phase-tag">Phase five · Days 9–10</div>
+      <div class="phase-name"><em>Integration</em></div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+
+  <a href="Day 09/index.html" class="day-row">
+    <div class="day-num">09</div>
+    <div class="day-content">
+      <div class="day-title">Ego States · Problem Ownership · <em>Learning Spiral</em></div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · Ego State Locator · 5-state map + sentence catcher</div>
+      <div class="day-one-liner">Parent · Child · Adult · Gremlin · Demon. Five locations to speak from. The tool helps you catch which one you're in mid-sentence.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity high">High</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="09"></span>Record</span>
+    </div>
+  </a>
+
+  <a href="Day 10/index.html" class="day-row">
+    <div class="day-num">10</div>
+    <div class="day-content">
+      <div class="day-title">Map of Possibility · Bright Principles · Three Powers · <em>Integration</em></div>
+      <div class="day-tool"><span class="arrow">→</span>1 tool · Declaration Composer · three powers, sequential</div>
+      <div class="day-one-liner">The closing tool. Own the choice. Ask the dangerous question. Source from a bright principle. Compose and speak one declaration for the 90 days after the course.</div>
+    </div>
+    <div class="day-meta">
+      <span class="intensity low">Low</span>
+      <span class="open">Open day →</span>
+      <span class="day-dot" title="This device has a saved record from this day's tool."><span class="dot" data-day="10"></span>Record</span>
+    </div>
+  </a>
+
+  <!-- always-available utilities: your records + emergency grounding -->
+  <div class="utility-row">
+    <a href="journal.html">
+      <div class="ut-kicker">Your records</div>
+      <div class="ut-name">The <em>Journal</em></div>
+      <div class="ut-desc">Everything the tools saved on this device, gathered in one place, with an export. Nothing leaves your browser.</div>
+    </a>
+    <a href="ground.html">
+      <div class="ut-kicker">If it gets heavy</div>
+      <div class="ut-name">Ground · <em>60 sec</em></div>
+      <div class="ut-desc">The 60-second grounding script, one tap away, always. If anything feels too far, too fast — ground first, then decide.</div>
+    </a>
+  </div>
+
+  <section class="about">
+    <div>
+      <h3>How to <em>use</em> these.</h3>
+      <p>
+        Read the matching Day module first (`Days/Day NN - …`.md). Then open the day's interactive tool. The tools are not replacements — they are the embodied companions to the written modules.
+      </p>
+      <p>
+        Each tool stays in <em>your browser</em>. No data leaves the device. Your commitments, your experiments, your declarations, your chain walks, your ego-state log — all local to you. Clear your browser data and the tools forget.
+      </p>
+      <p>
+        High-intensity days (5, 6, 7, 9) include a consent gate and a grounding tool, and prompt you to confirm your partner is reachable before you begin. Day 6's EHP tool refuses trauma material and routes to clinician referral — that gate is structural, not optional.
+      </p>
+    </div>
+    <div>
+      <h3>What they're <em>not</em>.</h3>
+      <p>
+        These are not the course. The course is the 10 modules, the partner pairings, and the experiments the learner runs in their actual life. The tools are <em>scaffolds</em> — they make some practices repeatable, some distinctions tangible, some commitments visible.
+      </p>
+      <p>
+        They also don't replace a community manager, a partner, or a clinician. They are tools. The work happens in the learner's life.
+      </p>
+      <p>
+        Built standalone — double-click any `.html` file to use. The whole suite runs offline once the fonts cache. No servers, no accounts, no telemetry.
+      </p>
+    </div>
+  </section>
+
+  <footer class="bottom">
+    <div>Expand the Box · Interactive Tools · v2.0 · 2026-06-10</div>
+    <div>Built for the async ETB online course · all 10 days</div>
+  </footer>
+</div>
+
+<script>
+/* Quiet per-day completion dots. A dot fills if this device holds any
+   etb_day0N_* localStorage key for that day's tool (plus Day 01's named
+   keys). Presence only — no scores, streaks, percentages, or badges.
+   Consent keys are never written, so they can never light a dot. */
+(function(){
+  var keys = [];
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf('etb_') === 0) keys.push(k);
+    }
+  } catch (e) { return; }  /* storage blocked — leave dots empty */
+
+  /* extra named keys some tools use instead of the etb_dayNN_ prefix */
+  var EXTRA = { '01': ['etb_chain_walks', 'etb_levels_sets'] };
+
+  function dayPresent(dd){
+    var prefix = 'etb_day' + dd + '_';
+    for (var i = 0; i < keys.length; i++){
+      if (keys[i].indexOf(prefix) === 0) return true;
+    }
+    var extra = EXTRA[dd] || [];
+    for (var j = 0; j < extra.length; j++){
+      if (keys.indexOf(extra[j]) !== -1) return true;
+    }
+    return false;
+  }
+
+  document.querySelectorAll('.day-dot .dot').forEach(function(dot){
+    var dd = dot.getAttribute('data-day');
+    if (dayPresent(dd)) dot.classList.add('present');
+  });
+})();
+</script>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

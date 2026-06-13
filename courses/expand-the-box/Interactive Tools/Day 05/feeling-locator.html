@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feeling Locator · ETB Day 5</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --vermillion-glow: rgba(196, 59, 28, 0.32);
+  --mustard: #d8b04a;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+  gap: 24px;
+}
+header.top .left { display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top .tag-high {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1.5px solid var(--vermillion);
+  color: var(--vermillion);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero { margin: 48px 0 24px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 16px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 22px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 720px;
+  font-style: italic;
+}
+
+/* shared section frame */
+.stage {
+  margin-top: 56px;
+  padding: 48px 52px;
+  background: var(--ivory-shade);
+  border-top: 3px solid var(--vermillion);
+  animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.stage.hidden { display: none; }
+.stage .stage-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+}
+.stage h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.stage h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.stage .instruction {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  max-width: 680px;
+}
+.stage .cue {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 10px 0 22px;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====================== CONSENT ====================== */
+.consent {
+  margin: 56px auto 24px;
+  max-width: 760px;
+  padding: 48px 52px;
+  border: 2px solid var(--vermillion);
+  background: var(--ivory-shade);
+  position: relative;
+}
+.consent::before {
+  content: 'HIGH-INTENSITY MODULE';
+  position: absolute;
+  top: -12px;
+  left: 32px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.consent .c-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.1;
+  margin: 8px 0 20px;
+  color: var(--ink);
+}
+.consent .c-title em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.consent .c-body {
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+}
+.consent .c-body em { color: var(--ink); }
+.consent ul.c-checklist {
+  list-style: none;
+  margin: 18px 0 24px;
+  padding: 22px 26px;
+  background: var(--ivory);
+  border-left: 3px solid var(--vermillion);
+}
+.consent ul.c-checklist li {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.45;
+  padding: 8px 0;
+  color: var(--ink);
+  border-bottom: 1px dashed var(--rule);
+}
+.consent ul.c-checklist li:last-child { border-bottom: none; }
+.consent ul.c-checklist li::before {
+  content: '·';
+  color: var(--vermillion);
+  font-weight: 700;
+  margin-right: 12px;
+  font-style: normal;
+  font-size: 24px;
+  vertical-align: middle;
+}
+.consent .c-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+/* ====================== STEP 1 — BODY ====================== */
+.body-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 48px;
+  margin-top: 28px;
+  align-items: start;
+}
+@media (max-width: 800px) { .body-layout { grid-template-columns: 1fr; gap: 24px; } }
+
+.body-figure {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+.body-figure .silhouette {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.body-figure .zone {
+  fill: var(--ivory);
+  stroke: var(--ink-mute);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 3;
+  cursor: pointer;
+  transition: all 0.25s;
+  opacity: 0.55;
+}
+.body-figure .zone:hover {
+  fill: var(--mustard-soft);
+  opacity: 0.85;
+  stroke: var(--ink);
+}
+.body-figure .zone.selected {
+  fill: var(--vermillion-glow);
+  stroke: var(--vermillion);
+  stroke-width: 2;
+  stroke-dasharray: none;
+  opacity: 1;
+  filter: drop-shadow(0 0 8px var(--vermillion-glow));
+}
+.body-figure .zone-label {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--ink-mute);
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+.zones-selected {
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.zones-selected .pill {
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 3px 4px 3px 0;
+  background: var(--vermillion);
+  color: var(--ivory);
+  font-weight: 500;
+}
+
+.body-side {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.body-side p { margin-bottom: 12px; }
+.body-side .small-note {
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ====================== STEP 2 — QUALITY ====================== */
+.quality-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 22px 0 18px;
+}
+.chip {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 12px 22px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chip:hover { border-color: var(--ink); background: var(--ivory); }
+.chip.selected {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+
+.free-text {
+  width: 100%;
+  padding: 16px 20px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 70px;
+  line-height: 1.4;
+  display: block;
+  margin: 16px 0 10px;
+}
+.free-text:focus {
+  outline: none;
+  border-color: var(--vermillion);
+}
+
+/* ====================== STEP 3 — FEELINGS ====================== */
+.match-explain {
+  margin: 18px 0 22px;
+  padding: 18px 22px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.match-explain strong {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #b8902c;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.feelings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin: 22px 0;
+}
+@media (max-width: 700px) { .feelings-grid { grid-template-columns: 1fr; } }
+
+.feeling-card {
+  border: 1.5px solid var(--ink-mute);
+  background: var(--ivory);
+  padding: 28px 26px 24px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  position: relative;
+}
+.feeling-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+  box-shadow: 0 8px 22px rgba(14,10,5,0.1);
+}
+.feeling-card.suggested {
+  border: 2px solid var(--mustard);
+  background: linear-gradient(135deg, var(--ivory) 0%, var(--mustard-soft) 100%);
+}
+.feeling-card.suggested::before {
+  content: 'BEST MATCH';
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: #b8902c;
+  color: var(--ink);
+  padding: 3px 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+}
+.feeling-card.picked {
+  border: 2px solid var(--vermillion);
+  background: var(--ivory);
+  box-shadow: 0 0 0 4px var(--vermillion-soft);
+}
+.feeling-card.picked::after {
+  content: 'YOU PICKED THIS';
+  position: absolute;
+  bottom: -10px;
+  left: 16px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 3px 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+}
+
+.feeling-card .f-name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 36px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  font-style: italic;
+  line-height: 1;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+}
+.feeling-card .f-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 14px;
+  padding: 8px 0;
+  border-top: 1px dashed var(--rule);
+  font-size: 15px;
+  line-height: 1.45;
+}
+.feeling-card .f-row:first-of-type { border-top: none; padding-top: 4px; }
+.feeling-card .f-row .label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  padding-top: 3px;
+}
+.feeling-card .f-row .value {
+  font-family: var(--body);
+  color: var(--ink-soft);
+}
+.feeling-card .f-row .value.shadow {
+  font-style: italic;
+  color: var(--ink-mute);
+  font-family: var(--display);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+}
+
+/* ====================== STEP 4 — ACTION ====================== */
+.action-block {
+  margin: 24px 0;
+  padding: 36px 40px;
+  background: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+}
+.action-block .a-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 12px;
+}
+.action-block .a-feeling {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 6px;
+}
+.action-block .a-text {
+  font-family: var(--display);
+  font-weight: 350;
+  font-style: italic;
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.commitment-input {
+  width: 100%;
+  padding: 22px 26px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.4;
+  display: block;
+  margin: 18px 0 8px;
+}
+.commitment-input:focus { outline: none; border-color: var(--vermillion); }
+
+/* ====================== STEP 5 — WITNESS ====================== */
+.witness-card {
+  margin: 24px 0;
+  padding: 40px 44px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-left: 4px solid var(--mustard);
+}
+.witness-card .w-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-bottom: 14px;
+}
+.witness-card h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  color: var(--ivory);
+}
+.witness-card h3 em {
+  font-style: italic;
+  color: var(--mustard);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+.witness-card p {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ivory-shade);
+  margin-bottom: 12px;
+}
+.witness-card .three-lines {
+  margin: 18px 0;
+  padding: 18px 22px;
+  background: rgba(244, 236, 220, 0.08);
+  border-left: 2px solid var(--mustard);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ivory);
+}
+.witness-card .three-lines span {
+  display: block;
+  padding: 4px 0;
+}
+.witness-card .three-lines .lbl {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  display: inline-block;
+  width: 92px;
+}
+
+/* ====================== BUTTONS ====================== */
+.actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn.large { font-size: 12px; padding: 18px 32px; }
+.btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+.btn.invert-light {
+  background: transparent;
+  color: var(--ivory);
+  border-color: var(--ivory);
+}
+.btn.invert-light:hover { background: var(--ivory); color: var(--ink); }
+
+/* progress */
+.progress {
+  display: flex;
+  gap: 4px;
+  margin: 28px 0 8px;
+}
+.progress .seg {
+  flex: 1;
+  height: 3px;
+  background: var(--rule);
+}
+.progress .seg.done { background: var(--mustard); }
+.progress .seg.current { background: var(--vermillion); }
+
+/* saved sessions */
+.saved {
+  margin-top: 80px;
+  padding-top: 36px;
+  border-top: 1px solid var(--rule);
+}
+.saved h3 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 18px;
+}
+.saved .session {
+  padding: 16px 0;
+  border-top: 1px dashed var(--rule);
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  gap: 24px;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--ink-mute);
+}
+.saved .session:first-of-type { border-top: none; }
+.saved .session .date { color: var(--ink-mute); }
+.saved .session .zones, .saved .session .feelings {
+  font-family: var(--body);
+  font-size: 15px;
+  letter-spacing: 0;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  font-style: italic;
+}
+.saved .session .feelings { color: var(--vermillion); font-style: normal; font-weight: 500; }
+.saved .empty {
+  font-family: var(--body);
+  font-style: italic;
+  color: var(--ink-mute);
+  font-size: 16px;
+}
+.saved .clear-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  color: var(--ink-mute);
+  cursor: pointer;
+  padding: 8px 0;
+  margin-top: 16px;
+  border-bottom: 1px dashed var(--ink-mute);
+}
+.saved .clear-btn:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+@media (max-width: 700px) {
+  .saved .session { grid-template-columns: 1fr; gap: 4px; }
+}
+
+footer.bottom {
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 760px) {
+  .wrap { padding: 24px 20px 60px; }
+  .stage { padding: 32px 28px; }
+  .consent { padding: 32px 28px; }
+}
+
+/* ====================== KEYBOARD FOCUS (custom controls) ====================== */
+.body-figure .zone:focus-visible {
+  outline: none;
+  fill: var(--vermillion-glow);
+  stroke: var(--vermillion);
+  stroke-width: 2.5;
+  stroke-dasharray: none;
+  opacity: 1;
+}
+.feeling-card:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+
+/* ====================== GROUND NOW — floating safety button ====================== */
+.ground-now {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  background: var(--vermillion);
+  color: var(--ivory);
+  border: 2px solid var(--vermillion-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 22px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(196, 59, 28, 0.28);
+  transition: all 0.25s ease;
+  line-height: 1.1;
+  display: none;
+}
+.ground-now.show { display: block; }
+.ground-now:hover {
+  background: var(--vermillion-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(196, 59, 28, 0.36);
+}
+.ground-now:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.ground-now .small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* ====================== GROUNDING MODAL ====================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(14, 10, 5, 0.86);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.modal.show { display: flex; }
+.modal-inner {
+  max-width: 620px;
+  width: 100%;
+  background: var(--ivory);
+  border: 2px solid var(--vermillion);
+  padding: 44px 40px 36px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-inner::before {
+  content: 'GROUNDING · 60 SECONDS';
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.modal-inner h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.modal-inner h2 em { font-style: italic; color: var(--vermillion); }
+.modal-inner ol {
+  margin: 0 0 22px 22px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.modal-inner ol li { margin-bottom: 12px; }
+.modal-inner ol li strong { color: var(--ink); }
+.modal-inner .session-paused {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+.modal-inner .modal-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+@media (max-width: 760px) {
+  .ground-now { top: 16px; right: 16px; padding: 12px 16px; font-size: 11px; }
+  .modal-inner { padding: 36px 24px 28px; }
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<!-- floating safety button — visible from the gate screen onward, the whole visit -->
+<button class="ground-now show" id="groundNowBtn" type="button" onclick="openGround()" aria-haspopup="dialog">
+  GROUND NOW
+  <span class="small">60-second pause</span>
+</button>
+
+<div class="wrap">
+  <header class="top">
+    <div class="left">
+      <span><span class="num">DAY 05</span> · EXPAND THE BOX</span>
+      <span>Feeling Locator</span>
+      <span class="tag-high">HIGH INTENSITY</span>
+    </div>
+    <a href="index.html">← All Day 5 tools</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Day 5 · Map Notes M08 · M09 · M10</div>
+    <h1 class="display">Feeling <em>Locator.</em></h1>
+    <p class="lede">
+      Sit with your body. Find the sensation. Locate it. Identify which of the four feelings it most closely is.
+      Then receive the action the feeling is asking for.
+    </p>
+  </section>
+
+  <!-- ====================== CONSENT ====================== -->
+  <section class="consent" id="consent">
+    <div class="c-title">A consent <em>check</em> before you begin.</div>
+    <p class="c-body">
+      This tool engages <em>your emotional body directly</em>. Material that has been managed by avoidance — anger you weren't allowed to feel, sadness you cut off, fear you learned to call something else, joy you suppressed — may surface. You're choosing to do this.
+    </p>
+    <p class="c-body">Confirm to yourself, out loud if you can, each of these:</p>
+    <ul class="c-checklist">
+      <li>My partner is reachable today and tomorrow.</li>
+      <li>I have 30+ uninterrupted minutes ahead of me.</li>
+      <li>I'm not in acute crisis or under the influence right now.</li>
+      <li>I know how to ground — and the GROUND NOW button (top right) is there the whole time.</li>
+    </ul>
+    <p class="c-body">
+      If any of those isn't true, pause and come back when they are. Doing this tool unsafely creates exactly the kind of stored material PM is trying to help you metabolize.
+    </p>
+    <div class="c-actions">
+      <button class="btn primary large" onclick="confirmConsent()">I confirm — begin</button>
+      <a href="index.html" class="btn ghost">Not now</a>
+    </div>
+  </section>
+
+  <!-- ====================== MAIN TOOL ====================== -->
+  <div id="tool" style="display:none;">
+    <div class="progress" id="progress">
+      <div class="seg current"></div>
+      <div class="seg"></div>
+      <div class="seg"></div>
+      <div class="seg"></div>
+      <div class="seg"></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <section class="stage" id="step1">
+      <div class="stage-label">Step I · Body scan</div>
+      <h2>Take a breath. Drop into <em>your body.</em> What's present in you right now? Where?</h2>
+      <p class="instruction">
+        Touch each region of the figure where you feel a sensation, however small. Multiple zones are normal. <em>Look smaller than you think you should.</em>
+      </p>
+      <p class="cue">2% counts. 5% counts. Stay with the sensation, not the story about it.</p>
+
+      <div class="body-layout">
+        <div>
+          <svg class="body-figure" viewBox="0 0 200 480" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Body map — select the regions where you feel a sensation">
+            <!-- silhouette: hand-drawn-feeling, not anatomical (decorative) -->
+            <g class="silhouette" aria-hidden="true">
+              <!-- head -->
+              <ellipse cx="100" cy="42" rx="28" ry="34"/>
+              <!-- neck -->
+              <path d="M88 74 Q86 84 84 92 L116 92 Q114 84 112 74"/>
+              <!-- shoulders + torso -->
+              <path d="M84 92 Q56 96 46 116 L42 168 Q44 200 50 232 L60 280 Q68 308 78 320 L122 320 Q132 308 140 280 L150 232 Q156 200 158 168 L154 116 Q144 96 116 92"/>
+              <!-- left arm -->
+              <path d="M46 116 Q34 138 28 168 Q24 198 26 230 Q28 248 32 264"/>
+              <!-- left hand -->
+              <ellipse cx="34" cy="278" rx="11" ry="14"/>
+              <!-- right arm -->
+              <path d="M154 116 Q166 138 172 168 Q176 198 174 230 Q172 248 168 264"/>
+              <!-- right hand -->
+              <ellipse cx="166" cy="278" rx="11" ry="14"/>
+              <!-- left leg -->
+              <path d="M78 320 Q74 360 70 400 Q68 432 70 462"/>
+              <!-- right leg -->
+              <path d="M122 320 Q126 360 130 400 Q132 432 130 462"/>
+              <!-- feet -->
+              <path d="M60 462 L80 462" stroke-linecap="round"/>
+              <path d="M120 462 L140 462" stroke-linecap="round"/>
+              <!-- subtle facial line -->
+              <path d="M88 44 Q100 50 112 44" stroke-width="1"/>
+            </g>
+
+            <!-- ZONES (clickable) -->
+            <!-- face -->
+            <ellipse class="zone" data-zone="face" cx="100" cy="40" rx="22" ry="26"/>
+            <!-- jaw -->
+            <ellipse class="zone" data-zone="jaw" cx="100" cy="68" rx="20" ry="9"/>
+            <!-- throat -->
+            <rect class="zone" data-zone="throat" x="84" y="78" width="32" height="16" rx="6"/>
+            <!-- chest -->
+            <ellipse class="zone" data-zone="chest" cx="100" cy="140" rx="48" ry="36"/>
+            <!-- belly -->
+            <ellipse class="zone" data-zone="belly" cx="100" cy="222" rx="44" ry="42"/>
+            <!-- hands (group) -->
+            <ellipse class="zone" data-zone="hands" cx="34" cy="278" rx="16" ry="20"/>
+            <ellipse class="zone" data-zone="hands" cx="166" cy="278" rx="16" ry="20"/>
+            <!-- back (rectangle behind torso, slightly offset) -->
+            <rect class="zone" data-zone="back" x="58" y="180" width="84" height="100" rx="10" style="opacity: 0.3;"/>
+            <!-- full body wrap -->
+            <rect class="zone" data-zone="full" x="14" y="10" width="172" height="464" rx="40" style="opacity: 0.18; stroke-width: 1;"/>
+
+            <!-- zone hint labels (small, decorative — accessible names live on the zones) -->
+            <g aria-hidden="true">
+              <text class="zone-label" x="100" y="40">FACE</text>
+              <text class="zone-label" x="100" y="70">JAW</text>
+              <text class="zone-label" x="100" y="88">THROAT</text>
+              <text class="zone-label" x="100" y="142">CHEST</text>
+              <text class="zone-label" x="100" y="224">BELLY</text>
+              <text class="zone-label" x="34" y="282">HANDS</text>
+              <text class="zone-label" x="166" y="282">HANDS</text>
+              <text class="zone-label" x="100" y="232" style="font-size: 7px;">·</text>
+              <text class="zone-label" x="14" y="24" style="text-anchor: start;">FULL BODY</text>
+              <text class="zone-label" x="186" y="180" style="text-anchor: end;">BACK</text>
+            </g>
+          </svg>
+          <div class="zones-selected" id="zonesSelected">
+            <span style="opacity: 0.6;">No zones selected yet.</span>
+          </div>
+        </div>
+        <div class="body-side">
+          <p>
+            The body is the only place a feeling actually lives. The thought about the feeling is the story; <em>the sensation in a specific place is the feeling itself.</em>
+          </p>
+          <p>
+            Anger lives in bones, jaw, hands. Sadness lives in heart and throat and eyes. Fear lives in belly, skin, nervous system. Joy lives in face, chest, the whole organism.
+          </p>
+          <p>
+            Don't decide what feeling it is yet. Just find <em>where</em> the sensation lives. The map comes after.
+          </p>
+          <div class="small-note">Click any region. Click again to deselect.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="step1Next" onclick="goStep(2)" disabled>Continue to Step II →</button>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="stage hidden" id="step2">
+      <div class="stage-label">Step II · Quality of sensation</div>
+      <h2>Describe the <em>quality</em> of the sensation. Short phrases.</h2>
+      <p class="instruction">
+        Pick any that fit. Multiple are normal — a sensation can be hot and contracting at the same time.
+      </p>
+
+      <div class="quality-chips" id="qualityChips">
+        <button class="chip" data-q="hot">Hot</button>
+        <button class="chip" data-q="cold">Cold</button>
+        <button class="chip" data-q="expanding">Expanding</button>
+        <button class="chip" data-q="contracting">Contracting</button>
+        <button class="chip" data-q="fast">Fast</button>
+        <button class="chip" data-q="slow">Slow</button>
+      </div>
+
+      <textarea class="free-text" id="qualityFree" aria-label="Other qualities of the sensation, in your own words" placeholder="Anything else? — e.g. buzzing, weight, prickling, fluttering, pressing…"></textarea>
+
+      <p class="cue">No need to be poetic. Plain language is best.</p>
+
+      <div class="actions">
+        <button class="btn primary" onclick="goStep(3)">Continue to Step III →</button>
+        <button class="btn ghost" onclick="goStep(1)">← Back</button>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="stage hidden" id="step3">
+      <div class="stage-label">Step III · The four feelings</div>
+      <h2>Which of these does the sensation <em>most resemble</em>?</h2>
+      <div class="match-explain">
+        <strong>About the suggestion</strong>
+        Cards marked <em>BEST MATCH</em> are this tool's heuristic, based on where you said the sensation lives. The heuristic is a starting point — your body knows better than the heuristic does. Pick what you actually recognize, not what the map suggests. Multi-select is fine; <em>mixed feelings are common, and a mix is technically an emotion, not a feeling. Day 6 is where mixed emotions get unmixed.</em>
+      </div>
+
+      <div class="feelings-grid" id="feelingsGrid">
+        <!-- populated by JS -->
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="step3Next" onclick="goStep(4)" disabled>Continue to Step IV →</button>
+        <button class="btn ghost" onclick="goStep(2)">← Back</button>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="stage hidden" id="step4">
+      <div class="stage-label">Step IV · The action it's asking for</div>
+      <h2>For each feeling you picked, here is what the energy is <em>for.</em></h2>
+      <p class="instruction">
+        A feeling is information. The information includes an asked-for action — the thing the energy is built to do. Read it. Notice the body's response when you read it.
+      </p>
+
+      <div id="actionsList"></div>
+
+      <h2 style="margin-top: 32px;">What's one <em>small move</em> you can make now?</h2>
+      <p class="instruction">
+        Not the whole life-change. The next 24-hour-sized move. One sentence is enough.
+      </p>
+      <textarea class="commitment-input" id="commitmentText" aria-label="One small move you can make in the next 24 hours" placeholder="In the next day I will…"></textarea>
+
+      <div class="actions">
+        <button class="btn primary large" onclick="saveAndContinue()">Save and continue →</button>
+        <button class="btn ghost" onclick="goStep(3)">← Back</button>
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="stage hidden" id="step5">
+      <div class="stage-label">Step V · The witness</div>
+      <h2>Consider <em>voice-messaging</em> your pairing partner about what just happened.</h2>
+
+      <div class="witness-card">
+        <div class="w-label">The witness is the medicine</div>
+        <h3>Say <em>only</em> three things. No story.</h3>
+        <div class="three-lines">
+          <span><span class="lbl">The feeling</span><span id="wFeeling">—</span></span>
+          <span><span class="lbl">The location</span><span id="wLocation">—</span></span>
+          <span><span class="lbl">The action</span><span id="wAction">—</span></span>
+        </div>
+        <p>
+          Resist the pull to explain. Resist the pull to make it interesting. The bareness <em>is</em> the practice — speaking the feeling instead of the story about the feeling.
+        </p>
+        <p>
+          Your partner doesn't have to do anything except hear it. No advice. No fixing. Witnessing only.
+        </p>
+        <div class="actions">
+          <button class="btn invert-light" onclick="newSession()">Locate another feeling</button>
+          <a href="index.html" class="btn invert-light">Done — return to Day 5</a>
+        </div>
+      </div>
+
+      <p class="cue" style="margin-top: 28px;">Saved on this device only. Nothing leaves your browser.</p>
+    </section>
+  </div>
+
+  <!-- saved sessions -->
+  <section class="saved" id="savedBlock">
+    <h3>Previous sessions · this device only</h3>
+    <div id="savedList">
+      <div class="empty">No sessions yet. Your first one will appear here.</div>
+    </div>
+  </section>
+
+  <footer class="bottom">
+    <div>Feeling Locator · ETB Day 5 · Map Notes M08 · M09 · M10</div>
+    <div>Source: 12, 13, 14 — _EN.mp4 + Day 5 module</div>
+  </footer>
+</div>
+
+<!-- modal: grounding (60-second sequence) -->
+<div class="modal" id="groundModal" role="dialog" aria-modal="true" aria-labelledby="groundModalTitle">
+  <div class="modal-inner">
+    <h2 id="groundModalTitle">Ground. <em>Now.</em></h2>
+    <ol>
+      <li><strong>Stop.</strong> Stand up — both feet flat on the floor. Feel the contact.</li>
+      <li><strong>Breathe out, longer than in</strong> — three slow exhales.</li>
+      <li><strong>Name three things you can see</strong> in this room. Out loud is best.</li>
+      <li><strong>Name one thing you can hear.</strong> The fridge. Traffic. Your own breath.</li>
+      <li><strong>One hand on your sternum, one on your belly.</strong> Notice your body is here.</li>
+      <li><strong>Then decide:</strong> continue, pause 10 minutes, or stop for today. Any of the three is fine.</li>
+    </ol>
+    <p class="session-paused">The tool is paused. Take as long as you need.</p>
+    <div class="modal-actions">
+      <button class="btn primary" type="button" onclick="closeGround()">I'm grounded — continue</button>
+      <a href="index.html" class="btn ghost">Stop — return to Day 5 tools</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====================== DATA ====================== */
+const FEELINGS = {
+  anger: {
+    name: 'Anger',
+    location: 'Bones · jaw · hands · big muscles of legs and arms',
+    purpose: 'Energy that makes boundaries. Changes what is not life. Clarifies what matters.',
+    action: 'Name what doesn\'t work. Stand. Push back. Make the cut.',
+    shadow: 'Rage · resentment · bitterness · passive aggression · collapsed compliance',
+    zones: ['jaw', 'hands', 'back'] /* heuristic match-zones */
+  },
+  sadness: {
+    name: 'Sadness',
+    location: 'Heart · throat · soft tissue of the face · eyes',
+    purpose: 'Energy that releases. Honors what is gone. Opens the heart so care can be received.',
+    action: 'Let it move — often tears. Slow down. Honor the loss. Be held.',
+    shadow: 'Depression · self-pity · chronic grief · emotional shutdown · martyr stance',
+    zones: ['throat', 'chest', 'face']
+  },
+  fear: {
+    name: 'Fear',
+    location: 'Nervous system · skin · small nerves · belly',
+    purpose: 'Energy of presence and precision. Prepares for what\'s coming. Avoids actual danger.',
+    action: 'Stop. Sense. Check the ground. Prepare. Then move — or don\'t.',
+    shadow: 'Anxiety · paranoia · panic · avoidance · hyper-vigilance · freeze',
+    zones: ['belly', 'full']
+  },
+  joy: {
+    name: 'Joy',
+    location: 'Whole organism · face · eyes · chest',
+    purpose: 'Energy of connection, appreciation, expansion. Invites others in.',
+    action: 'Let it expand. Speak it. Move toward it. Share it.',
+    shadow: 'Mania · forced positivity · spiritual bypass · addictive pleasure · numb pleasantness',
+    zones: ['face', 'chest', 'full']
+  }
+};
+
+const FEELING_ORDER = ['anger', 'sadness', 'fear', 'joy'];
+
+/* ====================== STATE ====================== */
+let state = {
+  zones: new Set(),
+  qualities: new Set(),
+  qualityFree: '',
+  pickedFeelings: new Set(),
+  suggestedFeelings: new Set(),
+  commitment: '',
+  currentStep: 1
+};
+
+/* ====================== A11Y HELPERS ====================== */
+// keyboard activation for custom (non-native) controls: Enter or Space fires the action
+function kb(e, fn) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    fn();
+  }
+}
+// move focus to a freshly-revealed step heading so keyboard/SR users land in the new section
+function focusHeading(stepEl) {
+  if (!stepEl) return;
+  const h = stepEl.querySelector('h2');
+  if (h) {
+    h.setAttribute('tabindex', '-1');
+    setTimeout(() => h.focus({ preventScroll: true }), 80);
+  }
+}
+
+/* ====================== CONSENT ====================== */
+function confirmConsent() {
+  document.getElementById('consent').style.display = 'none';
+  document.getElementById('tool').style.display = 'block';
+  document.getElementById('tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // GROUND NOW is already visible from the gate screen and stays visible
+  renderSaved();
+  focusHeading(document.getElementById('step1'));
+}
+
+/* ====================== STEP NAV ====================== */
+function goStep(n) {
+  state.currentStep = n;
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('step' + i).classList.toggle('hidden', i !== n);
+  }
+  updateProgress();
+
+  if (n === 3) renderFeelingsGrid();
+  if (n === 4) renderActions();
+  if (n === 5) renderWitness();
+
+  const stepEl = document.getElementById('step' + n);
+  stepEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  focusHeading(stepEl);
+}
+
+function updateProgress() {
+  const segs = document.querySelectorAll('#progress .seg');
+  segs.forEach((s, i) => {
+    s.classList.remove('done', 'current');
+    if (i + 1 < state.currentStep) s.classList.add('done');
+    else if (i + 1 === state.currentStep) s.classList.add('current');
+  });
+}
+
+/* ====================== STEP 1: BODY ====================== */
+function initBodyZones() {
+  document.querySelectorAll('.body-figure .zone').forEach(z => {
+    const label = ZONE_LABEL[z.dataset.zone] || z.dataset.zone;
+    z.setAttribute('role', 'button');
+    z.setAttribute('tabindex', '0');
+    z.setAttribute('aria-label', label + ' — toggle sensation here');
+    z.setAttribute('aria-pressed', 'false');
+    z.addEventListener('click', () => toggleZone(z));
+    z.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        toggleZone(z);
+      }
+    });
+  });
+}
+
+function toggleZone(el) {
+  const zone = el.dataset.zone;
+  // toggle all elements with this zone (e.g. both hands)
+  const all = document.querySelectorAll(`.body-figure .zone[data-zone="${zone}"]`);
+  if (state.zones.has(zone)) {
+    state.zones.delete(zone);
+    all.forEach(e => { e.classList.remove('selected'); e.setAttribute('aria-pressed', 'false'); });
+  } else {
+    state.zones.add(zone);
+    all.forEach(e => { e.classList.add('selected'); e.setAttribute('aria-pressed', 'true'); });
+  }
+  renderSelectedZones();
+}
+
+const ZONE_LABEL = {
+  face: 'Face',
+  jaw: 'Jaw',
+  throat: 'Throat',
+  chest: 'Chest',
+  belly: 'Belly',
+  hands: 'Hands',
+  back: 'Back',
+  full: 'Full body'
+};
+
+function renderSelectedZones() {
+  const el = document.getElementById('zonesSelected');
+  if (state.zones.size === 0) {
+    el.innerHTML = '<span style="opacity: 0.6;">No zones selected yet.</span>';
+    document.getElementById('step1Next').disabled = true;
+  } else {
+    el.innerHTML = 'Selected: ' + [...state.zones].map(z => `<span class="pill">${ZONE_LABEL[z]}</span>`).join('');
+    document.getElementById('step1Next').disabled = false;
+  }
+}
+
+/* ====================== STEP 2: QUALITY ====================== */
+function initQualityChips() {
+  document.querySelectorAll('#qualityChips .chip').forEach(c => {
+    c.addEventListener('click', () => {
+      const q = c.dataset.q;
+      if (state.qualities.has(q)) {
+        state.qualities.delete(q);
+        c.classList.remove('selected');
+      } else {
+        state.qualities.add(q);
+        c.classList.add('selected');
+      }
+    });
+  });
+  document.getElementById('qualityFree').addEventListener('input', e => {
+    state.qualityFree = e.target.value;
+  });
+}
+
+/* ====================== STEP 3: FEELINGS ====================== */
+function computeSuggestions() {
+  // heuristic: count zone overlaps; mark top-scoring feelings (>= max-1)
+  const scores = {};
+  for (const key of FEELING_ORDER) {
+    scores[key] = 0;
+    for (const z of FEELINGS[key].zones) {
+      if (state.zones.has(z)) scores[key]++;
+    }
+  }
+  const maxScore = Math.max(...Object.values(scores));
+  state.suggestedFeelings = new Set();
+  if (maxScore > 0) {
+    for (const key of FEELING_ORDER) {
+      if (scores[key] === maxScore) state.suggestedFeelings.add(key);
+    }
+  }
+}
+
+function renderFeelingsGrid() {
+  computeSuggestions();
+  const grid = document.getElementById('feelingsGrid');
+  grid.innerHTML = FEELING_ORDER.map(key => {
+    const f = FEELINGS[key];
+    const suggested = state.suggestedFeelings.has(key) ? 'suggested' : '';
+    const isPicked = state.pickedFeelings.has(key);
+    const picked = isPicked ? 'picked' : '';
+    const nameParts = [f.name];
+    if (suggested) nameParts.push('best match');
+    return `
+      <div class="feeling-card ${suggested} ${picked}" data-key="${key}" role="button" tabindex="0" aria-pressed="${isPicked}" aria-label="${nameParts.join(', ')} — select this feeling" onclick="togglePick('${key}')" onkeydown="kb(event,()=>togglePick('${key}'))">
+        <div class="f-name">${f.name}</div>
+        <div class="f-row"><div class="label">Location</div><div class="value">${f.location}</div></div>
+        <div class="f-row"><div class="label">Purpose</div><div class="value">${f.purpose}</div></div>
+        <div class="f-row"><div class="label">Action</div><div class="value">${f.action}</div></div>
+        <div class="f-row"><div class="label">Shadow</div><div class="value shadow">${f.shadow}</div></div>
+      </div>
+    `;
+  }).join('');
+  updateStep3NextState();
+}
+
+function togglePick(key) {
+  if (state.pickedFeelings.has(key)) {
+    state.pickedFeelings.delete(key);
+  } else {
+    state.pickedFeelings.add(key);
+  }
+  renderFeelingsGrid();
+}
+
+function updateStep3NextState() {
+  document.getElementById('step3Next').disabled = state.pickedFeelings.size === 0;
+}
+
+/* ====================== STEP 4: ACTION ====================== */
+function renderActions() {
+  const list = document.getElementById('actionsList');
+  const picked = [...state.pickedFeelings];
+  list.innerHTML = picked.map(key => {
+    const f = FEELINGS[key];
+    return `
+      <div class="action-block">
+        <div class="a-feeling">${f.name.toUpperCase()}</div>
+        <div class="a-label">The action this energy is asking for</div>
+        <div class="a-text">${f.action}</div>
+      </div>
+    `;
+  }).join('');
+
+  if (picked.length > 1) {
+    list.insertAdjacentHTML('afterbegin', `
+      <div class="match-explain" style="border-left-color: var(--vermillion);">
+        <strong style="color: var(--vermillion);">You picked more than one</strong>
+        That's a mix — which means it's likely an <em>emotion</em>, not a present-time feeling. Note this. Day 6 is where mixed emotions get unmixed. For now, read each asked-for action and notice which one your body recognizes.
+      </div>
+    `);
+  }
+
+  document.getElementById('commitmentText').value = state.commitment;
+  document.getElementById('commitmentText').oninput = e => { state.commitment = e.target.value; };
+}
+
+/* ====================== STEP 5: WITNESS ====================== */
+function renderWitness() {
+  const picked = [...state.pickedFeelings].map(k => FEELINGS[k].name).join(' + ');
+  const locations = [...state.zones].map(z => ZONE_LABEL[z]).join(', ');
+  const actions = [...state.pickedFeelings].map(k => FEELINGS[k].action).join(' / ');
+  document.getElementById('wFeeling').textContent = picked || '—';
+  document.getElementById('wLocation').textContent = locations || '—';
+  document.getElementById('wAction').textContent = actions || '—';
+}
+
+/* ====================== SAVE ====================== */
+function saveAndContinue() {
+  const session = {
+    date: new Date().toISOString(),
+    zones: [...state.zones],
+    qualities: [...state.qualities],
+    qualityFree: state.qualityFree,
+    feelings: [...state.pickedFeelings],
+    suggested: [...state.suggestedFeelings],
+    commitment: state.commitment
+  };
+  const sessions = JSON.parse(localStorage.getItem('etb_day05_sessions') || '[]');
+  sessions.unshift(session);
+  localStorage.setItem('etb_day05_sessions', JSON.stringify(sessions.slice(0, 30)));
+  renderSaved();
+  goStep(5);
+}
+
+function newSession() {
+  // reset state
+  state = {
+    zones: new Set(),
+    qualities: new Set(),
+    qualityFree: '',
+    pickedFeelings: new Set(),
+    suggestedFeelings: new Set(),
+    commitment: '',
+    currentStep: 1
+  };
+  // reset visual selections
+  document.querySelectorAll('.body-figure .zone.selected').forEach(z => { z.classList.remove('selected'); z.setAttribute('aria-pressed', 'false'); });
+  document.querySelectorAll('#qualityChips .chip.selected').forEach(c => c.classList.remove('selected'));
+  document.getElementById('qualityFree').value = '';
+  document.getElementById('commitmentText').value = '';
+  renderSelectedZones();
+  goStep(1);
+}
+
+function renderSaved() {
+  const list = document.getElementById('savedList');
+  const sessions = JSON.parse(localStorage.getItem('etb_day05_sessions') || '[]');
+  if (!sessions.length) {
+    list.innerHTML = '<div class="empty">No sessions yet. Your first one will appear here.</div>';
+    return;
+  }
+  list.innerHTML = sessions.map(s => `
+    <div class="session">
+      <div class="date">${new Date(s.date).toLocaleString()}</div>
+      <div class="zones">Zones: ${s.zones.map(z => ZONE_LABEL[z] || z).join(', ') || '—'}</div>
+      <div class="feelings">${s.feelings.map(k => FEELINGS[k].name).join(' + ') || '—'}</div>
+    </div>
+  `).join('') + `<button class="clear-btn" onclick="clearSaved()">Clear all saved sessions</button>`;
+}
+
+function clearSaved() {
+  if (!confirm('Clear all saved Feeling Locator sessions on this device? This cannot be undone.')) return;
+  localStorage.removeItem('etb_day05_sessions');
+  renderSaved();
+}
+
+/* ====================== GROUNDING MODAL ====================== */
+/* always-available exit for a flooded learner — replicates the Day 7 pattern */
+let _groundReturnFocus = null;
+function openGround() {
+  _groundReturnFocus = document.activeElement;
+  const modal = document.getElementById('groundModal');
+  modal.classList.add('show');
+  // move focus into the modal
+  const firstBtn = modal.querySelector('.modal-actions .btn');
+  if (firstBtn) firstBtn.focus();
+}
+function closeGround() {
+  document.getElementById('groundModal').classList.remove('show');
+  // return focus to whatever opened it (usually the GROUND NOW button)
+  if (_groundReturnFocus && typeof _groundReturnFocus.focus === 'function') {
+    _groundReturnFocus.focus();
+  }
+  _groundReturnFocus = null;
+}
+/* ESC closes the grounding modal */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('groundModal');
+    if (modal.classList.contains('show')) closeGround();
+  }
+});
+
+/* ====================== INIT ====================== */
+window.addEventListener('DOMContentLoaded', () => {
+  initBodyZones();
+  initQualityChips();
+  renderSaved();
+  // GROUND NOW stays hidden until consent opens the tool
+  document.getElementById('groundNowBtn').classList.remove('show');
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

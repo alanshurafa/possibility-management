@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 00 · Start Here and Getting Your Container · Expand the Box</title>
+<meta name="description" content="Module 00 of the Expand the Box course: Start Here and Getting Your Container.">
+<meta name="generator" content="ETB build.py — generated page, do not hand-edit. Source: Days/Day 00 - Start Here and Getting Your Container.md">
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root{
+  --ivory:#f4ecdc; --ivory-shade:#ece2c8; --ivory-deep:#e3d7b9;
+  --ink:#0e0a05; --ink-soft:#2a221a; --ink-mute:#4a3f30; --rule:#b8a98a;
+  --vermillion:#c43b1c; --vermillion-deep:#962a13; --mustard:#d8b04a;
+  --mustard-text:#b8902c; --sky:#4a6b7c; --green:#1d4d3a;
+  --display:'Fraunces','EB Garamond',Georgia,serif;
+  --body:'EB Garamond',Georgia,serif;
+  --mono:'JetBrains Mono','Courier New',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--body); background:var(--ivory); color:var(--ink);
+  font-size:18px; line-height:1.62; -webkit-font-smoothing:antialiased;
+  min-height:100vh; position:relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216,176,74,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196,59,28,0.04) 0%, transparent 50%);
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a.skip-link{position:absolute;left:-9999px;top:8px;z-index:200;background:var(--ink);
+  color:var(--ivory);font-family:var(--mono);font-size:12px;letter-spacing:0.12em;
+  text-transform:uppercase;padding:12px 18px;text-decoration:none;}
+a.skip-link:focus{left:8px;}
+.wrap{max-width:820px;margin:0 auto;padding:36px 48px 90px;position:relative;z-index:2;}
+
+header.top{
+  display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-mute);padding-bottom:32px;border-bottom:1px solid var(--rule);flex-wrap:wrap;}
+header.top .num{color:var(--vermillion);font-weight:600;}
+header.top a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px;transition:all 0.2s;}
+header.top a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+header.top a:focus-visible{outline:2px solid var(--vermillion);outline-offset:3px;}
+
+.module-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--vermillion);margin:48px 0 14px;}
+
+/* rendered markdown prose */
+.prose{margin-top:8px;}
+.prose h1{font-family:var(--display);font-weight:350;
+  font-size:clamp(40px,6vw,72px);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;
+  line-height:1.0;letter-spacing:-0.025em;margin:0 0 28px;color:var(--ink);}
+.prose h2{font-family:var(--display);font-weight:400;
+  font-size:clamp(26px,3.2vw,38px);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;
+  line-height:1.08;letter-spacing:-0.015em;margin:52px 0 16px;color:var(--ink);
+  padding-top:8px;border-top:1px solid var(--rule);}
+.prose h3{font-family:var(--display);font-weight:500;font-size:24px;
+  font-variation-settings:'opsz' 144,'SOFT' 50;line-height:1.15;margin:36px 0 12px;color:var(--ink);}
+.prose h4{font-family:var(--mono);font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--mustard-text);font-weight:600;margin:28px 0 10px;}
+.prose p{margin:0 0 18px;color:var(--ink-soft);}
+.prose strong{color:var(--ink);font-weight:600;}
+.prose em{color:var(--ink);font-style:italic;}
+.prose a{color:var(--vermillion-deep);text-decoration:none;
+  border-bottom:1px solid rgba(150,42,19,0.35);transition:all 0.2s;}
+.prose a:hover{border-bottom-color:var(--vermillion);color:var(--vermillion);}
+.prose a:focus-visible{outline:2px solid var(--vermillion);outline-offset:2px;}
+.prose ul,.prose ol{margin:0 0 20px 26px;color:var(--ink-soft);}
+.prose li{margin-bottom:9px;}
+.prose blockquote{margin:24px 0;padding:20px 28px;background:var(--ivory-shade);
+  border-left:4px solid var(--vermillion);font-style:italic;color:var(--ink-soft);}
+.prose blockquote p:last-child{margin-bottom:0;}
+.prose hr{border:none;border-top:1px dashed var(--rule);margin:40px 0;}
+.prose code{font-family:var(--mono);font-size:0.86em;background:var(--ivory-shade);
+  padding:2px 6px;color:var(--vermillion-deep);border:1px solid var(--rule);}
+.prose pre{background:var(--ink);color:var(--ivory);padding:22px 24px;overflow-x:auto;
+  margin:0 0 22px;border-left:4px solid var(--vermillion);}
+.prose pre code{background:none;border:none;color:var(--ivory);padding:0;font-size:14px;
+  line-height:1.6;}
+.prose img{max-width:100%;height:auto;display:block;margin:28px auto;border:1px solid var(--rule);
+  background:var(--ivory-shade);padding:12px;box-shadow:0 14px 40px rgba(14,10,5,0.14);}
+.prose table{width:100%;border-collapse:collapse;margin:0 0 26px;font-size:16px;}
+.prose th,.prose td{border:1px solid var(--rule);padding:10px 14px;text-align:left;
+  vertical-align:top;color:var(--ink-soft);}
+.prose th{background:var(--ivory-shade);font-family:var(--mono);font-size:11px;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);font-weight:600;}
+.prose sub{font-size:12px;color:var(--ink-mute);line-height:1.6;}
+.prose sub a{color:var(--ink-mute);}
+
+/* module nav */
+nav.module-nav{display:flex;justify-content:space-between;gap:16px;margin:56px 0 0;
+  padding-top:28px;border-top:1px solid var(--rule);flex-wrap:wrap;}
+nav.module-nav a,nav.module-nav span{font-family:var(--mono);font-size:11px;
+  letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:var(--ink-mute);
+  border:1.5px solid var(--rule);padding:12px 18px;transition:all 0.2s;max-width:46%;}
+nav.module-nav a:hover{color:var(--vermillion);border-color:var(--vermillion);}
+nav.module-nav a:focus-visible{outline:2px solid var(--vermillion);outline-offset:3px;}
+nav.module-nav .nn-label{display:block;font-size:9px;letter-spacing:0.2em;color:var(--vermillion);
+  margin-bottom:4px;}
+nav.module-nav .disabled{opacity:0.4;}
+nav.module-nav .next{text-align:right;margin-left:auto;}
+
+footer.bottom{margin-top:60px;padding-top:30px;border-top:1px solid var(--rule);}
+footer.bottom .nav-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-mute);}
+footer.bottom .nav-row a{color:var(--ink-mute);text-decoration:none;
+  border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s;}
+footer.bottom .nav-row a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+footer.bottom .license{margin-top:24px;font-family:var(--mono);font-size:10px;line-height:1.7;
+  letter-spacing:0.04em;color:var(--ink-mute);max-width:760px;}
+footer.bottom .license a{color:var(--ink-mute);text-decoration:underline;}
+footer.bottom .license a:hover{color:var(--vermillion);}
+footer.bottom .license .cc{color:var(--ink-soft);font-weight:600;letter-spacing:0.06em;}
+.build-stamp{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-mute);margin-top:18px;opacity:0.7;}
+
+@media (max-width:760px){
+  .wrap{padding:24px 20px 60px;}
+  nav.module-nav a,nav.module-nav span{max-width:100%;}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important;}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to module</a>
+<div class="wrap">
+  <header class="top">
+    <div><span class="num">EXPAND THE BOX</span> · Module 00 of 11</div>
+    <div><a href="../index.html">← Course front door</a></div>
+  </header>
+
+  <div class="module-eyebrow">Course · Module 00</div>
+
+  <article class="prose" id="main">
+<h1>Module 00 · Start Here &amp; Getting Your Container</h1>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><strong>Intensity</strong></td><td>Low</td></tr><tr><td><strong>Sittings</strong></td><td>2 (the break point is marked in the module)</td></tr><tr><td><strong>Partner check-in</strong></td><td>Not yet. Getting your container is what this module is for.</td></tr><tr><td><strong>Tools for this module</strong></td><td><a href="../Map%20Atlas/index.html">Study the maps: Map Atlas index</a> · your records and exports: <a href="../Interactive%20Tools/journal.html">journal</a> · emergency grounding: <a href="../Interactive%20Tools/ground.html">ground</a></td></tr></tbody></table>
+<p><strong>Daily spine:</strong> Phase A — Beep! Book morning capture (3-5 min). See <a href="../Practice/Daily%20Practice%20Spine.md">Daily Practice Spine</a>.</p>
+<p><strong>Videos:</strong> The written module is complete on its own. Videos are optional enrichment; see the <a href="../Resources/Video%20Manifest.md">Video Manifest</a>.</p>
+<p><em>Returning after a gap instead of starting fresh? Go to <a href="../Practice/Coming%20Back.md">Coming Back</a>. It is shorter than re-reading this page.</em></p>
+<hr>
+<h2>Purpose</h2>
+<p>To set up the conditions under which the next eleven modules can work: a container, a notebook, and a calendar.</p>
+<p>Module 00 teaches almost no Possibility Management content. It does three concrete things. It tells you how the course actually runs, so nothing later is a surprise. It walks you through <strong>getting your container</strong>: the witnessed structure this work requires, with three honest paths to it. And it installs the one piece of standing equipment the whole course writes into: the <strong>Beep! Book</strong>, which starts today, before Module 1, not on some later day when the course "really" begins.</p>
+<p>A course like this without a container is a book. Books are fine. This is built to be more than one, and the difference is entirely in what you set up in the next hour or two.</p>
+<hr>
+<h2>Core PM concepts</h2>
+<ul>
+<li><strong>Container.</strong> The held structure inside which this work is safe to do: a witness who has agreed to specific commitments, a schedule you chose on purpose, and a way back in when you drop the thread.</li>
+<li><strong>Witness.</strong> A person who listens, reflects back what they heard, and asks one open question. Not a therapist, coach, or fixer. The course teaches the skill; the agreement below defines the job.</li>
+<li><strong>Beep! Book.</strong> A literal notebook. An engineering log of your reps, not a journal. Full spec: <a href="../Practice/Beep%20Book%20Guide.md">Beep! Book Guide</a>.</li>
+<li><strong>Experiment.</strong> A small, specific, time-bounded test of new thoughtware: <em>what I will do / by when / what I will notice.</em> One at a time. Taught fully in Module 4; the format appears from Module 1.</li>
+<li><strong>Sitting.</strong> One seated stretch of work on a module, usually 30 to 60 minutes. Every module is split into 2 or 3 sittings with marked break points, so you never need a free afternoon to do this course.</li>
+</ul>
+<hr>
+<h2>Learning outcomes</h2>
+<p>By the end of this module you will:</p>
+<ol>
+<li>Know the shape of the course: 12 modules, the rhythm of one module, the intensity tags, and where the climb is.</li>
+<li>Have chosen one of the three container paths, and completed that path's setup step.</li>
+<li>Have a physical Beep! Book with today's date on the first page, and have run the morning capture once.</li>
+<li>Have a written schedule: a date next to each module, with the two pause beats marked.</li>
+<li>Know where the tools live, what the journal page exports, and where the grounding page is bookmarked.</li>
+</ol>
+<hr>
+<h2>Module flow</h2>
+<table><thead><tr><th>Step</th><th>Time</th><th>What you do</th></tr></thead><tbody><tr><td>0</td><td>5 min</td><td>Run Script 2 (5 min centering) from the <a href="../Resources/Solo%20Centering%20and%20Grounding%20Scripts.md">Solo Centering and Grounding Scripts</a>. Then open the module.</td></tr><tr><td>1</td><td>10 min</td><td>Read this header and the orientation section (Sitting 1)</td></tr><tr><td>2</td><td>10 min</td><td>Set up the tools: open the Atlas, open the journal, bookmark the grounding page</td></tr><tr><td>3</td><td>15 min</td><td><strong>Install the Beep! Book</strong> (today, before anything else happens)</td></tr><tr><td>4</td><td>20 min</td><td>Read <strong>Getting your container</strong> and choose your path (Sitting 2)</td></tr><tr><td>5</td><td>15–30 min</td><td>Complete your path's setup step (join, send the agreement, or set the defer-list)</td></tr><tr><td>6</td><td>15 min</td><td><strong>The calendaring ritual</strong>: put dates on the schedule table</td></tr><tr><td>7</td><td>2 mornings</td><td>Run the <strong>between-module experiment</strong> (the morning capture, twice)</td></tr><tr><td>8</td><td>10 min</td><td>Reflection prompts, close the loop</td></tr></tbody></table>
+<p>Total: roughly 90 minutes of seated work plus two short mornings. Spread it across one to three days. Nothing in Module 1 is waiting on speed; everything in Module 1 is waiting on the container.</p>
+<hr>
+<h2>Sitting 1 · How this course runs</h2>
+<h3>The shape</h3>
+<p>Twelve modules, 00 through 11, over roughly thirty days. For each module you read a tightly written file, study one to three maps, do one solo embodied practice, exchange a voice message with your witness, run one small experiment inside your ordinary life, and write a few reflections. Then you do it again. The work is not in the reading. It is in the practices and the experiments: the small reps you run between modules.</p>
+<p>This is not therapy, coaching, or treatment. It is an education in a set of distinctions and maps, and the course asks you to verify every one of them in your own experience rather than believe anything.</p>
+<p>The rhythm of one module is about three days. Faster is fine (about 20 days for the course). Slower is fine (about 60). What matters is the order: <em>content → practice → experiment → reflection</em>, every module, no skipped steps.</p>
+<h3>Sittings</h3>
+<p>Every module is split into two or three <strong>sittings</strong> with explicit break markers. Stop at a marker whenever you need to. When you come back: one breath, re-read your last Beep! Book line, continue. You do not need to find a free afternoon anywhere in this course.</p>
+<h3>The intensity tags, and the climb</h3>
+<p>Every module header carries an honest tag.</p>
+<ul>
+<li><strong>Low</strong> (Modules 00, 01, 03, 04, 10, 11): mostly cognitive and embodied-light. One warning: Module 3 is Low intensity and load-bearing. It installs the centering and grounding equipment every hard module later stands on. Do not skim it.</li>
+<li><strong>Medium</strong> (Modules 02, 08): real but manageable charge. Your witness must be confirmed reachable before the day's main practice.</li>
+<li><strong>High</strong> (Modules 05, 06, 07, 09): these engage your feelings, your drama patterns, and your shadow directly. Each one asks your consent again before it begins and requires your witness reachable within 24 hours.</li>
+</ul>
+<p>Say it plainly: <strong>Modules 5 through 9 are the climb.</strong> Four High modules and a demanding Medium, in a row, in the same stretch where the reading is also heaviest. The course builds two beats into that stretch on purpose: a consolidation pause after Module 6 and a rest day between Modules 8 and 9. They are in the schedule table below. Plan them like appointments, because the version of you who reaches Module 6 will be tempted to power through, and powering through is how this work stops working.</p>
+<h3>The tools</h3>
+<p>Two tool systems ship with the course, named by what you do with them:</p>
+<ul>
+<li><strong>Study the map.</strong> Each map has an interactive Atlas page. The module tells you when; the header's tools row holds the links.</li>
+<li><strong>Run the practice.</strong> Some modules have a browser version of the day's practice in <a href="../Interactive%20Tools/index.html">Interactive Tools</a>.</li>
+</ul>
+<p>Everything the browser tools store stays on your device. Nothing is sent anywhere. The <a href="../Interactive%20Tools/journal.html">journal page</a> shows your entries and completion dots in one place and can <strong>export everything to a file</strong>. Do that export once a week; a browser-data clear should never be able to take your records. And bookmark the <a href="../Interactive%20Tools/ground.html">grounding page</a> now, in your browser toolbar, before you need it. It holds the 60-second grounding script with no clicks between you and it.</p>
+<p>The paper Beep! Book remains the canonical record. The browser tools are a convenience, not the spine.</p>
+<h3>Install the Beep! Book (today)</h3>
+<p>Get a physical notebook. Write <strong>Beep! Book</strong> on the cover. Write today's date on the first page. That is the installation, and it happened before Module 1 on purpose: the daily spine of this course starts now.</p>
+<p>The Beep! Book is an engineering log, not a journal. No reflection prose, no self-talk. Date-stamped lines: <em>what I did · what happened.</em> Every capture instruction in this course names it as the destination. Each morning from now on, you run the <strong>Phase A morning capture</strong>, 3 to 5 minutes, specified fully in the <a href="../Practice/Daily%20Practice%20Spine.md">Daily Practice Spine</a>: arrive, date the page, sweep yesterday in flat one-line entries, name your current experiment, close the book. The full instrument spec, including what a Beep! is and what goes on a page, lives in the <a href="../Practice/Beep%20Book%20Guide.md">Beep! Book Guide</a>. Read it before tomorrow morning.</p>
+<p>There is no streak, no score, and nobody checking. Missing a morning produces one piece of information in the weekly review, not a debt.</p>
+<hr>
+<p><strong>SITTING BREAK</strong> — stop here if you need to. When you return: one breath, re-read your last Beep! Book line, continue with Sitting 2 of 2.</p>
+<hr>
+<h2>Sitting 2 · Getting your container</h2>
+<p>This course hard-gates its deepest work on being witnessed. That is structure, not ceremony: the High modules involve practices that are safe with a witness and not safe without one. So before Module 1, you choose how you will be witnessed. Three paths. All three are honest. Walk the tree top to bottom and stop at the first door that is true for you.</p>
+<h3>The decision tree</h3>
+<p><strong>Question 1: Is an operator-run cohort open to you right now?</strong> A cohort gives you a community manager who screens, pairs, and holds the container, a matched partner, and a cohort feed. If a cohort is open and you can join it: <strong>join the cohort.</strong> This is the held path; everything in the course works as written. Complete the cohort's intake before Module 1, and stop reading this tree.</p>
+<p><strong>Question 2: No cohort, but is there a community pod you could join or form?</strong> A pod is 3 to 12 people doing the course together: they run the rituals on calls, witness each other's High work, and share one weekly pulse, while you still pair with one named partner inside it. The pod is your held container; the wider community around it is company, not container. If a community is open to you: <strong>join or form a pod.</strong> Find one in the Pod Directory or start your own, and the pod adopts the Pod Charter (it extends the 7-line agreement below) before the first ritual call. The full learner's map of this layer, including the privacy rules and the high-work-never-over-text line, is in <a href="../Practice/Practicing%20in%20a%20Group.md">Practicing in a Group</a>.</p>
+<p><strong>Question 3: No cohort and no pod. Is there one person in your life who would do this with you?</strong> They do not enroll, study the maps, or learn any vocabulary. They listen to a voice message once per module and reply within 24 hours under a short agreement. A friend qualifies. A colleague qualifies. The two poor fits: someone you live inside a charged conflict with right now, and someone who cannot stop themselves from giving advice. If you have such a person: <strong>recruit a witness.</strong> Send them the 7-line agreement below, ask them to reply "signed," and agree on a private voice-message channel (Signal, WhatsApp with encryption on, Telegram: a private 1:1 thread, no group chats, no AI transcription). That is the entire setup.</p>
+<p><strong>Question 4: None of these.</strong> Then you go <strong>solo with the defer-list</strong>, and the course says clearly what that means rather than pretending it changes nothing. Every Low and Medium module is fully available to you: the teaching, the maps, the solo practices, the experiments, the reflections. Two pieces of work are <strong>deferred until you are witnessed</strong>: the Emotional Healing Process work in Module 6, and the Demon-related ego-state work in Module 9. Deferred means you read the teaching and do the locator-level practices, and you do not run the deep practice until a witness exists. Modules 5, 6, 7, and 9 each repeat this at the point of use. The defer-list is not a punishment for being alone. It is the course refusing to put you somewhere it cannot hold you.</p>
+<p>You can move between paths at any time. Most solo readers eventually recruit a witness, and the deferred work is still there when they do.</p>
+<h3>The 7-line partner agreement</h3>
+<p>Whoever your witness is (matched partner or recruited friend) both of you agree to these seven lines before the first exchange. Copy the block and send it as-is.</p>
+<pre><code>1. I will respond to my partner's voice message within 24 hours,
+   even if briefly.
+2. I will not advise, fix, or diagnose. I will witness.
+3. I will hold what my partner shares in confidence.
+4. If my partner tells me they may harm themselves or someone else,
+   I will ask: "Are you in immediate danger right now?" If yes,
+   I will contact local emergency or crisis services AND the CM
+   immediately. I will not wait for course protocol.
+5. If I become unable to be in the partnership, I will tell the CM
+   within 48 hours so a re-match happens.
+6. I will not use what my partner shares in any other context.
+7. I will not enter a sexual, financial, or professional
+   relationship with my partner during the course.</code></pre>
+<p>For a recruited witness with no CM, lines 4 and 5 route to the next real person: in line 4, "AND the CM" becomes contacting crisis services directly; in line 5, "tell the CM" becomes telling <em>you</em>, 48 hours ahead, so you can recruit someone else before a High module. Everything else stands word for word. A witness who will not agree to line 4 is not a witness for this course.</p>
+<blockquote><p><strong>Reading this without a cohort?</strong> The Low and Medium modules are fully yours. Do not run the Module 6 EHP work or the Module 9 Demon work without a live witness. If you need someone to talk to before a witness exists, <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a> lists free, confidential helplines by country.</p></blockquote>
+<h3>The calendaring ritual</h3>
+<p>A schedule that lives in your head is a wish. Do this with your actual calendar open.</p>
+<p>Print or copy the table below. For each module, write a real date in the date column, honoring the ~3-day rhythm and your own life. Then put the first three dates in your calendar as appointments, including the pause beats, which are appointments with nothing in them. When you complete a module, write the next three dates. Say the first date out loud once, with your feet on the floor. That small theatrical act is the difference between a plan and a decision.</p>
+<table><thead><tr><th>Module</th><th>Title</th><th>Intensity</th><th>Date</th></tr></thead><tbody><tr><td>00</td><td>Start Here &amp; Getting Your Container</td><td>Low</td><td></td></tr><tr><td>01</td><td>Orientation, New Context, Radical Responsibility</td><td>Low</td><td></td></tr><tr><td>02</td><td>Thoughtware, Thoughtmaps, Box Technology</td><td>Medium</td><td></td></tr><tr><td>03</td><td>Liquid State, Center-Ground-Bubble, Five Bodies</td><td>Low</td><td></td></tr><tr><td>04</td><td>Feedback, Coaching, Rapid Learning, Experiments</td><td>Low</td><td></td></tr><tr><td>05</td><td>Feelings vs Emotions, Old Map, Numbness Bar</td><td>High</td><td></td></tr><tr><td>06</td><td>Mixed Emotions &amp; Emotional Healing Process</td><td>High</td><td></td></tr><tr><td></td><td><strong>Consolidation pause</strong> (1–2 days, built in, not optional)</td><td></td><td></td></tr><tr><td>07</td><td>Low Drama, Gremlin, Responsible Game</td><td>High</td><td></td></tr><tr><td>08</td><td>Listening, Speaking, Communication</td><td>Medium</td><td></td></tr><tr><td></td><td><strong>Rest day</strong> between Modules 8 and 9</td><td></td><td></td></tr><tr><td>09</td><td>Ego States, Problem Ownership, Learning Spiral</td><td>High</td><td></td></tr><tr><td>10</td><td>Map of Possibility, Bright/Shadow, Is-Glue, Three Powers</td><td>Low</td><td></td></tr><tr><td>11</td><td>Continuation: 90-Day Container &amp; Possibility Team</td><td>Low</td><td></td></tr></tbody></table>
+<p>The table is a tracker, not a scoreboard. The course keeps no count and awards nothing; the dates exist so <em>you</em> can read your own pattern.</p>
+<p>One quiet line that matters for a small number of readers: if naming things out loud at home is unsafe for you, every experiment in this course has a lower-stakes variant; see the variant column in the <a href="../Resources/Experiment%20Bank.md">Experiment Bank</a>.</p>
+<hr>
+<h2>Partner exchange (async)</h2>
+<p>There is no partner prompt this module; getting the partner <em>is</em> the module. What "sent" looks like by the end of Module 0, per path:</p>
+<ul>
+<li><strong>Cohort:</strong> intake complete, partner assigned and confirmed, agreement signed by both.</li>
+<li><strong>Recruited witness:</strong> agreement sent, "signed" received, channel chosen and tested with one ten-second hello message.</li>
+<li><strong>Solo:</strong> the defer-list read out loud once, and one line in the Beep! Book: <em>"Solo path. EHP and Demon work deferred until witnessed."</em></li>
+</ul>
+<p>Your first real exchange happens in Module 1, and the structure of it is taught there. Nothing to rehearse.</p>
+<hr>
+<h2>Between-module experiment</h2>
+<p>The experiment format this course uses everywhere, taught fully in Module 4, is three parts: <em>what I will do / by when / what I will notice.</em> One experiment at a time. Run this one before you open Module 1.</p>
+<ul>
+<li><strong>What I will do:</strong> the Beep! Book morning capture, exactly as the <a href="../Practice/Daily%20Practice%20Spine.md">Daily Practice Spine</a> specifies, two mornings in a row.</li>
+<li><strong>By when:</strong> the morning I start Module 1.</li>
+<li><strong>What I will notice:</strong> what the 3-to-5 minute box does to the rest of the morning, and what my Box does with "engineering log, not journal" (whether the entries try to become prose).</li>
+</ul>
+<p>Capture what you notice within ten minutes, in the Beep! Book itself: one line per noticing. If a morning gets skipped, that is a Beep!, and Beeps go in the book. A captured miss is the loop working.</p>
+<hr>
+<h2>Reflection prompts</h2>
+<p>Write longhand if you can. Three questions, a few lines each:</p>
+<ol>
+<li>Which container path did I choose, and what was the half-second of hesitation before I chose it about?</li>
+<li>When I look at the schedule with real dates on it, where does my body tighten? Which module, or which week?</li>
+<li>What have I started and silently dropped before, and what was the pattern of the dropping? (Not to fix it. To know your own exits before the course shows them to you.)</li>
+</ol>
+<hr>
+<h2>Safety callouts for this module</h2>
+<p>Module 00 is Low intensity. Logistics, not charge. Three things anyway:</p>
+<ul>
+<li><strong>The 60-second grounding script</strong> is the standing default whenever you notice you are floating, can't follow the words, or your heart is racing without cause. It lives at <a href="../Interactive%20Tools/ground.html">ground.html</a> and as Script 1 in the <a href="../Resources/Solo%20Centering%20and%20Grounding%20Scripts.md">Solo Centering and Grounding Scripts</a>. Stop, stand, exhale longer than you inhale three times, name three things you can see and one you can hear, one hand on sternum and one on belly, then decide: continue, pause ten minutes, or stop for today.</li>
+<li><strong>This course is not therapy and not a substitute for it.</strong> If what surfaces at any point is bigger than a thoughtware course is built to hold, that is the signal to bring in someone qualified, not a sign you did it wrong. The <a href="../Resources/Referral%20List.md">Referral List</a> starts with crisis lines by country.</li>
+<li><strong>If the schedule itself spikes dread</strong> rather than ordinary resistance, stretch the dates before you start, not after you stall. A 60-day pass through this course is a pass through this course.</li>
+</ul>
+<hr>
+<h2>Cohort feed post (suggested)</h2>
+<p>One line each, no more. On the solo or recruited-witness path, write the same lines in your Beep! Book instead.</p>
+<ul>
+<li>The container path I chose: …</li>
+<li>The date Module 1 starts: …</li>
+<li>(Optional) one thing I want this cohort to know about how I drop things: …</li>
+</ul>
+<hr>
+<h2>Glossary additions</h2>
+<ul>
+<li><strong>Container:</strong> the held structure (witness, agreements, schedule, ways back in) inside which this work is safe to do</li>
+<li><strong>Witness:</strong> the person who listens, reflects back what they heard, and asks one open question; never advises, fixes, or diagnoses</li>
+<li><strong>Partner agreement:</strong> the 7 lines both witness and learner sign before any exchange; line 4 is the one that makes the rest possible</li>
+<li><strong>Defer-list:</strong> the solo path's honest boundary: Low and Medium work fully available; EHP (Module 6) and Demon work (Module 9) deferred until witnessed</li>
+<li><strong>Beep! Book:</strong> a literal notebook; engineering log, not journal; date-stamped reps; installed today</li>
+<li><strong>Sitting:</strong> one seated stretch of module work with a marked break point after it</li>
+<li><strong>The climb:</strong> Modules 5 through 9; four High modules and a demanding Medium, with a consolidation pause after Module 6 and a rest day before Module 9</li>
+</ul>
+<hr>
+<h2>Close the loop (5 minutes)</h2>
+<p>Rate yourself on the course's three-word scale (from the <a href="../Resources/Learning%20Self-Assessment.md">Learning Self-Assessment</a>: <em>not yet / starting / landed in my body</em>) on one statement: <em>"I have a container, a Beep! Book with today's date in it, and a schedule with real dates."</em> If the honest answer is <em>not yet</em>, the next step is in this file, not in Module 1.</p>
+<p>Write your first one-distinction entry in <a href="../Practice/My%20Map%20Book.md">My Map Book</a>: what "container" means, in your own words, with the path you chose as the lived example.</p>
+<p>If you drop the thread at any point in this course, come back through <a href="../Practice/Coming%20Back.md">Coming Back</a>. Returning is a rep, not an apology.</p>
+<hr>
+<sub>🄯 <strong>World Copyleft 2026</strong> · <em>Expand the Box (Digital)</em> · licensed <strong><a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></strong>, consistent with the spirit of World Copyleft · re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community · this course is an independent re-presentation, <strong>not an official Possibility Management training</strong> · please share, share-alike · Powered by Possibility Management (<a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>) · full terms: <code>LICENSE.md</code> in the course root</sub>
+  </article>
+
+  <nav class="module-nav" aria-label="Module navigation">
+    <span class="prev disabled"><span class="nn-label">Start</span>The front door</span>
+    <a class="next" href="module-01.html"><span class="nn-label">Module 01 →</span>Orientation, New Context, Radical Responsibility</a>
+  </nav>
+
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="../index.html">← Course front door</a>
+      <a href="../Map%20Atlas/index.html">Map Atlas →</a>
+      <a href="../Interactive%20Tools/index.html">Interactive Tools →</a>
+    </div>
+    <p class="license"><span class="cc">🄯 World Copyleft 2026 · Expand the Box (Digital).</span> Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>, consistent with the spirit of World Copyleft. Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. This course is an independent re-presentation, <strong>not an official Possibility Management training</strong>. Please share, share-alike. Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>. Full terms: <code>LICENSE.md</code> in the course root.</p>
+    <p class="build-stamp">Generated by build.py · 2026-06-12 · do not hand-edit · source: Days/Day 00 - Start Here and Getting Your Container.md</p>
+  </footer>
+</div>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. This course is an independent re-presentation, not an official Possibility Management training. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

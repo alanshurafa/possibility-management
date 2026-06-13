@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Journal · Expand the Box</title>
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+  --green: #1d4d3a;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap { max-width: 1100px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero { margin: 56px 0 36px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 720px;
+  font-style: italic;
+}
+
+/* privacy callout */
+.privacy-callout {
+  margin: 32px 0 0;
+  padding: 18px 24px;
+  background: var(--vermillion-soft);
+  border-left: 3px solid var(--vermillion);
+  font-family: var(--body);
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.55;
+  max-width: 860px;
+}
+.privacy-callout strong {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* buttons */
+.btn-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+.btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+/* sections */
+.section {
+  margin-top: 56px;
+  padding: 48px 52px;
+  background: var(--ivory-shade);
+  border-top: 3px solid var(--vermillion);
+}
+.section .section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+}
+.section h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.section h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.section .prose {
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 760px;
+  margin-bottom: 8px;
+}
+.section .prose em { color: var(--ink); font-style: italic; }
+
+/* progress grid */
+.prog-row {
+  display: grid;
+  grid-template-columns: 64px 240px 1fr;
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px dashed var(--rule);
+  align-items: baseline;
+}
+.prog-row:last-of-type { border-bottom: none; }
+.prog-row .prog-day {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: 40px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.prog-row .prog-title {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.prog-row .prog-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+.art {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.art .dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-mute);
+  background: transparent;
+  flex: 0 0 auto;
+}
+.art.filled { color: var(--ink); }
+.art.filled .dot { background: var(--vermillion); border-color: var(--vermillion); }
+.art .count { color: var(--vermillion); font-weight: 600; }
+
+.atlas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin-top: 18px;
+}
+
+/* journal cards */
+.journal-card {
+  margin-top: 28px;
+  background: var(--ivory);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--vermillion);
+}
+.journal-card .card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 18px 24px 14px;
+  border-bottom: 1px dashed var(--rule);
+}
+.journal-card .card-head .key-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.journal-card .card-head .key-label {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  color: var(--ink);
+  margin-top: 2px;
+}
+.journal-card .card-head .copy-btn {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--ink-mute);
+  color: var(--ink-mute);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.journal-card .card-head .copy-btn:hover { border-color: var(--ink); color: var(--ink); }
+.journal-card .card-head .copy-btn:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 2px; }
+.journal-card .card-body { padding: 20px 24px 24px; }
+
+.entry {
+  padding: 14px 0;
+  border-bottom: 1px dotted var(--rule);
+}
+.entry:first-child { padding-top: 0; }
+.entry:last-child { border-bottom: none; padding-bottom: 0; }
+.entry .entry-when {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.entry .field { margin-bottom: 6px; font-size: 17px; line-height: 1.5; color: var(--ink-soft); }
+.entry .field .fkey {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: inline-block;
+  margin-right: 10px;
+}
+.entry .field .fval { color: var(--ink); }
+.entry pre.nested {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  background: var(--ivory-shade);
+  border-left: 2px solid var(--rule);
+  padding: 10px 14px;
+  margin: 6px 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.plain-text {
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.empty-state {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-mute);
+  padding: 24px 0 8px;
+}
+
+.deprecated-note {
+  margin-top: 24px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  line-height: 1.7;
+  max-width: 760px;
+}
+
+/* import confirm panel */
+.import-panel {
+  margin-top: 28px;
+  border: 1.5px solid var(--ink);
+  background: var(--ivory-deep);
+  padding: 28px 32px 26px;
+  position: relative;
+  display: none;
+}
+.import-panel.show { display: block; }
+.import-panel::before {
+  content: 'IMPORT · CONFIRM BEFORE WRITING';
+  position: absolute;
+  top: -11px;
+  left: 24px;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  padding: 4px 12px;
+  font-weight: 600;
+}
+.import-panel h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 24px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.import-panel h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.import-panel p { font-size: 16px; color: var(--ink-soft); margin-bottom: 10px; }
+.import-list {
+  margin: 14px 0;
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--rule);
+  background: var(--ivory);
+}
+.import-list .import-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+  padding: 9px 16px;
+  border-bottom: 1px dotted var(--rule);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  flex-wrap: wrap;
+}
+.import-list .import-item:last-child { border-bottom: none; }
+.import-item .tag {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 2px 8px;
+}
+.import-item .tag.new { background: var(--green); color: var(--ivory); }
+.import-item .tag.overwrite { background: var(--vermillion); color: var(--ivory); }
+.import-item .tag.skipped { background: var(--ivory-shade); color: var(--ink-mute); border: 1px solid var(--rule); }
+
+/* flash */
+#flashMsg {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--ivory);
+  padding: 14px 22px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  z-index: 1000;
+  border-left: 3px solid var(--vermillion);
+}
+
+footer.bottom {
+  margin-top: 72px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 800px) {
+  .wrap { padding: 24px 20px 60px; }
+  .section { padding: 32px 24px; }
+  .prog-row { grid-template-columns: 48px 1fr; }
+  .prog-row .prog-dots { grid-column: 1 / -1; padding-top: 6px; }
+  .prog-row .prog-day { font-size: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">EXPAND THE BOX</span> · Practice Journal · local only
+    </div>
+    <div>
+      <a href="ground.html">Ground now</a> &nbsp;·&nbsp; <a href="index.html">← All tools</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Possibility Management · your practice record</div>
+    <h1 class="display">Your work. <em>All of it.</em> On this device.</h1>
+    <p class="lede">
+      Every tool in this suite saves to your browser, and only to your browser. This page gathers all of it
+      in one place — what you have done, what you wrote, when — and lets you save it to a file you own.
+    </p>
+    <div class="privacy-callout" role="note">
+      <strong>Privacy · read this once</strong>
+      Everything on this page is stored only in this browser, on this device. Nothing is sent anywhere — no
+      server, no account, no telemetry. That also means one browser-data clear erases it all. If your practice
+      record matters to you, <em>export it regularly</em> using the button below and keep the file somewhere safe.
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" type="button" onclick="exportAll()">Export everything (.json)</button>
+      <button class="btn" type="button" onclick="document.getElementById('importFile').click()">Import from a file…</button>
+      <button class="btn ghost" type="button" onclick="renderAll(); flash('Refreshed from this browser.')">Refresh</button>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none" aria-label="Choose an ETB journal export file to import">
+    </div>
+
+    <!-- import confirmation -->
+    <div class="import-panel" id="importPanel" role="region" aria-labelledby="importHeading">
+      <h3 id="importHeading">About to write <em>into this browser.</em></h3>
+      <p id="importSummary"></p>
+      <div class="import-list" id="importList"></div>
+      <p style="font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mute);">
+        Only keys starting with <strong>etb_</strong> are ever written. Overwrites replace what is currently stored under that key.
+      </p>
+      <div class="btn-row">
+        <button class="btn primary" type="button" id="importConfirmBtn" onclick="confirmImport()">Write these keys</button>
+        <button class="btn ghost" type="button" onclick="cancelImport()">Cancel — write nothing</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== PROGRESS ====================== -->
+  <section class="section" aria-labelledby="progress-h">
+    <div class="section-label">Progress · plain facts, not scores</div>
+    <h2 id="progress-h">What is <em>recorded,</em> day by day.</h2>
+    <p class="prose">
+      A filled dot means that artifact exists in this browser — a saved commitment, a logged session, a kept
+      reflection. An empty dot means nothing saved yet. No streaks, no badges, no percentages. Just what is there.
+    </p>
+    <div id="progressDays"></div>
+
+    <div style="margin-top:36px;">
+      <div class="section-label">Map Atlas · reflections</div>
+      <p class="prose">One dot per map. Filled when a reflection is saved on that map's page.</p>
+      <div class="atlas-grid" id="progressAtlas"></div>
+    </div>
+  </section>
+
+  <!-- ====================== JOURNAL ====================== -->
+  <section class="section" aria-labelledby="journal-h">
+    <div class="section-label">Journal · everything stored</div>
+    <h2 id="journal-h">Read it <em>back.</em></h2>
+    <p class="prose">
+      Every saved record in this browser, rendered readably — newest material first within each tool.
+      This includes anything saved by tools added to the suite later.
+    </p>
+    <div id="journalCards"></div>
+    <div class="deprecated-note" id="deprecatedNote" hidden></div>
+  </section>
+
+  <footer class="bottom">
+    <div>Practice Journal · ETB Interactive Tools</div>
+    <div>Local-only · export regularly · <a href="index.html" style="color:inherit;">all tools</a></div>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   ETB Practice Journal — local-only viewer, exporter, importer.
+   Reads every localStorage key starting with "etb_" at runtime.
+   Never writes any key that does not start with "etb_".
+   Consent-gate keys (matching /consent/i) are deprecated:
+   excluded from display, export and import.
+   ============================================================ */
+
+const EXPORT_SCHEMA = 'etb-journal-export';
+const EXPORT_VERSION = 1;
+
+/* ---- known artifact map (display labels only; enumeration is runtime) ---- */
+const DAYS = [
+  { num: '01', title: 'Orientation · New Context · Radical Responsibility', artifacts: [
+    { key: 'etb_chain_walks', label: 'Chain walks' },
+    { key: 'etb_levels_sets', label: 'Four Levels sets' },
+    { key: 'etb_day01_commitment', label: 'Red-Pill commitment' }
+  ]},
+  { num: '02', title: 'Thoughtware · Thoughtmaps · Box Technology', artifacts: [
+    { key: 'etb_day02_box_inventory', label: 'Box inventory' },
+    { key: 'etb_day02_reflection', label: 'Reflection' }
+  ]},
+  { num: '03', title: 'Liquid State · Center-Ground-Bubble · Five Bodies', artifacts: [
+    { key: 'etb_day03_practice', label: 'Centering practice' },
+    { key: 'etb_day03_reps', label: 'Practice reps' }
+  ]},
+  { num: '04', title: 'Feedback · Coaching · Experiments', artifacts: [
+    { key: 'etb_day04_experiments', label: 'Experiments' }
+  ]},
+  { num: '05', title: 'Feelings vs Emotions · Numbness Bar', artifacts: [
+    { key: 'etb_day05_sessions', label: 'Feeling sessions' }
+  ]},
+  { num: '06', title: 'Mixed Emotions · Emotional Healing Process', artifacts: [
+    { key: 'etb_day06_ehp_sessions', label: 'EHP sessions' }
+  ]},
+  { num: '07', title: 'Low Drama · Gremlin Food · Responsible Game', artifacts: [
+    { key: 'etb_day07_detections', label: 'Drama detections' }
+  ]},
+  { num: '08', title: 'Listening · Speaking · Completion Loops', artifacts: [
+    { key: 'etb_day08_draft', label: 'Loop draft' },
+    { key: 'etb_day08_loops', label: 'Completed loops' }
+  ]},
+  { num: '09', title: 'Ego States · Problem Ownership · Learning Spiral', artifacts: [
+    { key: 'etb_day09_catches', label: 'Ego-state catches' }
+  ]},
+  { num: '10', title: 'Map of Possibility · Three Powers · Integration', artifacts: [
+    { key: 'etb_day10_declaration', label: 'Declaration' },
+    { key: 'etb_day10_state', label: 'Composer state' }
+  ]}
+];
+
+const ATLAS_TITLES = {
+  M01: 'New Context (the chain)', M02: 'Map of Thoughtware', M03: 'Map of Thoughtmaps',
+  M04: 'Anatomy of the Box', M05: 'Liquid State', M06: 'Five Bodies',
+  M07: 'Center, Grounding Cord, Bubble, Golden Cube', M08: 'Old Map of Feelings',
+  M09: 'Numbness Bar', M10: 'New Map of Feelings', M11: 'Mixed Emotions',
+  M12: 'Emotional Healing Process', M13: 'Low Drama Triangle', M14: '4 Listenings',
+  M15: '4 Speakings', M16: 'Map of Communication', M17: 'Ego States',
+  M18: 'Problem Ownership', M19: 'Learning Spiral', M20: 'Map of Possibility',
+  M21: 'Bright Principles and Shadow Principles', M22: 'Is-Glue and Is-Glue Dissolver',
+  M23: 'Three Powers', M24: 'Levels of Responsibility', M25: 'Feedback and Coaching',
+  M26: 'Rapid Learning', M27: 'Your Gremlin', M28: 'Gameworld', M29: 'Map of Reactivities'
+};
+
+/* flat label lookup for journal card headings */
+const KEY_LABELS = {};
+DAYS.forEach(d => d.artifacts.forEach(a => { KEY_LABELS[a.key] = 'Day ' + d.num + ' · ' + a.label; }));
+Object.keys(ATLAS_TITLES).forEach(m => { KEY_LABELS['etb_atlas_' + m] = 'Atlas ' + m + ' · ' + ATLAS_TITLES[m]; });
+
+/* ---- util ---- */
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function isConsentKey(k) { return /consent/i.test(k); }
+function isEtbKey(k) { return /^etb_/.test(k); }
+
+/* every etb_ key currently in localStorage, consent keys excluded */
+function listEtbKeys() {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (isEtbKey(k) && !isConsentKey(k)) keys.push(k);
+  }
+  return keys.sort();
+}
+/* deprecated consent keys found (display the fact, never the value) */
+function listDeprecatedKeys() {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (isEtbKey(k) && isConsentKey(k)) keys.push(k);
+  }
+  return keys.sort();
+}
+
+function rawValue(key) {
+  try { return localStorage.getItem(key); } catch (e) { return null; }
+}
+function nonEmpty(raw) {
+  if (raw === null || raw === undefined) return false;
+  const t = String(raw).trim();
+  return t !== '' && t !== '[]' && t !== '{}' && t !== 'null';
+}
+function parseMaybe(raw) {
+  if (raw === null || raw === undefined) return { kind: 'missing' };
+  try {
+    const v = JSON.parse(raw);
+    if (Array.isArray(v)) return { kind: 'array', value: v };
+    if (v && typeof v === 'object') return { kind: 'object', value: v };
+    if (typeof v === 'string') return { kind: 'string', value: v };
+    return { kind: 'string', value: String(v) };
+  } catch (e) {
+    return { kind: 'string', value: String(raw) };
+  }
+}
+function entryCount(raw) {
+  const p = parseMaybe(raw);
+  if (p.kind === 'array') return p.value.length;
+  return null;
+}
+
+const DATE_FIELDS = ['date', 'savedAt', 'saved_at', 'timestamp', 'ts', 'when', 'time', 'createdAt', 'created', 'updatedAt', 'updated'];
+function findDate(obj) {
+  for (const f of DATE_FIELDS) {
+    if (obj && obj[f]) {
+      const d = new Date(obj[f]);
+      if (!isNaN(d)) return { field: f, date: d };
+    }
+  }
+  return null;
+}
+function fmtDate(d) {
+  try { return d.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); }
+  catch (e) { return d.toISOString(); }
+}
+function humanize(k) {
+  return String(k)
+    .replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .toLowerCase();
+}
+
+/* ---- flash ---- */
+function flash(msg) {
+  const existing = document.getElementById('flashMsg');
+  if (existing) existing.remove();
+  const f = document.createElement('div');
+  f.id = 'flashMsg';
+  f.textContent = msg;
+  document.body.appendChild(f);
+  setTimeout(() => f.remove(), 2600);
+}
+
+/* ============================================================
+   PROGRESS VIEW
+   ============================================================ */
+function renderProgress() {
+  const daysEl = document.getElementById('progressDays');
+  daysEl.innerHTML = DAYS.map(d => {
+    const dots = d.artifacts.map(a => {
+      const raw = rawValue(a.key);
+      const filled = nonEmpty(raw);
+      const n = filled ? entryCount(raw) : null;
+      const countTxt = (n !== null && n > 0) ? ` · <span class="count">${n} ${n === 1 ? 'entry' : 'entries'}</span>` : '';
+      const ariaState = filled ? (n !== null ? `recorded, ${n} ${n === 1 ? 'entry' : 'entries'}` : 'recorded') : 'nothing saved yet';
+      return `<span class="art ${filled ? 'filled' : ''}" role="img" aria-label="${escapeHtml(a.label)}: ${ariaState}"><span class="dot"></span>${escapeHtml(a.label)}${countTxt}</span>`;
+    }).join('');
+    return `
+      <div class="prog-row">
+        <div class="prog-day">${d.num}</div>
+        <div class="prog-title">${escapeHtml(d.title)}</div>
+        <div class="prog-dots">${dots}</div>
+      </div>`;
+  }).join('');
+
+  const atlasEl = document.getElementById('progressAtlas');
+  atlasEl.innerHTML = Object.keys(ATLAS_TITLES).map(m => {
+    const key = 'etb_atlas_' + m;
+    const filled = nonEmpty(rawValue(key));
+    const ariaState = filled ? 'reflection saved' : 'no reflection yet';
+    return `<span class="art ${filled ? 'filled' : ''}" role="img" title="${escapeHtml(ATLAS_TITLES[m])}" aria-label="${m} ${escapeHtml(ATLAS_TITLES[m])}: ${ariaState}"><span class="dot"></span>${m}</span>`;
+  }).join('');
+}
+
+/* ============================================================
+   JOURNAL VIEW — all rendering of stored values goes through
+   escapeHtml; stored values are user input.
+   ============================================================ */
+function renderFieldValue(v) {
+  if (v === null || v === undefined) return '<span class="fval">—</span>';
+  if (Array.isArray(v) || (typeof v === 'object')) {
+    return `<pre class="nested">${escapeHtml(JSON.stringify(v, null, 2))}</pre>`;
+  }
+  if (typeof v === 'boolean') return `<span class="fval">${v ? 'yes' : 'no'}</span>`;
+  return `<span class="fval">${escapeHtml(String(v))}</span>`;
+}
+
+function renderEntryObject(obj) {
+  const dateInfo = findDate(obj);
+  let html = '';
+  if (dateInfo) html += `<div class="entry-when">${escapeHtml(fmtDate(dateInfo.date))}</div>`;
+  for (const k of Object.keys(obj)) {
+    if (dateInfo && k === dateInfo.field) continue;
+    const v = obj[k];
+    if (v === '' || v === null || v === undefined) continue;
+    if (Array.isArray(v) && v.length === 0) continue;
+    html += `<div class="field"><span class="fkey">${escapeHtml(humanize(k))}</span>${renderFieldValue(v)}</div>`;
+  }
+  return html || '<div class="field"><span class="fval">—</span></div>';
+}
+
+function renderStoredValue(raw) {
+  const p = parseMaybe(raw);
+  if (p.kind === 'array') {
+    if (!p.value.length) return '<div class="empty-state">Saved, but currently empty.</div>';
+    return p.value.map(item => {
+      if (item && typeof item === 'object' && !Array.isArray(item)) {
+        return `<div class="entry">${renderEntryObject(item)}</div>`;
+      }
+      return `<div class="entry"><div class="plain-text">${escapeHtml(typeof item === 'string' ? item : JSON.stringify(item, null, 2))}</div></div>`;
+    }).join('');
+  }
+  if (p.kind === 'object') {
+    return `<div class="entry">${renderEntryObject(p.value)}</div>`;
+  }
+  return `<div class="plain-text">${escapeHtml(p.value)}</div>`;
+}
+
+function renderJournal() {
+  const host = document.getElementById('journalCards');
+  const keys = listEtbKeys().filter(k => nonEmpty(rawValue(k)));
+
+  /* known keys in curriculum order first, then any unknown etb_ keys */
+  const knownOrder = Object.keys(KEY_LABELS);
+  const known = knownOrder.filter(k => keys.includes(k));
+  const unknown = keys.filter(k => !knownOrder.includes(k));
+  const ordered = known.concat(unknown);
+
+  if (!ordered.length) {
+    host.innerHTML = '<div class="empty-state">Nothing saved in this browser yet. Open any day’s tool, do the practice, save — and it will appear here.</div>';
+  } else {
+    host.innerHTML = ordered.map(k => {
+      const raw = rawValue(k);
+      const label = KEY_LABELS[k] || ('Unrecognized record · ' + humanize(k.replace(/^etb_/, '')));
+      const n = entryCount(raw);
+      const countTxt = (n !== null) ? ` · ${n} ${n === 1 ? 'entry' : 'entries'}` : '';
+      return `
+        <article class="journal-card" aria-label="${escapeHtml(label)}">
+          <div class="card-head">
+            <div>
+              <div class="key-name">${escapeHtml(k)}${escapeHtml(countTxt)}</div>
+              <div class="key-label">${escapeHtml(label)}</div>
+            </div>
+            <button class="copy-btn" type="button" data-copy-key="${escapeHtml(k)}">Copy section</button>
+          </div>
+          <div class="card-body">${renderStoredValue(raw)}</div>
+        </article>`;
+    }).join('');
+  }
+
+  /* per-section copy-to-clipboard (raw stored value, for pasting elsewhere) */
+  host.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const k = btn.getAttribute('data-copy-key');
+      const raw = rawValue(k);
+      if (raw === null) { flash('Nothing stored under that key.'); return; }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(raw).then(
+          () => flash('Copied ' + k + ' to clipboard.'),
+          () => flash('Could not copy — your browser blocked it.')
+        );
+      } else {
+        flash('Clipboard not available in this browser.');
+      }
+    });
+  });
+
+  /* deprecated consent keys: named, never shown, never exported */
+  const dep = listDeprecatedKeys();
+  const noteEl = document.getElementById('deprecatedNote');
+  if (dep.length) {
+    noteEl.hidden = false;
+    noteEl.innerHTML = 'Deprecated key' + (dep.length > 1 ? 's' : '') + ' found and excluded from this journal and from exports: '
+      + dep.map(k => `<strong>${escapeHtml(k)}</strong>`).join(', ')
+      + '. Consent gates are re-armed on every visit and carry no practice data.';
+  } else {
+    noteEl.hidden = true;
+    noteEl.innerHTML = '';
+  }
+}
+
+function renderAll() {
+  renderProgress();
+  renderJournal();
+}
+
+/* ============================================================
+   EXPORT — one JSON file with every etb_ key (consent excluded)
+   ============================================================ */
+function exportAll() {
+  const keys = listEtbKeys();
+  const out = {
+    schema: EXPORT_SCHEMA,
+    version: EXPORT_VERSION,
+    exportedAt: new Date().toISOString(),
+    keys: {}
+  };
+  keys.forEach(k => { out.keys[k] = rawValue(k); });
+
+  const stamp = new Date().toISOString().slice(0, 10);
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'etb-practice-export-' + stamp + '.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+  flash(keys.length + ' key' + (keys.length === 1 ? '' : 's') + ' exported.');
+}
+
+/* ============================================================
+   IMPORT — file picker, explicit confirmation, etb_-only writes
+   ============================================================ */
+let pendingImport = null; /* { writes: [{key, value, exists}], skipped: [key] } */
+
+document.getElementById('importFile').addEventListener('change', (ev) => {
+  const file = ev.target.files && ev.target.files[0];
+  ev.target.value = ''; /* allow re-picking the same file */
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let data;
+    try { data = JSON.parse(reader.result); }
+    catch (e) { flash('That file is not valid JSON.'); return; }
+    prepareImport(data);
+  };
+  reader.onerror = () => flash('Could not read that file.');
+  reader.readAsText(file);
+});
+
+function prepareImport(data) {
+  /* accept a journal export ({schema, keys:{...}}) or a bare {etb_*: value} map */
+  let map = null;
+  if (data && typeof data === 'object' && data.keys && typeof data.keys === 'object' && !Array.isArray(data.keys)) {
+    map = data.keys;
+  } else if (data && typeof data === 'object' && !Array.isArray(data) && Object.keys(data).some(isEtbKey)) {
+    map = data;
+  }
+  if (!map) {
+    flash('Not an ETB journal export — no etb_ keys found.');
+    return;
+  }
+
+  const writes = [];
+  const skipped = [];
+  Object.keys(map).forEach(k => {
+    /* hard validation: only etb_ keys, never consent keys */
+    if (!isEtbKey(k) || isConsentKey(k)) {
+      if (k !== 'schema' && k !== 'version' && k !== 'exportedAt') skipped.push(k);
+      return;
+    }
+    const v = map[k];
+    if (v === null || v === undefined) return;
+    const value = (typeof v === 'string') ? v : JSON.stringify(v);
+    writes.push({ key: k, value: value, exists: rawValue(k) !== null });
+  });
+
+  if (!writes.length) {
+    flash('Nothing importable in that file.');
+    return;
+  }
+
+  pendingImport = { writes, skipped };
+
+  const overwrites = writes.filter(w => w.exists).length;
+  document.getElementById('importSummary').textContent =
+    writes.length + ' key' + (writes.length === 1 ? '' : 's') + ' will be written — '
+    + (writes.length - overwrites) + ' new, ' + overwrites + ' overwriting what is already in this browser.'
+    + (data.exportedAt ? ' File exported ' + (isNaN(new Date(data.exportedAt)) ? String(data.exportedAt) : fmtDate(new Date(data.exportedAt))) + '.' : '');
+
+  document.getElementById('importList').innerHTML =
+    writes.map(w => {
+      const n = entryCount(w.value);
+      const size = (n !== null) ? (n + ' ' + (n === 1 ? 'entry' : 'entries')) : (w.value.length + ' chars');
+      return `<div class="import-item"><span>${escapeHtml(w.key)} · ${escapeHtml(size)}</span><span class="tag ${w.exists ? 'overwrite' : 'new'}">${w.exists ? 'overwrites' : 'new'}</span></div>`;
+    }).join('')
+    + skipped.map(k => `<div class="import-item"><span>${escapeHtml(k)}</span><span class="tag skipped">skipped — not an etb_ key</span></div>`).join('');
+
+  const panel = document.getElementById('importPanel');
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => document.getElementById('importConfirmBtn').focus({ preventScroll: true }), 250);
+}
+
+function confirmImport() {
+  if (!pendingImport) return;
+  let written = 0;
+  pendingImport.writes.forEach(w => {
+    /* final guard — never write a non-etb_ or consent key */
+    if (!isEtbKey(w.key) || isConsentKey(w.key)) return;
+    try { localStorage.setItem(w.key, w.value); written++; } catch (e) {}
+  });
+  cancelImport();
+  renderAll();
+  flash(written + ' key' + (written === 1 ? '' : 's') + ' written.');
+}
+
+function cancelImport() {
+  pendingImport = null;
+  document.getElementById('importPanel').classList.remove('show');
+}
+
+/* ---- boot ---- */
+window.addEventListener('DOMContentLoaded', renderAll);
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

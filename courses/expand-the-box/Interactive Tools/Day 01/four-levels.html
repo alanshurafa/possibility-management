@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Four Levels of Responsibility · ETB Day 1</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #5c4f3d;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* level-specific accents */
+  --child: #7d6c50;
+  --adolescent: #c43b1c;
+  --adult: #4a6b7c;
+  --radical: #1d4d3a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero { margin: 56px 0 32px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 720px;
+  font-style: italic;
+}
+
+/* input area */
+.input-area {
+  margin: 48px 0 32px;
+  padding: 36px 40px;
+  background: var(--ivory-shade);
+  border-left: 4px solid var(--vermillion);
+  position: relative;
+}
+.input-area .prompt {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.input-area h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+.input-area h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+
+textarea.main-input {
+  width: 100%;
+  padding: 22px 26px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 24px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.4;
+}
+textarea.main-input:focus {
+  outline: none;
+  border-color: var(--ink);
+  background: white;
+}
+
+.detect-row {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+
+.suggestion {
+  display: none;
+  margin-top: 18px;
+  padding: 14px 18px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.suggestion.show { display: block; }
+.suggestion .marker {
+  display: inline-block;
+  background: var(--mustard);
+  color: var(--ink);
+  padding: 2px 8px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  margin-right: 6px;
+}
+.suggestion .note {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+
+/* the 4 levels grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: 36px 0;
+}
+
+.level-card {
+  background: var(--ivory);
+  border: 1.5px solid var(--ink);
+  padding: 32px 30px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.level-card.highlighted {
+  background: var(--ivory-shade);
+  box-shadow: 0 12px 32px rgba(14, 10, 5, 0.12);
+  transform: translateY(-2px);
+}
+.level-card .level-tag {
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+  color: var(--ivory);
+}
+.level-card[data-level="child"] .level-tag { background: var(--child); }
+.level-card[data-level="adolescent"] .level-tag { background: var(--adolescent); }
+.level-card[data-level="adult"] .level-tag { background: var(--adult); }
+.level-card[data-level="radical"] .level-tag { background: var(--radical); }
+
+.level-card .level-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  margin-bottom: 4px;
+}
+.level-card h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 38px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+.level-card h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+.level-card[data-level="child"] h3 em { color: var(--child); }
+.level-card[data-level="adolescent"] h3 em { color: var(--adolescent); }
+.level-card[data-level="adult"] h3 em { color: var(--adult); }
+.level-card[data-level="radical"] h3 em { color: var(--radical); }
+
+.level-card .stance {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.level-card .markers-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.level-card .markers {
+  margin-bottom: 24px;
+}
+.level-card .markers li {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.35;
+  list-style: none;
+  padding: 4px 0;
+  padding-left: 18px;
+  position: relative;
+}
+.level-card .markers li::before {
+  content: '“';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  font-size: 22px;
+  color: var(--rule);
+  font-style: normal;
+}
+
+.rephrase-area {
+  margin-top: 18px;
+  border-top: 1px solid var(--rule);
+  padding-top: 18px;
+}
+.rephrase-area .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+}
+.rephrase-area textarea {
+  width: 100%;
+  min-height: 70px;
+  padding: 14px 16px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.4;
+}
+.level-card[data-level="child"] .rephrase-area textarea:focus { border-color: var(--child); outline: none; background: var(--ivory); }
+.level-card[data-level="adolescent"] .rephrase-area textarea:focus { border-color: var(--adolescent); outline: none; background: var(--ivory); }
+.level-card[data-level="adult"] .rephrase-area textarea:focus { border-color: var(--adult); outline: none; background: var(--ivory); }
+.level-card[data-level="radical"] .rephrase-area textarea:focus { border-color: var(--radical); outline: none; background: var(--ivory); }
+
+.actions-row {
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  align-items: center;
+  margin: 32px 0 48px;
+  flex-wrap: wrap;
+}
+
+/* saved rephrases */
+.saved {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+}
+.saved h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+.saved .item {
+  padding: 18px 0;
+  border-bottom: 1px dashed var(--rule);
+}
+.saved .item .when {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+.saved .item .original {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+.saved .item .chosen {
+  display: inline-block;
+  padding: 6px 12px;
+  background: var(--ivory-shade);
+  border-left: 3px solid var(--vermillion);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  margin-right: 8px;
+  margin-bottom: 4px;
+}
+.saved .item .chosen-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+  color: var(--vermillion);
+}
+
+footer.bottom {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+  .wrap { padding: 24px 20px 60px; }
+  .input-area { padding: 24px 20px; }
+  h1.display { font-size: clamp(36px, 8vw, 64px); }
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 01</span> · EXPAND THE BOX · Four Levels of Responsibility
+    </div>
+    <a href="index.html">← All Day 1 tools</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Day 1 · Interactive Practice · the rephrase grid</div>
+    <h1 class="display">Four <em>levels.</em> One sentence.</h1>
+    <p class="lede">
+      Type something you actually said or thought recently. Then rephrase it from each of the four levels of responsibility.
+      Notice — in your body, not your head — which level you usually live in, and which one feels like a stretch.
+    </p>
+  </section>
+
+  <div class="input-area">
+    <div class="prompt">The sentence</div>
+    <h2 id="mainInputLabel">Type something you said — out loud or in your head — <em>recently.</em></h2>
+    <textarea class="main-input" id="mainInput" aria-labelledby="mainInputLabel" placeholder="e.g. It's not fair that they keep dumping this on me." rows="2"></textarea>
+    <div class="detect-row">
+      <button class="btn primary" onclick="detect()">Suggest a level</button>
+      <button class="btn ghost" onclick="clearAll()">Clear everything</button>
+    </div>
+    <div class="suggestion" id="suggestion" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="grid" id="grid">
+    <!-- 4 level cards populated by JS -->
+  </div>
+
+  <div class="actions-row">
+    <button class="btn primary" onclick="saveSet()">Save these rephrases</button>
+    <button class="btn ghost" onclick="renderSaved()">Show saved sets</button>
+  </div>
+
+  <div class="saved" id="savedArea" style="display:none;">
+    <h3 id="savedHeading" tabindex="-1">Saved rephrases — this device only</h3>
+    <div id="savedList"></div>
+  </div>
+
+  <footer class="bottom">
+    <div>Four Levels · ETB Day 1 · Map M01</div>
+    <div>Source: 02 - New Responsibility & Culture.mp4</div>
+  </footer>
+</div>
+
+<script>
+const LEVELS = [
+  {
+    key: 'child', num: 'I', name: 'Child',
+    italic: 'level',
+    stance: 'Someone else is responsible. I am acted upon. The world happens to me.',
+    markers: [
+      "It's not fair.",
+      "They did this to me.",
+      "I have no choice.",
+      "I'm just trying to survive here.",
+      "Why is this happening to me?"
+    ],
+    detectWords: ['fair', 'not fair', 'unfair', 'not my fault', 'can\'t', 'cannot', 'have to', 'have no choice', 'no choice', 'making me', 'making us', 'they did', 'they always', 'they never', 'supposed to', 'should be', 'why me', 'poor me', 'overwhelmed', 'too much']
+  },
+  {
+    key: 'adolescent', num: 'II', name: 'Adolescent',
+    italic: 'level',
+    stance: 'I rebel against whoever is responsible. I prove they are wrong. Defiance is identity.',
+    markers: [
+      "I'll do the opposite. Watch me.",
+      "They don't get to decide for me.",
+      "Fuck that. I'm out.",
+      "I'll show them.",
+      "You can't make me."
+    ],
+    detectWords: ['fuck', 'screw', 'i\'ll show', 'watch me', 'they don\'t', 'i won\'t', 'i refuse', 'no way', 'rebel', 'damn them', 'opposite', 'i\'m out', 'you can\'t make', 'whatever']
+  },
+  {
+    key: 'adult', num: 'III', name: 'Adult',
+    italic: 'level',
+    stance: 'I am responsible for me. I do my share. I keep my agreements. I am contractual and clear.',
+    markers: [
+      "I'll handle my part.",
+      "I'm responsible for what I committed to.",
+      "Here is what I can do; here is what I can't.",
+      "I'll meet you where I said I would.",
+      "Let me know what you need from me specifically."
+    ],
+    detectWords: ['my part', 'my share', 'i\'ll handle', 'i\'ll take care', 'agreed to', 'i\'m responsible', 'i commit', 'what i can do', 'meet you', 'i will be there', 'on me', 'i can do', 'i can\'t do']
+  },
+  {
+    key: 'radical', num: 'IV', name: 'Radical',
+    italic: 'responsibility',
+    stance: 'I am at cause. I am the author. Inaction is a choice with consequences. I create what is needed.',
+    markers: [
+      "I am the one who is making this happen.",
+      "I am here. I will create what is needed.",
+      "I created this. So I can create something different.",
+      "What I declared brought this into being.",
+      "I am at cause for what is showing up."
+    ],
+    detectWords: ['i am the one', 'i created', 'i\'m at cause', 'at cause', 'i am here', 'i am at', 'i will create', 'i declared', 'i declare', 'i source', 'i\'m sourcing', 'authored', 'i am the author']
+  }
+];
+
+function buildGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = LEVELS.map(L => `
+    <div class="level-card" data-level="${L.key}" id="card-${L.key}">
+      <div class="level-tag">${L.num} · ${L.name.toUpperCase()}</div>
+      <div class="level-num">Level ${L.num}</div>
+      <h3>${L.name} <em>${L.italic}</em></h3>
+      <p class="stance">${L.stance}</p>
+      <div class="markers-title">You'll often say —</div>
+      <ul class="markers">
+        ${L.markers.slice(0, 4).map(m => `<li>${m}</li>`).join('')}
+      </ul>
+      <div class="rephrase-area">
+        <div class="label">Rephrase your sentence from this level →</div>
+        <textarea id="rephrase-${L.key}" aria-label="Rephrase your sentence from the ${L.name} level of responsibility" placeholder="Your sentence, rephrased as ${L.name}-level…" rows="3"></textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function detect() {
+  const text = document.getElementById('mainInput').value.trim().toLowerCase();
+  if (!text) {
+    document.getElementById('mainInput').focus();
+    return;
+  }
+  // score each level by markers found
+  const scores = LEVELS.map(L => {
+    let hits = [];
+    L.detectWords.forEach(w => {
+      if (text.includes(w)) hits.push(w);
+    });
+    return { level: L, hits };
+  });
+  scores.sort((a, b) => b.hits.length - a.hits.length);
+  const top = scores[0];
+
+  // clear all highlights
+  document.querySelectorAll('.level-card').forEach(c => c.classList.remove('highlighted'));
+
+  const sugg = document.getElementById('suggestion');
+  if (top.hits.length === 0) {
+    sugg.innerHTML = `
+      <span class="marker">SUGGESTION</span>
+      Couldn't detect any strong linguistic markers. Read the four cards below — your sentence might be operating at any level, or might be neutral content that takes its meaning from the level you're <em>standing in</em> while saying it.
+      <span class="note">Reminder: the tool is a heuristic, not a verdict. <em>You</em> notice which level it actually came from. The course teaches your body to feel the difference.</span>
+    `;
+  } else {
+    const card = document.getElementById('card-' + top.level.key);
+    card.classList.add('highlighted');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const cardHeading = card.querySelector('h3');
+    if (cardHeading) {
+      cardHeading.setAttribute('tabindex', '-1');
+      cardHeading.focus({ preventScroll: true });
+    }
+    sugg.innerHTML = `
+      <span class="marker">SUGGESTION · ${top.level.name.toUpperCase()}-LEVEL</span>
+      Phrases that landed in this level's markers: <strong>${top.hits.map(h => '"' + h + '"').join(' · ')}</strong>
+      <span class="note">This is a hint, not a verdict. Now rephrase the same content from each of the four levels and notice which one your body recognizes as the next move.</span>
+    `;
+  }
+  sugg.classList.add('show');
+}
+
+function clearAll() {
+  document.getElementById('mainInput').value = '';
+  LEVELS.forEach(L => {
+    const ta = document.getElementById('rephrase-' + L.key);
+    if (ta) ta.value = '';
+  });
+  document.getElementById('suggestion').classList.remove('show');
+  document.querySelectorAll('.level-card').forEach(c => c.classList.remove('highlighted'));
+  document.getElementById('mainInput').focus();
+}
+
+function saveSet() {
+  const original = document.getElementById('mainInput').value.trim();
+  if (!original) {
+    document.getElementById('mainInput').focus();
+    return;
+  }
+  const rephrases = {};
+  LEVELS.forEach(L => {
+    const v = document.getElementById('rephrase-' + L.key).value.trim();
+    if (v) rephrases[L.key] = v;
+  });
+  if (Object.keys(rephrases).length === 0) {
+    alert('Write at least one rephrase before saving.');
+    return;
+  }
+  const sets = JSON.parse(localStorage.getItem('etb_levels_sets') || '[]');
+  sets.unshift({
+    date: new Date().toISOString(),
+    original,
+    rephrases
+  });
+  localStorage.setItem('etb_levels_sets', JSON.stringify(sets.slice(0, 20)));
+  renderSaved();
+  alert('Saved. You can re-read it any time on this device.');
+}
+
+function renderSaved() {
+  const sets = JSON.parse(localStorage.getItem('etb_levels_sets') || '[]');
+  const area = document.getElementById('savedArea');
+  const list = document.getElementById('savedList');
+  if (!sets.length) {
+    list.innerHTML = '<p style="font-family:var(--body); font-style:italic; color:var(--ink-mute);">No saved rephrases yet.</p>';
+  } else {
+    list.innerHTML = sets.map(s => `
+      <div class="item">
+        <div class="when">${new Date(s.date).toLocaleString()}</div>
+        <div class="original">Original: "${escapeHtml(s.original)}"</div>
+        ${Object.entries(s.rephrases).map(([key, val]) => `
+          <span class="chosen">
+            <span class="chosen-label" style="color: var(--${key});">${LEVELS.find(L => L.key === key).name}</span>
+            ${escapeHtml(val)}
+          </span>
+        `).join(' ')}
+      </div>
+    `).join('');
+  }
+  area.style.display = 'block';
+  area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('savedHeading').focus({ preventScroll: true });
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  buildGrid();
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

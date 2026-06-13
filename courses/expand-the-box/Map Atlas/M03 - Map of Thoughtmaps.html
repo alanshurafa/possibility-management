@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map of Thoughtmaps · Map Atlas M03 · Expand the Box</title>
+<meta name="description" content="Interactive teaching tool for the Possibility Management Map of Thoughtmaps — the meta-map that locates each PM thoughtmap as a tool to use, never the truth to believe. The map is not the territory.">
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+/* ============================================================
+   MAP ATLAS — shared design system (template for all 29 maps).
+   Tokens, fonts, paper-grain, GROUND-NOW, reduced-motion and the
+   license comment are inherited from the ETB course design system
+   (see Interactive Tools / feeling-locator.html). Keep in sync.
+   ============================================================ */
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --vermillion-glow: rgba(196, 59, 28, 0.32);
+  --mustard: #d8b04a;
+  --mustard-text: #b8902c;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+/* paper-grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 200;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 18px;
+  text-decoration: none;
+}
+a.skip-link:focus { left: 8px; }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+/* ====================== HEADER BAR ====================== */
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+  gap: 24px;
+}
+header.top .left { display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+header.top .right { display: flex; gap: 22px; flex-wrap: wrap; align-items: baseline; }
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top .brand { color: var(--ink-mute); }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+header.top a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+
+/* ====================== HERO ====================== */
+.hero { margin: 48px 0 24px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 16px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 22px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 760px;
+  font-style: italic;
+}
+
+/* ====================== MAP FIGURE ====================== */
+figure.map-figure {
+  margin: 56px 0 16px;
+  padding: 28px;
+  background: var(--ivory-shade);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--vermillion);
+  text-align: center;
+}
+figure.map-figure a.map-link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  cursor: zoom-in;
+}
+figure.map-figure a.map-link:focus-visible { outline: 3px solid var(--vermillion); outline-offset: 4px; }
+figure.map-figure img {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  border: 1px solid var(--rule);
+  background: var(--ivory);
+  box-shadow: 0 14px 40px rgba(14, 10, 5, 0.16);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s;
+}
+figure.map-figure a.map-link:hover img {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(14, 10, 5, 0.22);
+}
+figure.map-figure figcaption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 20px;
+}
+figure.map-figure figcaption .zoom-hint { color: var(--vermillion); }
+
+/* ====================== SECTION FRAME ====================== */
+.section {
+  margin-top: 56px;
+  padding: 48px 52px;
+  background: var(--ivory-shade);
+  border-top: 3px solid var(--vermillion);
+}
+.section .section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+}
+.section h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.section h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.section .prose {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 760px;
+}
+.section .prose p { margin-bottom: 16px; }
+.section .prose p:last-child { margin-bottom: 0; }
+.section .prose em { color: var(--ink); font-style: italic; }
+.section .prose strong { color: var(--ink); font-weight: 600; }
+.section .prose .emph {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+  font-weight: 400;
+}
+
+/* ====================== STEPPER (distinctions) ====================== */
+.stepper-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin: 28px 0 6px;
+  flex-wrap: wrap;
+}
+.stepper-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.stepper-count .now { color: var(--vermillion); font-weight: 700; }
+.progress {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0 22px;
+}
+.progress .seg {
+  flex: 1;
+  height: 3px;
+  background: var(--rule);
+  transition: background 0.2s;
+}
+.progress .seg.done { background: var(--mustard); }
+.progress .seg.current { background: var(--vermillion); }
+
+.step-card {
+  background: var(--ivory);
+  border: 1.5px solid var(--ink-mute);
+  border-left: 4px solid var(--vermillion);
+  padding: 34px 38px;
+  min-height: 220px;
+  animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.step-card[hidden] { display: none; }
+.step-card .sc-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.step-card .sc-name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(28px, 3.6vw, 42px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.05;
+  color: var(--vermillion);
+  margin-bottom: 16px;
+}
+.step-card .sc-body {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.step-card .sc-body em { color: var(--ink); font-style: italic; }
+.step-card .sc-rows { margin-top: 6px; }
+.step-card .sc-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px dashed var(--rule);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.step-card .sc-row:first-child { border-top: none; }
+.step-card .sc-row .lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  padding-top: 4px;
+}
+.step-card .sc-row .val { color: var(--ink-soft); }
+.step-card .sc-row .val.shadow {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-mute);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====================== FLIP CARDS (misunderstandings) ====================== */
+.flip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 26px;
+}
+@media (max-width: 760px) { .flip-grid { grid-template-columns: 1fr; } }
+
+.flip {
+  background: transparent;
+  perspective: 1400px;
+  min-height: 230px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+  display: block;
+  width: 100%;
+}
+.flip:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 4px; }
+.flip-inner {
+  position: relative;
+  width: 100%;
+  min-height: 230px;
+  height: 100%;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip[aria-pressed="true"] .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.flip-face .fc-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.flip-face .fc-text {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
+  line-height: 1.3;
+}
+.flip-face .fc-hint {
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.flip-front {
+  background: var(--ivory);
+  border: 1.5px solid var(--ink-mute);
+}
+.flip-front .fc-tag { color: var(--ink-mute); }
+.flip-front .fc-tag::before { content: '✗  '; color: var(--ink-mute); }
+.flip-front .fc-text { color: var(--ink); font-style: italic; }
+.flip-front .fc-hint { color: var(--ink-mute); }
+.flip-back {
+  background: var(--ink);
+  border: 1.5px solid var(--ink);
+  transform: rotateY(180deg);
+}
+.flip-back .fc-tag { color: var(--mustard); }
+.flip-back .fc-tag::before { content: '✓  '; color: var(--mustard); }
+.flip-back .fc-text { color: var(--ivory); }
+.flip-back .fc-text em { color: var(--mustard); font-style: italic; }
+.flip-back .fc-hint { color: rgba(244, 236, 220, 0.5); }
+
+/* ====================== SAY IT (verbal) ====================== */
+.quote-block {
+  margin-top: 26px;
+  padding: 40px 44px;
+  background: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(19px, 2.1vw, 23px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 70, 'WONK' 1;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.quote-block p { margin-bottom: 18px; }
+.quote-block p:last-child { margin-bottom: 0; }
+.quote-block .lead-in {
+  font-style: italic;
+  color: var(--vermillion);
+}
+.quote-tools {
+  display: flex;
+  gap: 14px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.read-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ====================== EMBODY (practice) ====================== */
+.practice-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 22px 0 8px;
+}
+ol.practice {
+  list-style: none;
+  counter-reset: practice;
+  margin: 18px 0 0;
+}
+ol.practice > li {
+  counter-increment: practice;
+  position: relative;
+  padding: 18px 0 18px 64px;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+ol.practice > li:first-child { border-top: none; }
+ol.practice > li::before {
+  content: counter(practice);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--vermillion);
+  border: 1.5px solid var(--vermillion);
+  border-radius: 50%;
+}
+ol.practice > li em { color: var(--ink); font-style: italic; }
+ol.practice > li strong { color: var(--ink); font-weight: 600; }
+ol.practice .four-list {
+  list-style: none;
+  margin: 12px 0 4px;
+  padding: 14px 18px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-size: 16px;
+}
+ol.practice .four-list li { padding: 4px 0; color: var(--ink-soft); }
+ol.practice .four-list li b { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mustard-text); margin-right: 8px; }
+
+.practice-closer {
+  margin-top: 24px;
+  padding: 22px 26px;
+  background: var(--ivory);
+  border-left: 3px solid var(--vermillion);
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.practice-capture {
+  margin-top: 24px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.capture-state {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+}
+
+/* ====================== REFLECTION ====================== */
+.reflect-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 22px 0 12px;
+}
+textarea.reflect {
+  width: 100%;
+  padding: 22px 26px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.45;
+  display: block;
+}
+textarea.reflect:focus { outline: none; border-color: var(--vermillion); }
+.reflect-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.reflect-saved {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+}
+.privacy-note {
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.prior-entry {
+  margin-top: 18px;
+  padding: 18px 22px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.prior-entry[hidden] { display: none; }
+.prior-entry .pe-label {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ====================== BUTTONS ====================== */
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+.btn[disabled]:hover { background: transparent; color: var(--ink); }
+
+/* ====================== FOOTER ====================== */
+footer.bottom {
+  margin-top: 72px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+}
+footer.bottom .nav-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+footer.bottom .nav-row a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+footer.bottom .nav-row a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+footer.bottom .nav-row a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+footer.bottom .license {
+  margin-top: 26px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+  max-width: 860px;
+}
+footer.bottom .license a { color: var(--ink-mute); text-decoration: underline; }
+footer.bottom .license a:hover { color: var(--vermillion); }
+footer.bottom .license .cc { color: var(--ink-soft); font-weight: 600; letter-spacing: 0.06em; }
+
+/* ====================== GROUND NOW — floating safety button ====================== */
+.ground-now {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  background: var(--vermillion);
+  color: var(--ivory);
+  border: 2px solid var(--vermillion-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 22px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(196, 59, 28, 0.28);
+  transition: all 0.25s ease;
+  line-height: 1.1;
+}
+.ground-now:hover {
+  background: var(--vermillion-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(196, 59, 28, 0.36);
+}
+.ground-now:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.ground-now .small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* ====================== GROUNDING MODAL ====================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(14, 10, 5, 0.86);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.modal.show { display: flex; }
+.modal-inner {
+  max-width: 620px;
+  width: 100%;
+  background: var(--ivory);
+  border: 2px solid var(--vermillion);
+  padding: 44px 40px 36px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-inner::before {
+  content: 'GROUNDING · 60 SECONDS';
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.modal-inner h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.modal-inner h2 em { font-style: italic; color: var(--vermillion); }
+.modal-inner ol {
+  margin: 0 0 22px 22px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.modal-inner ol li { margin-bottom: 12px; }
+.modal-inner ol li strong { color: var(--ink); }
+.modal-inner .session-paused {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+.modal-inner .modal-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+@media (max-width: 760px) {
+  .wrap { padding: 24px 20px 60px; }
+  .section { padding: 32px 26px; }
+  .step-card { padding: 28px 24px; }
+  .quote-block { padding: 30px 26px; }
+  .ground-now { top: 16px; right: 16px; padding: 12px 16px; font-size: 11px; }
+  .modal-inner { padding: 36px 24px 28px; }
+}
+
+/* ====================== REDUCED MOTION ====================== */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+    scroll-behavior:auto!important;
+  }
+  .flip[aria-pressed="true"] .flip-inner { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to map</a>
+
+<!-- floating safety button — always available; this tool engages the emotional body -->
+<button class="ground-now" id="groundNowBtn" type="button" onclick="openGround()" aria-haspopup="dialog">
+  GROUND NOW
+  <span class="small">60-second pause</span>
+</button>
+
+<div class="wrap">
+
+  <!-- ====================== 1 · HEADER BAR ====================== -->
+  <header class="top">
+    <div class="left">
+      <span><span class="num">MAP ATLAS · M03</span></span>
+      <span class="brand">Possibility Management</span>
+    </div>
+    <div class="right">
+      <a href="index.html">← All maps</a>
+      <a href="../Days/Day%2002%20-%20Thoughtware%2C%20Thoughtmaps%2C%20Box%20Technology.md">Taught in Day 2 →</a>
+    </div>
+  </header>
+
+  <!-- ====================== 2 · HERO ====================== -->
+  <section class="hero" id="main">
+    <div class="eyebrow">Thoughtmaps · The Map About the Maps</div>
+    <h1 class="display">Map of <em>Thoughtmaps.</em></h1>
+    <p class="lede">
+      A thoughtmap is a specific cognitive map used to navigate a piece of territory. PM gives you roughly twenty of them — each one a tool to use, none of them the truth to believe. The map is not the territory.
+    </p>
+  </section>
+
+  <!-- ====================== 3 · THE MAP ====================== -->
+  <figure class="map-figure">
+    <a class="map-link" href="../Maps/M03.png" target="_blank" rel="noopener" aria-label="Open the full-size Map of Thoughtmaps in a new tab">
+      <img src="../Maps/M03.png"
+           alt="The Map of Thoughtmaps: the meta-map about the maps. It locates each PM thoughtmap — the Chain, the Box, the Five Bodies, the Old and New Maps of Feelings, the Low Drama Triangle, Ego States — as a tool, and holds the rule that the map is not the territory.">
+    </a>
+    <figcaption>Map of Thoughtmaps · <span class="zoom-hint">click the map to open full-size →</span></figcaption>
+  </figure>
+
+  <!-- ====================== 4 · WHAT THIS MAP SHOWS ====================== -->
+  <section class="section" aria-labelledby="shows-h">
+    <div class="section-label">What this map shows</div>
+    <h2 id="shows-h">The map <em>is not</em> the territory.</h2>
+    <div class="prose">
+      <p>
+        A thoughtmap is a specific cognitive map you use to navigate a piece of territory. The Chain (M01), the Box (M04), the Five Bodies, the Old and New Maps of Feelings, the Low Drama Triangle, Ego States — each is a thoughtmap. PM provides roughly twenty across the full body of work; this course installs the core set.
+      </p>
+      <p>
+        The Map of Thoughtmaps is the <em>meta-map</em> — the map <em>about</em> the maps. It locates each as a tool and establishes the rule that holds the toolbox together: <span class="emph">the map is not the territory.</span> No PM thoughtmap is true. Each is a useful cut through reality that makes a previously-invisible structure visible enough to work with.
+      </p>
+      <p>
+        The moment a learner treats a thoughtmap as doctrine, the thoughtmap has been converted into <strong>Box</strong> and stops working. <strong>Integration is using, not believing</strong> — a thoughtmap has been integrated when you can reach for it under pressure and put it down afterwards. Belief is the opposite of integration.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================== 5 · WALK THE DISTINCTIONS (stepper) ====================== -->
+  <section class="section" aria-labelledby="walk-h">
+    <div class="section-label">Walk the distinctions</div>
+    <h2 id="walk-h">Take them <em>one at a time.</em></h2>
+    <p class="prose">Step through the load-bearing distinctions this map draws. Move at the pace of your body, not your reading speed.</p>
+
+    <div class="stepper-head">
+      <div class="stepper-count">Distinction <span class="now" id="stepNow">1</span> of <span id="stepTotal">8</span></div>
+    </div>
+    <div class="progress" id="stepProgress" aria-hidden="true"></div>
+
+    <div id="stepRegion" aria-live="polite">
+      <!-- step cards injected by JS -->
+    </div>
+
+    <div class="quote-tools" style="margin-top: 22px;">
+      <button class="btn ghost" id="stepPrev" type="button" onclick="stepBy(-1)" disabled>← Prev</button>
+      <button class="btn primary" id="stepNext" type="button" onclick="stepBy(1)">Next →</button>
+    </div>
+  </section>
+
+  <!-- ====================== 6 · COMMON MISUNDERSTANDINGS (flip cards) ====================== -->
+  <section class="section" aria-labelledby="mis-h">
+    <div class="section-label">Common misunderstandings</div>
+    <h2 id="mis-h">Each card shows the <em>wrong</em> belief. Flip it for the correction.</h2>
+    <p class="prose">Click a card — or focus it and press Enter or Space — to turn it over.</p>
+    <div class="flip-grid" id="flipGrid">
+      <!-- flip cards injected by JS -->
+    </div>
+  </section>
+
+  <!-- ====================== 7 · SAY IT (verbal) ====================== -->
+  <section class="section" aria-labelledby="say-h">
+    <div class="section-label">Say it · the verbal map</div>
+    <h2 id="say-h">Now <em>explain it aloud.</em></h2>
+    <p class="prose">This is the spoken version of the map. Read it through once, then close your eyes and say it in your own words. You teach the map by speaking it.</p>
+    <blockquote class="quote-block">
+      <p><span class="lead-in">A thoughtmap is a specific cognitive map you use to navigate a specific piece of territory.</span> The chain. The Box. The Five Bodies. The Low Drama Triangle. The New Map of Feelings. Each is a thoughtmap. PM has roughly twenty across the full body of work; this course installs the core ones. Each cuts the territory differently and makes a structure visible that was previously a fog.</p>
+      <p>The critical thing — the thing the course will keep reminding you of — is that <em>the map is not the territory.</em> None of these maps is true. The Box is not a literal box. There is no emotional body sitting next to the physical one in any surgical sense. Thoughtmaps are tools — perceptual cuts that give you traction. The moment you treat one as doctrine — <em>this is how things really are</em> instead of <em>this is one useful way of looking</em> — you have turned the thoughtmap into a Box, and it has stopped working.</p>
+      <p>The practice is this. Try it on like a t-shirt. Run it for a week. See what it makes visible. If it gives traction, keep using it. If it doesn’t fit your direct experience, take it off. Nothing in PM asks you to believe anything. The learner is the verifier — your direct experience, not the facilitator’s authority, decides whether a map is useful.</p>
+      <p>Different territories want different maps. Anger through the New Map of Feelings is archetypal energy. Anger through the Five Bodies is physical sensation versus emotional charge. Anger through the Low Drama Triangle is Persecutor performance. Anger through ego states is Child versus Adult. None is the right answer. Each reveals what the others miss. You pick up the map that gives traction, use it, put it down. Integration — not belief, skilled use.</p>
+      <p>If you find yourself defending a PM thoughtmap, you have already misunderstood. The thoughtmaps are not positions to hold. They are tools to reach for.</p>
+    </blockquote>
+    <div class="quote-tools">
+      <button class="btn ghost" id="saidBtn" type="button" onclick="markSaid()" aria-pressed="false">I said it aloud</button>
+      <span class="read-status" id="saidStatus" role="status"></span>
+    </div>
+  </section>
+
+  <!-- ====================== 8 · EMBODY IT (practice) ====================== -->
+  <section class="section" aria-labelledby="embody-h">
+    <div class="section-label">Embody it · solo practice</div>
+    <h2 id="embody-h">The <em>same-territory test.</em></h2>
+    <p class="prose">Pick one specific recent situation — under a week old — that produced a strong reaction. A conversation that went sideways. A moment of avoidance. A burst of anger, sadness, or fear. Write it in two sentences. <em>Who. What. When.</em></p>
+    <div class="practice-meta">Solo · ~12 minutes · notebook required</div>
+
+    <ol class="practice">
+      <li>Look at the same situation through three thoughtmaps in turn. <strong>Three minutes each.</strong> Speak or write.
+        <ul class="four-list">
+          <li><b>Map 1</b> The Chain (M01)</li>
+          <li><b>Map 2</b> The Box (M04)</li>
+          <li><b>Map 3</b> One you half-know</li>
+        </ul>
+      </li>
+      <li><strong>Map 1 — The Chain.</strong> Walk it backwards. Result? Behavior? Choice? Option? Map? Thoughtware? Context underneath all of it?</li>
+      <li><strong>Map 2 — The Box.</strong> What surface-layer Box pattern was running? What rule was the Box following? What past situation was the Box treating this present situation as?</li>
+      <li><strong>Map 3 — one you have heard of but don’t fully understand.</strong> Five Bodies. Low Drama Triangle. Old Map of Feelings. <em>Try it on without needing to use it well.</em> What does looking through this map suggest, even loosely?</li>
+      <li>For the last three minutes, sit with what came. Each map revealed something different. None was <em>the</em> answer. The situation did not change — but you now have three handles instead of zero.</li>
+    </ol>
+
+    <div class="practice-closer">
+      That is what it feels like to use a thoughtmap as a tool, not believe it as truth. Close by saying out loud: <em>"These are maps. None is the territory. The territory is whatever it is. I have tools."</em>
+    </div>
+
+    <div class="practice-capture">
+      <button class="btn" id="practiceBtn" type="button" onclick="togglePractice()" aria-pressed="false">Start the same-territory test</button>
+      <span class="capture-state" id="practiceState" role="status"></span>
+    </div>
+  </section>
+
+  <!-- ====================== 9 · REFLECTION CAPTURE ====================== -->
+  <section class="section" aria-labelledby="reflect-h">
+    <div class="section-label">Reflection</div>
+    <h2 id="reflect-h">What <em>landed?</em></h2>
+    <p class="prose">One or two lines is plenty. Which of the three maps gave you the most traction on your situation? What was it like to hold three handles where two minutes earlier you had zero — without needing any of them to be true?</p>
+
+    <div class="prior-entry" id="priorEntry" hidden>
+      <span class="pe-label">Your last reflection · this device</span>
+      <span id="priorEntryText"></span>
+    </div>
+
+    <label class="reflect-label" for="reflectInput">Your reflection on the Map of Thoughtmaps</label>
+    <textarea class="reflect" id="reflectInput" aria-label="Your reflection on the Map of Thoughtmaps — what landed for you" placeholder="What landed…"></textarea>
+    <div class="reflect-row">
+      <button class="btn primary" type="button" onclick="saveReflection()">Save reflection</button>
+      <button class="btn ghost" type="button" onclick="clearReflection()">Clear</button>
+      <span class="reflect-saved" id="reflectSaved" role="status"></span>
+    </div>
+    <p class="privacy-note">Saved on this device only, in your browser (localStorage). Nothing is uploaded. No accounts, no telemetry, no external calls except the web-font request.</p>
+  </section>
+
+  <!-- ====================== 10 · FOOTER ====================== -->
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="index.html">← All maps · Map Atlas</a>
+      <a href="../Days/Day%2002%20-%20Thoughtware%2C%20Thoughtmaps%2C%20Box%20Technology.md">Taught in Day 2 →</a>
+    </div>
+    <p class="license">
+      <span class="cc">🄯 World Copyleft 2026 · Expand the Box (Digital).</span>
+      Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+      Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. Please share, share-alike.
+      Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>.
+      Full terms: <code>LICENSE.md</code> in the course root.
+    </p>
+  </footer>
+</div>
+
+<!-- modal: grounding (60-second sequence) -->
+<div class="modal" id="groundModal" role="dialog" aria-modal="true" aria-labelledby="groundModalTitle">
+  <div class="modal-inner">
+    <h2 id="groundModalTitle">Ground. <em>Now.</em></h2>
+    <ol>
+      <li><strong>Stop.</strong> Stand up — both feet flat on the floor. Feel the contact.</li>
+      <li><strong>Breathe out, longer than in</strong> — three slow exhales.</li>
+      <li><strong>Name three things you can see</strong> in this room. Out loud is best.</li>
+      <li><strong>Name one thing you can hear.</strong> The fridge. Traffic. Your own breath.</li>
+      <li><strong>One hand on your sternum, one on your belly.</strong> Notice your body is here.</li>
+      <li><strong>Then decide:</strong> continue, pause 10 minutes, or stop for today. Any of the three is fine.</li>
+    </ol>
+    <p class="session-paused">Take as long as you need.</p>
+    <div class="modal-actions">
+      <button class="btn primary" type="button" onclick="closeGround()">I'm grounded — continue</button>
+      <a href="index.html" class="btn ghost">Stop — return to the Atlas</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   M03 — Map of Thoughtmaps. Teaching content is sourced
+   verbatim from Map Note "M03 - Map of Thoughtmaps.md".
+   Local-only: the single localStorage key etb_atlas_M03.
+   ============================================================ */
+
+/* ---------------------- DATA: distinctions (stepper) ---------------------- */
+/* The load-bearing distinctions this meta-map draws — thoughtmap vs reality,
+   vs ideology, tool vs identity, multiple maps per territory, map-is-not-the-
+   thing, try-it-on-like-a-t-shirt, integration-is-using-not-believing.
+   Straight from the Map Note. */
+const DISTINCTIONS = [
+  {
+    kicker: 'Distinction 1',
+    name: 'Thoughtmap vs. reality.',
+    body: 'A thoughtmap is a <em>cut through reality</em>, not reality itself. The Box is not a literal box in your head. The Five Bodies is not anatomy.'
+  },
+  {
+    kicker: 'Distinction 2',
+    name: 'Thoughtmap vs. ideology.',
+    body: 'A thoughtmap is a tool you pick up to navigate a situation, then put down. An ideology is a position you defend. <em>The first is alive; the second is dead.</em>'
+  },
+  {
+    kicker: 'Distinction 3',
+    name: 'Tool vs. identity.',
+    body: 'A learner who <em>uses</em> the Low Drama Triangle has a tool. A learner who <em>is a Possibility Manager</em> has converted the toolbox into identity — and the identity is now running them.'
+  },
+  {
+    kicker: 'Distinction 4',
+    name: 'Multiple maps for the same territory.',
+    body: 'Anger can be looked at through the New Map of Feelings, the Five Bodies, the Low Drama Triangle, or ego states. None is <em>the</em> answer; each reveals a different cut.'
+  },
+  {
+    kicker: 'Distinction 5',
+    name: 'The map is not the thing.',
+    body: 'The load-bearing rule. The territory does not care which map you are using. Maps exist to give you <em>traction.</em>'
+  },
+  {
+    kicker: 'Distinction 6',
+    name: 'Try it on like a t-shirt.',
+    body: 'Pick up a thoughtmap, run it for a week, see what it reveals. If it doesn’t fit, take it off. <em>Nothing in PM requires belief.</em>'
+  },
+  {
+    kicker: 'Distinction 7',
+    name: 'Integration is using, not believing.',
+    body: 'A thoughtmap has been integrated when you can reach for it under pressure and put it down afterwards. <em>Belief is the opposite of integration.</em>'
+  },
+  {
+    kicker: 'The test',
+    name: 'The learner is the verifier.',
+    body: 'Your direct experience — not the facilitator’s authority — decides whether a map is useful. And if you find yourself <em>defending</em> a PM thoughtmap, you have already misunderstood: thoughtmaps are not positions to hold, they are tools to reach for.'
+  }
+];
+
+/* ---------------------- DATA: misunderstandings (flip cards) ---------------------- */
+const MISUNDERSTANDINGS = [
+  {
+    wrong: '"PM thoughtmaps describe how reality actually is; learning them is learning the truth."',
+    right: 'They are <em>perceptual cuts</em>, not descriptions of reality. Useful for navigation; not claims about the territory.'
+  },
+  {
+    wrong: '"If two thoughtmaps say different things about the same situation, one must be wrong."',
+    right: 'Different thoughtmaps reveal different aspects of the same territory. They are <em>complementary, not competing.</em>'
+  },
+  {
+    wrong: '"I have integrated a thoughtmap when I believe it."',
+    right: 'Belief is the opposite of integration. A thoughtmap is integrated when you can reach for it under pressure, use it, and <em>put it down</em> — without needing it to be true.'
+  },
+  {
+    wrong: '"If a thoughtmap doesn’t immediately resonate, it is not for me."',
+    right: 'Resonance is not fit. Some thoughtmaps land slowly because they cut through territory you are <em>heavily defended</em> around. Try them on for the time the course suggests; then decide.'
+  }
+];
+
+const STORE_KEY = 'etb_atlas_M03';
+
+/* ---------------------- A11Y HELPERS ---------------------- */
+/* keyboard activation for custom (non-native) controls */
+function kb(e, fn) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    fn();
+  }
+}
+
+/* ---------------------- STEPPER ---------------------- */
+let stepIndex = 0;
+
+function buildProgress() {
+  const p = document.getElementById('stepProgress');
+  p.innerHTML = DISTINCTIONS.map(() => '<div class="seg"></div>').join('');
+  document.getElementById('stepTotal').textContent = DISTINCTIONS.length;
+}
+
+function renderStep(focusCard) {
+  const d = DISTINCTIONS[stepIndex];
+  const region = document.getElementById('stepRegion');
+  let inner = `<div class="sc-kicker">${d.kicker}</div><div class="sc-name">${d.name}</div>`;
+  if (d.rows) {
+    inner += '<div class="sc-rows">';
+    for (const [lbl, val] of d.rows) {
+      const shadow = lbl === 'Shadow' ? ' shadow' : '';
+      inner += `<div class="sc-row"><div class="lbl">${lbl}</div><div class="val${shadow}">${val}</div></div>`;
+    }
+    inner += '</div>';
+  } else {
+    inner += `<div class="sc-body">${d.body}</div>`;
+  }
+  region.innerHTML = `<article class="step-card" id="stepCard" tabindex="-1" aria-label="${d.name}">${inner}</article>`;
+
+  document.getElementById('stepNow').textContent = stepIndex + 1;
+  document.querySelectorAll('#stepProgress .seg').forEach((s, i) => {
+    s.classList.remove('done', 'current');
+    if (i < stepIndex) s.classList.add('done');
+    else if (i === stepIndex) s.classList.add('current');
+  });
+
+  document.getElementById('stepPrev').disabled = stepIndex === 0;
+  document.getElementById('stepNext').disabled = stepIndex === DISTINCTIONS.length - 1;
+
+  // move focus to the freshly-revealed card for keyboard / SR users
+  if (focusCard) {
+    const card = document.getElementById('stepCard');
+    if (card) card.focus({ preventScroll: true });
+  }
+}
+
+function stepBy(delta) {
+  const next = stepIndex + delta;
+  if (next < 0 || next >= DISTINCTIONS.length) return;
+  stepIndex = next;
+  renderStep(true);
+}
+
+/* ---------------------- FLIP CARDS ---------------------- */
+function buildFlipCards() {
+  const grid = document.getElementById('flipGrid');
+  grid.innerHTML = MISUNDERSTANDINGS.map((m, i) => `
+    <button class="flip" type="button" id="flip${i}" aria-pressed="false"
+            aria-label="Misunderstanding ${i + 1}: ${m.wrong.replace(/"/g, '')} — activate to reveal the correction"
+            onclick="toggleFlip(${i})" onkeydown="kb(event,()=>toggleFlip(${i}))">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <div class="fc-tag">Common belief</div>
+          <div class="fc-text">${m.wrong}</div>
+          <div class="fc-hint">Flip for the correction →</div>
+        </div>
+        <div class="flip-face flip-back">
+          <div class="fc-tag">On this map</div>
+          <div class="fc-text">${m.right}</div>
+          <div class="fc-hint">← Flip back</div>
+        </div>
+      </div>
+    </button>
+  `).join('');
+}
+
+function toggleFlip(i) {
+  const el = document.getElementById('flip' + i);
+  const flipped = el.getAttribute('aria-pressed') === 'true';
+  el.setAttribute('aria-pressed', flipped ? 'false' : 'true');
+}
+
+/* ---------------------- SAY IT ---------------------- */
+function markSaid() {
+  const btn = document.getElementById('saidBtn');
+  const pressed = btn.getAttribute('aria-pressed') === 'true';
+  btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+  document.getElementById('saidStatus').textContent = pressed ? '' : 'Said aloud ✓ — say it again until it is yours.';
+  saveState();
+}
+
+/* ---------------------- EMBODY ---------------------- */
+function togglePractice() {
+  const btn = document.getElementById('practiceBtn');
+  const state = document.getElementById('practiceState');
+  const phase = btn.dataset.phase || 'idle';
+  if (phase === 'idle') {
+    btn.dataset.phase = 'running';
+    btn.textContent = 'Mark the test done';
+    btn.setAttribute('aria-pressed', 'true');
+    state.textContent = 'Test started — run all three maps, then mark done.';
+  } else {
+    btn.dataset.phase = 'idle';
+    btn.textContent = 'Start the same-territory test';
+    btn.setAttribute('aria-pressed', 'false');
+    state.textContent = 'Same-territory test complete ✓';
+    saveState();
+  }
+}
+
+/* ---------------------- REFLECTION + STATE ---------------------- */
+function loadState() {
+  let data = {};
+  try {
+    data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+  } catch (e) {
+    data = {};
+  }
+  if (data.reflection) {
+    document.getElementById('reflectInput').value = data.reflection;
+    const prior = document.getElementById('priorEntry');
+    document.getElementById('priorEntryText').textContent = data.reflection;
+    prior.hidden = false;
+    if (data.savedAt) {
+      document.getElementById('reflectSaved').textContent = 'Last saved ' + new Date(data.savedAt).toLocaleString();
+    }
+  }
+  if (data.said) {
+    const btn = document.getElementById('saidBtn');
+    btn.setAttribute('aria-pressed', 'true');
+    document.getElementById('saidStatus').textContent = 'Said aloud ✓ — say it again until it is yours.';
+  }
+  if (data.embodied) {
+    document.getElementById('practiceState').textContent = 'Check-in completed before ✓';
+  }
+}
+
+function currentData() {
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { data = {}; }
+  return data;
+}
+
+function saveState() {
+  const data = currentData();
+  data.said = document.getElementById('saidBtn').getAttribute('aria-pressed') === 'true';
+  const ps = document.getElementById('practiceState').textContent;
+  if (ps.indexOf('complete') !== -1 || ps.indexOf('completed') !== -1) data.embodied = true;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+function saveReflection() {
+  const val = document.getElementById('reflectInput').value.trim();
+  const data = currentData();
+  data.reflection = val;
+  data.savedAt = new Date().toISOString();
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    document.getElementById('reflectSaved').textContent = val ? 'Saved ✓ · ' + new Date().toLocaleString() : 'Saved (empty) ✓';
+    const prior = document.getElementById('priorEntry');
+    if (val) {
+      document.getElementById('priorEntryText').textContent = val;
+      prior.hidden = false;
+    } else {
+      prior.hidden = true;
+    }
+  } catch (e) {
+    document.getElementById('reflectSaved').textContent = 'Could not save (storage blocked).';
+  }
+}
+
+function clearReflection() {
+  document.getElementById('reflectInput').value = '';
+  const data = currentData();
+  delete data.reflection;
+  delete data.savedAt;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+  document.getElementById('priorEntry').hidden = true;
+  document.getElementById('reflectSaved').textContent = 'Cleared.';
+}
+
+/* ---------------------- GROUNDING MODAL ---------------------- */
+let _groundReturnFocus = null;
+function openGround() {
+  _groundReturnFocus = document.activeElement;
+  const modal = document.getElementById('groundModal');
+  modal.classList.add('show');
+  const firstBtn = modal.querySelector('.modal-actions .btn');
+  if (firstBtn) firstBtn.focus();
+}
+function closeGround() {
+  document.getElementById('groundModal').classList.remove('show');
+  if (_groundReturnFocus && typeof _groundReturnFocus.focus === 'function') _groundReturnFocus.focus();
+  _groundReturnFocus = null;
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('groundModal');
+    if (modal.classList.contains('show')) closeGround();
+  }
+});
+
+/* ---------------------- INIT ---------------------- */
+window.addEventListener('DOMContentLoaded', () => {
+  buildProgress();
+  renderStep(false);
+  buildFlipCards();
+  loadState();
+});
+</script>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

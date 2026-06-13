@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 02 · Thoughtware, Thoughtmaps, Box Technology · Expand the Box</title>
+<meta name="description" content="Module 02 of the Expand the Box course: Thoughtware, Thoughtmaps, Box Technology.">
+<meta name="generator" content="ETB build.py — generated page, do not hand-edit. Source: Days/Day 02 - Thoughtware, Thoughtmaps, Box Technology.md">
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root{
+  --ivory:#f4ecdc; --ivory-shade:#ece2c8; --ivory-deep:#e3d7b9;
+  --ink:#0e0a05; --ink-soft:#2a221a; --ink-mute:#4a3f30; --rule:#b8a98a;
+  --vermillion:#c43b1c; --vermillion-deep:#962a13; --mustard:#d8b04a;
+  --mustard-text:#b8902c; --sky:#4a6b7c; --green:#1d4d3a;
+  --display:'Fraunces','EB Garamond',Georgia,serif;
+  --body:'EB Garamond',Georgia,serif;
+  --mono:'JetBrains Mono','Courier New',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--body); background:var(--ivory); color:var(--ink);
+  font-size:18px; line-height:1.62; -webkit-font-smoothing:antialiased;
+  min-height:100vh; position:relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216,176,74,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196,59,28,0.04) 0%, transparent 50%);
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a.skip-link{position:absolute;left:-9999px;top:8px;z-index:200;background:var(--ink);
+  color:var(--ivory);font-family:var(--mono);font-size:12px;letter-spacing:0.12em;
+  text-transform:uppercase;padding:12px 18px;text-decoration:none;}
+a.skip-link:focus{left:8px;}
+.wrap{max-width:820px;margin:0 auto;padding:36px 48px 90px;position:relative;z-index:2;}
+
+header.top{
+  display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-mute);padding-bottom:32px;border-bottom:1px solid var(--rule);flex-wrap:wrap;}
+header.top .num{color:var(--vermillion);font-weight:600;}
+header.top a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px;transition:all 0.2s;}
+header.top a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+header.top a:focus-visible{outline:2px solid var(--vermillion);outline-offset:3px;}
+
+.module-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--vermillion);margin:48px 0 14px;}
+
+/* rendered markdown prose */
+.prose{margin-top:8px;}
+.prose h1{font-family:var(--display);font-weight:350;
+  font-size:clamp(40px,6vw,72px);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;
+  line-height:1.0;letter-spacing:-0.025em;margin:0 0 28px;color:var(--ink);}
+.prose h2{font-family:var(--display);font-weight:400;
+  font-size:clamp(26px,3.2vw,38px);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;
+  line-height:1.08;letter-spacing:-0.015em;margin:52px 0 16px;color:var(--ink);
+  padding-top:8px;border-top:1px solid var(--rule);}
+.prose h3{font-family:var(--display);font-weight:500;font-size:24px;
+  font-variation-settings:'opsz' 144,'SOFT' 50;line-height:1.15;margin:36px 0 12px;color:var(--ink);}
+.prose h4{font-family:var(--mono);font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--mustard-text);font-weight:600;margin:28px 0 10px;}
+.prose p{margin:0 0 18px;color:var(--ink-soft);}
+.prose strong{color:var(--ink);font-weight:600;}
+.prose em{color:var(--ink);font-style:italic;}
+.prose a{color:var(--vermillion-deep);text-decoration:none;
+  border-bottom:1px solid rgba(150,42,19,0.35);transition:all 0.2s;}
+.prose a:hover{border-bottom-color:var(--vermillion);color:var(--vermillion);}
+.prose a:focus-visible{outline:2px solid var(--vermillion);outline-offset:2px;}
+.prose ul,.prose ol{margin:0 0 20px 26px;color:var(--ink-soft);}
+.prose li{margin-bottom:9px;}
+.prose blockquote{margin:24px 0;padding:20px 28px;background:var(--ivory-shade);
+  border-left:4px solid var(--vermillion);font-style:italic;color:var(--ink-soft);}
+.prose blockquote p:last-child{margin-bottom:0;}
+.prose hr{border:none;border-top:1px dashed var(--rule);margin:40px 0;}
+.prose code{font-family:var(--mono);font-size:0.86em;background:var(--ivory-shade);
+  padding:2px 6px;color:var(--vermillion-deep);border:1px solid var(--rule);}
+.prose pre{background:var(--ink);color:var(--ivory);padding:22px 24px;overflow-x:auto;
+  margin:0 0 22px;border-left:4px solid var(--vermillion);}
+.prose pre code{background:none;border:none;color:var(--ivory);padding:0;font-size:14px;
+  line-height:1.6;}
+.prose img{max-width:100%;height:auto;display:block;margin:28px auto;border:1px solid var(--rule);
+  background:var(--ivory-shade);padding:12px;box-shadow:0 14px 40px rgba(14,10,5,0.14);}
+.prose table{width:100%;border-collapse:collapse;margin:0 0 26px;font-size:16px;}
+.prose th,.prose td{border:1px solid var(--rule);padding:10px 14px;text-align:left;
+  vertical-align:top;color:var(--ink-soft);}
+.prose th{background:var(--ivory-shade);font-family:var(--mono);font-size:11px;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);font-weight:600;}
+.prose sub{font-size:12px;color:var(--ink-mute);line-height:1.6;}
+.prose sub a{color:var(--ink-mute);}
+
+/* module nav */
+nav.module-nav{display:flex;justify-content:space-between;gap:16px;margin:56px 0 0;
+  padding-top:28px;border-top:1px solid var(--rule);flex-wrap:wrap;}
+nav.module-nav a,nav.module-nav span{font-family:var(--mono);font-size:11px;
+  letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;color:var(--ink-mute);
+  border:1.5px solid var(--rule);padding:12px 18px;transition:all 0.2s;max-width:46%;}
+nav.module-nav a:hover{color:var(--vermillion);border-color:var(--vermillion);}
+nav.module-nav a:focus-visible{outline:2px solid var(--vermillion);outline-offset:3px;}
+nav.module-nav .nn-label{display:block;font-size:9px;letter-spacing:0.2em;color:var(--vermillion);
+  margin-bottom:4px;}
+nav.module-nav .disabled{opacity:0.4;}
+nav.module-nav .next{text-align:right;margin-left:auto;}
+
+footer.bottom{margin-top:60px;padding-top:30px;border-top:1px solid var(--rule);}
+footer.bottom .nav-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-mute);}
+footer.bottom .nav-row a{color:var(--ink-mute);text-decoration:none;
+  border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s;}
+footer.bottom .nav-row a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+footer.bottom .license{margin-top:24px;font-family:var(--mono);font-size:10px;line-height:1.7;
+  letter-spacing:0.04em;color:var(--ink-mute);max-width:760px;}
+footer.bottom .license a{color:var(--ink-mute);text-decoration:underline;}
+footer.bottom .license a:hover{color:var(--vermillion);}
+footer.bottom .license .cc{color:var(--ink-soft);font-weight:600;letter-spacing:0.06em;}
+.build-stamp{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-mute);margin-top:18px;opacity:0.7;}
+
+@media (max-width:760px){
+  .wrap{padding:24px 20px 60px;}
+  nav.module-nav a,nav.module-nav span{max-width:100%;}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important;}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to module</a>
+<div class="wrap">
+  <header class="top">
+    <div><span class="num">EXPAND THE BOX</span> · Module 02 of 11</div>
+    <div><a href="../index.html">← Course front door</a></div>
+  </header>
+
+  <div class="module-eyebrow">Course · Module 02</div>
+
+  <article class="prose" id="main">
+<h1>Module 02 · Thoughtware, Thoughtmaps, Box Technology</h1>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><strong>Intensity</strong></td><td><strong>Medium</strong> (disidentification work + Box inventory + survival-layer preview)</td></tr><tr><td><strong>Sittings</strong></td><td>3 (break points are marked in the module)</td></tr><tr><td><strong>Partner check-in</strong></td><td><strong>Yes. This is a Medium day:</strong> before the Box-Inventory practice (Sitting 3), confirm your partner or witness is reachable within 24 hours. A ten-second message ("starting Module 2's practice today, you around this week?") is enough. Solo path: confirm your defer-list note is current and the grounding page is bookmarked.</td></tr><tr><td><strong>Tools for this module</strong></td><td>Study the map: <a href="../Map%20Atlas/M02%20-%20Map%20of%20Thoughtware.html">M02 Thoughtware</a> · <a href="../Map%20Atlas/M03%20-%20Map%20of%20Thoughtmaps.html">M03 Thoughtmaps</a> · <a href="../Map%20Atlas/M04%20-%20Anatomy%20of%20the%20Box.html">M04 Anatomy of the Box</a> — Run the practice: <a href="../Interactive%20Tools/Day%2002/box-inventory.html">Box inventory</a></td></tr></tbody></table>
+<p><strong>Daily spine:</strong> Phase A — Beep! Book morning capture (3-5 min). See <a href="../Practice/Daily%20Practice%20Spine.md">Daily Practice Spine</a>.</p>
+<p><strong>Videos:</strong> The written module is complete on its own. Videos are optional enrichment; see the <a href="../Resources/Video%20Manifest.md">Video Manifest</a>.</p>
+<hr>
+<h2>Before you start — recall (5 minutes)</h2>
+<p>Close everything. On a blank page, redraw Module 1's chain from memory: seven links, the arrow, which end is invisible. Then say Module 1's core distinction out loud, in your own words: what is context, what is content, and why does the work start on the left? Then open <a href="../Maps/M01.png">the M01 map</a> and check your drawing against it. Whatever you missed is not a failure; it is this warm-up doing its job. Five minutes, no more.</p>
+<hr>
+<h2>Purpose</h2>
+<p>To install the one perceptual cut the rest of the course is built on: <strong>you have a box; you are not your box.</strong></p>
+<p>Module 1 named the chain. Module 2 makes the second link of that chain, thoughtware, directly visible, then walks you to the specific piece of thoughtware called the <strong>Box</strong>, then performs the single most important move in PM: <strong>disidentifying</strong> from it. Not destroying it. Not improving it. Disidentifying: stepping back far enough to <em>see</em> it, so that for the first time it stops being <em>you</em> and starts being <em>something you have</em>.</p>
+<p>If this move takes, every module after this one has somewhere to land. If it doesn't, the rest of the course becomes interesting reading about somebody else's life.</p>
+<hr>
+<h2>Core PM concepts</h2>
+<ul>
+<li><strong>Thoughtware.</strong> What you think <em>with</em>. The internal architecture, not the contents. You cannot see it the way you cannot see your glasses while wearing them.</li>
+<li><strong>Thoughtmap.</strong> A specific cognitive map used to navigate. Box, Five Bodies, Low Drama, the Chain: each is a thoughtmap. <strong>The map is not the territory.</strong> A tool, not a doctrine.</li>
+<li><strong>Matrix (first mention).</strong> The energetic structure you build, through practice, that determines how much consciousness you can hold. Thoughtware upgrades install onto it. Taught in Module 3.</li>
+<li><strong>Box.</strong> The survival/protection thoughtware you assembled in childhood. What kept you alive then. Also what you have been identified with: most adults, asked "who are you?", accurately describe their Box.</li>
+<li><strong>Box layers.</strong> Surface (behaviors, habits) · Story (beliefs, rules) · Survival (identity-level commitments formed in response to threat). Module 2 stays at <strong>surface and story.</strong> Survival is touched later.</li>
+<li><strong>Disidentification.</strong> The move from <em>I am this</em> to <em>I have this.</em> The first PM move and the precondition for liquid state.</li>
+<li><strong>Box detection.</strong> Noticing, in real time, that you are reacting from a rule set by something that already happened.</li>
+</ul>
+<hr>
+<h2>Learning outcomes</h2>
+<p>By the end of this module you will:</p>
+<ol>
+<li>State, in your own words, the difference between <strong>thoughtware</strong> and the thoughts that run on it.</li>
+<li>Describe <strong>your own Box</strong> at the surface layer (at least five specific habitual reactions, rules, or automatic moves) neutrally, without making the Box wrong.</li>
+<li>Catch your Box in the act <strong>at least once</strong> during the between-module experiment, and name it (silently or out loud) while it is happening.</li>
+<li>Hold, for at least 60 seconds, the experience <em>I am noticing my Box right now. I am not my Box.</em></li>
+<li>Complete a partner exchange in which you described one surface-layer Box pattern without explaining, justifying, or apologizing for it.</li>
+</ol>
+<hr>
+<h2>Module flow</h2>
+<table><thead><tr><th>Step</th><th>Time</th><th>What you do</th></tr></thead><tbody><tr><td>0</td><td>5 min</td><td>Run Script 2 (5 min centering) from the <a href="../Resources/Solo%20Centering%20and%20Grounding%20Scripts.md">Solo Centering and Grounding Scripts</a>. Then open the module.</td></tr><tr><td>1</td><td>10 min</td><td>Recall warm-up (above), read this header, send the partner check-in message</td></tr><tr><td>2</td><td>45 min</td><td>Read teaching notes part one: thoughtware, the matrix seed, thoughtmaps, with the glasses test and same-territory test inline</td></tr><tr><td>3</td><td>30 min</td><td>Read teaching notes part two: the Box, Box detection, disidentification, the three layers</td></tr><tr><td>4</td><td>20 min</td><td><strong>The Box-Inventory practice</strong> (solo, embodied)</td></tr><tr><td>5</td><td>20 min</td><td><strong>Partner voice exchange</strong> (record + send)</td></tr><tr><td>6</td><td>—</td><td>Receive partner reply within 24 hours; record your reply back</td></tr><tr><td>7</td><td>2 days</td><td>Run the <strong>between-module experiment</strong></td></tr><tr><td>8</td><td>20 min</td><td>Journal the <strong>reflection prompts</strong></td></tr><tr><td>9</td><td>5 min</td><td>Close the loop · post one line to the cohort feed</td></tr></tbody></table>
+<p>Honest total: about two and a half hours of seated work across the three sittings, plus the experiment running on ordinary life-time. Do not do the Box-Inventory in the same sitting as the heavy reading. The reading goes into the intellectual body; the inventory has to land somewhere else, and it needs a gap (a night of sleep is ideal) to do that.</p>
+<hr>
+<h2>Concept teaching notes</h2>
+<h3>Thoughtware is what you think <em>with</em></h3>
+<p><img src="../Maps/M02.png" alt="Map of Thoughtware" loading="lazy"></p>
+<p><em>▶ <a href="../Map%20Atlas/M02%20-%20Map%20of%20Thoughtware.html">Study M02 in the Map Atlas →</a></em></p>
+<p>Study the map before reading on. It names the layer of cognition almost nobody can normally see: the operating system you think with, drawn as distinct from the thoughts that run on top of it. Hold that split, <em>content above, architecture below</em>, while you read.</p>
+<p>Ask most people what they think and you get <em>content</em>: opinions, beliefs, conclusions, memories, plans. That is what you think <em>about</em>. <strong>Thoughtware is the layer underneath</strong>: the operating system the content runs on; the structure that determines which thoughts are even available to be thought. An opinion is content. A belief is content. Thoughtware is the substrate that decides which opinions and beliefs are even reachable in the first place.</p>
+<p>You did not choose your thoughtware. You inherited it from your parents, school, culture, the language you happen to speak. (English has thoughtware Portuguese doesn't: "the glass broke" vs. "I broke the glass" is two different operating systems for cause and agency.) You absorbed it before you knew you were absorbing anything; by the time you could think, the apparatus you were thinking with was already in place. That is why you cannot see it. You are not looking <em>at</em> it; you are looking <em>through</em> it.</p>
+<p>Most "personal change" swaps the <em>content</em> (a new affirmation, a new resolution) and leaves the thoughtware where it was. The new belief runs on the old operating system, and the old operating system eats it within a week. The architecture wins. <strong>The course upgrades thoughtware</strong>: not new content to memorize, but new distinctions that update the layer underneath.</p>
+<p>One word to plant now, because Module 3 builds on it: where do thoughtware upgrades <em>install</em>? Onto your <strong>matrix</strong>: the energetic structure you build, through practice, that determines how much consciousness you can hold. Distinctions, feelings at higher intensity, responsibility at larger scale: each requires matrix to hold it, and matrix is built through conscious practice, rep by rep. Without enough matrix, an upgrade has nowhere to live, which is why this course runs on practices and experiments instead of on reading. For today the word is enough; Module 3 teaches the map. (Glossary entry: <a href="../Resources/Glossary%20of%20PM%20Distinctions.md">Glossary of PM Distinctions</a>.)</p>
+<p>Two things to hold about the upgrade. First, it is <strong>additive, not a replacement</strong>: installing new thoughtware does not delete the old configuration. The old one stays available, and the new one becomes <em>possible</em>. You gain choice between configurations, not erasure. Second, your thoughtware is <strong>not your personality or your fate</strong>. It is technology, and technology can be updated. The "me" that feels essential and permanent is largely one inherited configuration you have been identified with: the <strong>Box</strong> (the next two teaching blocks are about that specific configuration).</p>
+<p>You will know it is upgrading because <strong>things that used to be invisible become visible</strong>, and once visible, you cannot un-see them. You cannot unbite the sour apple. A real upgrade does not give you a new opinion about the territory; it gives you new eyes.</p>
+<blockquote><p><strong>Micro-practice — the glasses test (8 minutes).</strong> Do this now, before reading on. Pen, paper, timer for five minutes. Write the heading: <em>Things I think are obviously true that other people, in other places, do not think are obviously true.</em> Write without stopping: about time, money, food, work, family, gender, conflict, what's polite, what's rude, what's normal. Do not censor; write fast. When the timer ends, read the page: each sentence is a piece of your thoughtware made briefly visible. They feel obvious because they are the glasses you are wearing, and they are not obvious to someone raised in a different family, country, or decade. For the last three minutes, read each line again slowly and say out loud: <em>"This is thoughtware. I have been thinking with this. I did not choose it. I can notice it."</em> Change nothing; argue with nothing. Just feel the difference between <em>that's just how it is</em> and <em>that is one configuration I happen to be running.</em> Put the page in your course folder; you will want it on Module 9. <strong>What to expect:</strong> the first two minutes produce banalities. Keep writing. The real thoughtware usually surfaces in minute four, right after "I can't think of anything else."</p></blockquote>
+<p><strong>Common misunderstandings about thoughtware.</strong></p>
+<ul>
+<li><em>"Thoughtware is just a fancier word for beliefs or mindset."</em> Beliefs and mindset are content, downstream. Thoughtware is the structural layer that makes specific beliefs possible at all.</li>
+<li><em>"I can upgrade it by thinking harder, or by swapping negative thoughts for positive ones."</em> Thinking harder produces more content on the same architecture. Thoughtware upgrades only through new distinctions: perceptual cuts that make invisible structure visible.</li>
+<li><em>"Understanding the maps intellectually means the upgrade has happened."</em> Intellectual understanding lands in the intellectual body only. A real upgrade registers across several bodies (Module 3), which is why every module asks you to <em>do</em> something, not just read.</li>
+</ul>
+<h3>Thoughtmaps are tools, not territories</h3>
+<p><img src="../Maps/M03.png" alt="Map of Thoughtmaps" loading="lazy"></p>
+<p><em>▶ <a href="../Map%20Atlas/M03%20-%20Map%20of%20Thoughtmaps.html">Study M03 in the Map Atlas →</a></em></p>
+<p>Stop here and take the map in. Shape first, labels second. This is the <em>meta-map</em>, the map <em>about</em> the maps. It lays out the thoughtmaps this course installs side by side and holds them all to one rule: each is a tool, none is the truth. Notice it is an index, not a hierarchy; no map sits above the others as the real one.</p>
+<p>A thoughtmap is a specific cognitive map you use to navigate a specific piece of territory. The Chain (Module 1) is one. The Box (today) is one. Five Bodies (Module 3), Old Map of Feelings (Module 5), Low Drama (Module 7), Ego States (Module 9): each cuts the territory differently and lets you see what was previously a fog. PM has roughly twenty across the full body of work; this course installs the core set.</p>
+<p><strong>The map is not the territory.</strong> No PM map is <em>true</em>. The Box is not a literal box in your head; the Five Bodies is not anatomy. A thoughtmap is a perceptual cut that gives you traction, nothing more. The moment you treat one as doctrine (<em>this is how things really are</em> instead of <em>this is one useful way of looking</em>) you have turned the thoughtmap into a Box, and it has stopped working. Anyone who finds themselves <em>defending</em> a PM map has already misunderstood: the maps are not positions to hold, they are tools to reach for.</p>
+<p>A few distinctions that keep the toolbox alive:</p>
+<ul>
+<li><strong>Tool, not identity.</strong> A learner who <em>uses</em> the Low Drama Triangle has a tool. A learner who <em>is a Possibility Manager</em> has converted the toolbox into an identity, and the identity is now running them.</li>
+<li><strong>Integration is using, not believing.</strong> A map is integrated when you can reach for it under pressure, use it, and put it down afterwards, without needing it to be true. Belief is the <em>opposite</em> of integration.</li>
+<li><strong>Many maps for one territory.</strong> Anger can be looked at through the New Map of Feelings (archetypal energy), the Five Bodies (sensation vs. charge), Low Drama (Persecutor performance), or ego states (Child vs. Adult). None is <em>the</em> answer; each reveals what the others miss. You pick up the one that gives traction, use it, put it down.</li>
+<li><strong>The learner is the verifier.</strong> Your direct experience, not the facilitator's authority, decides whether a map is useful. As Vera says in the live training: <em>try it on like a t-shirt. Run it for a week. If it doesn't fit, take it off. None of this is a rule.</em></li>
+</ul>
+<blockquote><p><strong>Micro-practice — the same-territory test (12 minutes).</strong> Do this now, before reading on. Pick one specific recent situation, under a week old, that produced a strong reaction: a conversation that went sideways, a moment of avoidance, a burst of anger, sadness, or fear. Write it in two sentences: <em>who, what, when.</em> Then look at that same situation through three maps in turn, three minutes each, speaking or writing. <strong>Map 1, the Chain (Module 1).</strong> Walk it backwards: result? behavior? choice? option? map? thoughtware? context underneath all of it? <strong>Map 2, the Box (today).</strong> What surface-layer Box pattern was running? What rule was the Box following? What <em>past</em> situation was the Box treating this present one as? <strong>Map 3, one you've heard of but don't yet understand</strong> (Five Bodies, Low Drama, Old Map of Feelings). Try it on without needing to use it well: what does looking through it even <em>suggest</em>, loosely? For the last three minutes, sit with what came. Each map revealed something different; none was <em>the</em> answer. The situation didn't change, but you now have three handles instead of zero. Close by saying out loud: <em>"These are maps. None is the territory. The territory is whatever it is. I have tools."</em> <strong>What to expect:</strong> Map 3 will feel like guessing. Guessing with a map you half-know is still a rep; precision comes when the module teaches it.</p></blockquote>
+<p><strong>Common misunderstandings about thoughtmaps.</strong></p>
+<ul>
+<li><em>"PM maps describe how reality actually is; learning them is learning the truth."</em> They are perceptual cuts, not descriptions of reality. Useful for navigation; not claims about the territory.</li>
+<li><em>"If two maps say different things about the same situation, one must be wrong."</em> Different maps reveal different aspects of the same territory. They are complementary, not competing.</li>
+<li><em>"If a map doesn't immediately resonate, it's not for me."</em> Resonance is not fit. Some maps land slowly precisely because they cut through territory you are heavily defended around. Try them on for the time the course suggests, <em>then</em> decide.</li>
+</ul>
+<hr>
+<p><strong>SITTING BREAK</strong> — stop here if you need to. When you return: one breath, re-read your last Beep! Book line, continue with Sitting 2 of 3.</p>
+<hr>
+<h3>The Box</h3>
+<p><img src="../Maps/M04.png" alt="Box Technology" loading="lazy"></p>
+<p><em>▶ <a href="../Map%20Atlas/M04%20-%20Anatomy%20of%20the%20Box.html">Study M04 in the Map Atlas →</a></em></p>
+<p>Give the map a full minute before the words. It carries the load-bearing line of the whole course directly on its face: <em>"You have a Box. You are NOT your Box. They are NOT their Box."</em> It maps three layers (surface, story, survival) and the predictable ways the structure defends itself. Open it once side-by-side with this module; you will keep coming back to it.</p>
+<p><strong>The Box is the thoughtware you survived childhood by thinking with.</strong></p>
+<p>You were born without it. You assembled it in your first years of life. You watched what worked. You watched what got punished. You absorbed rules, most never spoken, none written, about how to be a person in your family, your culture, your body. You built a structure that could detect threat early and respond automatically before threat became danger.</p>
+<p><strong>That structure kept you alive.</strong> It is not the enemy. The Box was an act of intelligence by a small human in conditions they did not choose. A child cannot leave, cannot pick the rules, can only adapt.</p>
+<p><strong>The problem is not that you built it. The problem is that you cannot tell it from yourself.</strong></p>
+<p>By adolescence the Box has fused with the <em>you</em> that lives inside it. Ask most adults who they are and they will accurately describe their Box. The likes and dislikes are the Box's. The reactions that happen before thought are the Box's. The phrase "that's just how I am" is the Box talking.</p>
+<p>The Box was designed for <em>that environment</em>: the family, culture, era you grew up in. Most of that environment is no longer here. <strong>But the Box does not know that.</strong> It keeps reading the present through the filter of the past, producing reactions calibrated to threats that already finished. When you react to your boss the way you used to react to your father, the Box is in the chair. When the same fight in your relationship happens for the eighth time in the same shape, the Box is in the chair.</p>
+<h3>Box detection</h3>
+<p>The core skill of this module: <strong>catch yourself reacting from a rule you can sense was set by something that already happened.</strong> Most of the time you catch it <em>after</em>: three minutes after, an hour, the next morning. That's fine. As Vera puts it: <em>we sharpen through our oops, through our beeps, through our oops.</em></p>
+<p>Three things make catching easier:</p>
+<ul>
+<li><strong>The body signal.</strong> The Box has a signature: a tightening, a held breath, a familiar warmth in the chest. Notice yours.</li>
+<li><strong>The script.</strong> Sentences that come out with no apparent author. <em>"That's just how I am." "I don't have a choice." "They always do this." "I can't."</em> Notice sentences that <em>come out</em> rather than sentences you <em>choose</em>.</li>
+<li><strong>The predictability.</strong> The Box is a repetition engine. Same fight, same blocked move, same disappointment: a program is running.</li>
+</ul>
+<h3>"You have a box. You are not your box."</h3>
+<p>The disidentification move. Say it out loud now.</p>
+<p><em>I have a box. I am not my box.</em></p>
+<p>The grammar matters. <em>I am</em> puts you inside the Box, looking out through it. <em>I have</em> puts you outside, looking at it. That is the difference between a life lived inside a structure and a life lived next to one.</p>
+<p>The grammar generalizes past this one sentence. The same move works on anything you are fused with: <em>I am angry</em> → <em>I have anger.</em> <em>I am anxious</em> → <em>I have anxiety in me right now.</em> <em>I am a perfectionist</em> → <em>I have a perfectionist pattern.</em> PM calls this the difference between <strong>is-glue and has-glue</strong>: <em>is</em> glues you to the structure; <em>have</em> sets you down next to it. The whole disidentification lives in the verb.</p>
+<p>Disidentification is <strong>not destruction</strong>. You will likely have your Box, in some form, for the rest of your life, and that is fine. The work is to <strong>stop confusing it for yourself</strong>, so that you have access to the choice the Box never had.</p>
+<p>Expect the Box to <strong>defend itself the moment it is looked at</strong>. The defenses are predictable, and each one is itself a Box move: <em>justification</em> ("I have a good reason"), <em>righteousness</em> ("I am the one who is right"), <em>withdrawal</em> ("I'm fine"), <em>collapse</em> ("I'm a terrible person"). When one of these fires while you are looking at your Box, that is not a detour from the work; it is the work. Notice the defense, name it, keep looking. (<em>"No, but I really am this"</em> is itself the Box defending; keep going.)</p>
+<p>You will know disidentification has begun when, in a moment that would normally be entirely run by the Box, <strong>you sense something happening alongside the Box that is not the Box</strong>: quieter, slower, with more space. That something is what PM calls <em>Being</em>, what you actually are, prior to the Box. Module 2 is not the day you live there. Module 2 is the day you notice the door exists.</p>
+<p><strong>Common misunderstandings about the Box.</strong></p>
+<ul>
+<li><em>"The Box is the bad part of me, and the work is to get rid of it."</em> The Box kept you alive. The work is disidentification, not destruction; you will likely have your Box for life.</li>
+<li><em>"'I have a box' means I am broken or defective."</em> It is a structural observation, not a verdict. Every adult has one. Not a defect: thoughtware. If the inventory turns into a self-criticism list, the Box has eaten it; ground and return to neutral.</li>
+<li><em>"Once I see my Box clearly enough, it will dissolve."</em> Seeing loosens identification but does not dissolve the structure. The Box remains; you gain the capacity to choose whether to operate from it.</li>
+<li><em>"If I'm still reacting from my Box after looking at it, the work hasn't landed."</em> Disidentification does not stop the reaction. It introduces a quieter parallel awareness: <em>something is reacting here that is not all of me.</em> The reps compound.</li>
+<li><em>"I can reach the deepest survival-layer material in week one if I look hard enough."</em> Reaching survival material without the Five Bodies (Module 3), the new map of feelings (Module 5), and ego states (Module 9) is unsafe. The course paces this deliberately (see the three layers, below).</li>
+</ul>
+<h3>The three layers — and why we stay at the top two today</h3>
+<ul>
+<li><strong>Surface.</strong> Behaviors, habits, automatic reactions. <em>"I laugh when someone is angry." "I check my phone the second a conversation gets quiet."</em></li>
+<li><strong>Story.</strong> Beliefs, rules, narratives the surface rests on. <em>"If I disagree, they will leave." "I have to be useful to be loved."</em></li>
+<li><strong>Survival.</strong> Identity-level commitments formed early in response to threat. The layer where the Box says, often without words, <em>if I let this go I will die.</em></li>
+</ul>
+<p><strong>Today we work at surface and story.</strong> Deliberately. Reaching for survival without the Five Bodies (Module 3), the new map of feelings (Module 5), and ego states (Module 9) is unsafe. The surface is plenty; most learners are stunned by how much Box becomes visible there.</p>
+<p>A note about the browser tool, because it shows the survival layer on its diagram: the <a href="../Interactive%20Tools/Day%2002/box-inventory.html">Box inventory tool</a> keeps the survival layer behind a consent prompt. <strong>That consent is asked fresh on every visit and is never remembered.</strong> Not stored, not carried over from last time, gone when you close the page. Yesterday's yes does not speak for today, in this tool or anywhere else in this course. If you open the tool today and decline, nothing is lost: surface and story are the whole of today's assignment.</p>
+<h3>The Gremlin is not the Box</h3>
+<p>For now: the <strong>Box</strong> is structural, the survival-and-protection thoughtware running underneath. The <strong>Gremlin</strong> is active: the part of you that wants drama, suffering, righteousness, distraction. The Gremlin <strong>protects the Box</strong>. When the Box is being looked at, the Gremlin gets loud. If in the next 24 hours you find yourself wanting to declare the whole course is nonsense, quit, pick a fight, or eat an entire jar of something in front of a screen: that is Gremlin. Notice it. Don't act on it. Worked directly in Modules 7 and 9.</p>
+<hr>
+<p><strong>SITTING BREAK</strong> — stop here if you need to. When you return: one breath, re-read your last Beep! Book line, continue with Sitting 3 of 3.</p>
+<hr>
+<h2>Embodied practice (solo) — The Box-Inventory</h2>
+<p>20 minutes. Paper and pen. Phone face-down, in another room if possible. Partner check-in confirmed (header). Read the script through once, then do it. (The <a href="../Interactive%20Tools/Day%2002/box-inventory.html">browser version</a> exists if paper is genuinely impossible today; paper is better for this one, because the page you produce goes into your course folder and comes back out in Module 9.)</p>
+<blockquote><p><strong>Script.</strong></p>
+<p>Sit. Both feet on the floor. Spine long. Three breaths, exhale longer than inhale, audible.</p>
+<p>Out loud: <em>"I have a box. I am not my box. I am going to look at the surface of my box for the next 20 minutes."</em></p>
+<p>Write five headings on your paper:</p>
+<ol>
+<li><strong>Things I always do</strong> (automatic behaviors, habits, moves that just happen)</li>
+<li><strong>Things I always say</strong> (sentences that come out by themselves, the ones you have said a thousand times)</li>
+<li><strong>Things I cannot stand</strong> (reactions, in others or in yourself, that flip a switch in you instantly)</li>
+<li><strong>Rules I follow without remembering deciding to</strong> (about food, money, time, what is appropriate, what is shameful)</li>
+<li><strong>People I become around certain people</strong> (who do you become around your mother? your boss? your ex? your best friend?)</li>
+</ol>
+<p>3 minutes per heading. Set a timer.</p>
+<p>Write fast. Do not edit, explain, justify, or turn anything into a story about why. The Box is not on trial. The Box is being looked at.</p>
+<p>If you feel resistance (the inventory feels boring, you suddenly remember an urgent email, you want to stop): that is the Box noticing it is being looked at. Keep writing.</p>
+<p>When the timer ends, read the page slowly, as if it is someone else's. Notice what your body does as you read.</p>
+<p>Out loud, page in front of you: <em>"This is the surface of my box. I have all of this. I am not all of this."</em></p>
+<p>Sit for two minutes. Do nothing. There is no right reaction.</p>
+<p>Put the page in a folder you will use across the course. You will return to it in Module 9.</p></blockquote>
+<p><strong>What to expect:</strong> heading 5 is where most learners hit something real. If a heading stays blank for a full minute, say the heading out loud and write the first thing your body produces, even if it seems trivial. Trivial entries are usually the true ones.</p>
+<blockquote><p><strong>Variation B — the has-glue / is-glue switch (~10 min).</strong> If the inventory keeps you in your head, or you want to drill disidentification at the level of grammar, run this instead of or after the inventory. Sit, paper and pen, phone face down. Write five sentences about yourself beginning <em>"I am <em><strong>."</em>, whatever comes: <em>I am a perfectionist. I am anxious. I am the responsible one. I am bad with money.</em> Write fast. Read them aloud, one at a time, and notice what your body does and where each sentence locates you: <em>inside</em> the thing or <em>next to</em> it. Now rewrite each in the <em>"I have"</em> form: <em>I am a perfectionist</em> → <em>I have a perfectionist pattern</em>; <em>I am anxious</em> → <em>I have anxiety in me right now</em>; <em>I am bad with money</em> → <em>I have a Box pattern around money.</em> Read the <em>I have</em> set aloud, slowly, and notice the difference this time: more space, more distance, less weight, more choice (or whether the Box objects: <em>"no, but I really am this"</em> is a Box defense; keep going). For the last two minutes, pick one and say it both ways, three times slowly: <em>I am </strong></em> / I have ___.</em> Feel the gap between standing inside the structure and standing next to it. That small distance between <em>am</em> and <em>have</em> is the doorway into every other practice the course will ask of you.</p></blockquote>
+<p>If during the practice you feel ungrounded (far away from yourself, room hazy, breath shallow, the inventory starting to feel like an attack): <strong>stop</strong> and use the 60-second grounding script (<a href="../Interactive%20Tools/ground.html">ground.html</a>). The Box can experience being looked at as a small death. Brief ungroundedness as identification loosens is information, not a problem.</p>
+<hr>
+<h2>Partner exchange (async)</h2>
+<p>Same voice-message structure as Module 1. Different content. (Solo path: voice memo to yourself, three reply points written in the Beep! Book the next day.)</p>
+<p><strong>Prompt to record (3–8 minutes):</strong></p>
+<ol>
+<li><strong>One specific surface-layer Box pattern</strong> from your inventory. Not the most dramatic: a small specific one. Name it neutrally: <em>"I laugh when I'm uncomfortable." "I say I'm fine when I'm not." "I check my phone three seconds into any silence."</em> Do not explain. Do not narrate the backstory. Just name it.</li>
+<li><strong>What it cost you to look at it today.</strong> Did you flinch? Find a reason to take a break? Want to make it sound funnier than it is? Try to fix it immediately? Tell the truth about the moment of looking.</li>
+<li>**One sentence in the form: *"I have a <em><strong> . I am not my </strong></em> ."*** Say it once at the end. Let it land.</li>
+</ol>
+<p>Speak from your body. Do not edit. Performance is the Box.</p>
+<p><strong>When you receive your partner's message, listen all the way through once before you reply.</strong> Then record (3–8 minutes):</p>
+<ol>
+<li><strong>What you heard them say</strong>: paraphrase the specific surface pattern they named, without softening it.</li>
+<li><strong>What you noticed in yourself while listening</strong>: a body sensation, a feeling, a recognition. (A partner's Box pattern often names one of yours.)</li>
+<li><strong>One open-ended question</strong>: not advice. The question that lands in their body, not their head.</li>
+</ol>
+<p>No fixing. No "I had the same thing and what helped me was…" Coaching is taught in Module 8. Today is witnessing one small specific Box pattern, named cleanly, without rescue.</p>
+<hr>
+<h2>Between-module experiment</h2>
+<p>The standing format: <strong>what I will do / by when / what I will notice.</strong> One at a time. Write the three parts in your Beep! Book before you run it. Pick <strong>one</strong>; run it before you start Module 3.</p>
+<ol>
+<li><strong>Catch-and-name.</strong> <em>What:</em> catch my Box in the act one time, and while it is happening say silently: <em>"This is my box. I am not my box."</em> No changing the reaction; naming only. <em>By when:</em> within 48 hours. <em>What I will notice:</em> what shifts in the half-second after the naming.</li>
+<li><strong>The repetition map.</strong> <em>What:</em> identify one scene in my life that has happened many times in the same shape (same fight, same blocked move, same disappointment) and write the shape in three sentences: <em>who is in it, what happens, how it ends</em>, then ask: <em>what rule is my Box running here?</em> <em>By when:</em> before Module 3. <em>What I will notice:</em> whether seeing the shape changes the pull of it, even slightly.</li>
+<li><strong>The sentence audit.</strong> <em>What:</em> for one whole day, notice sentences that come out of me that I did not choose, and write three of them down by evening. <em>By when:</em> tomorrow night. <em>What I will notice:</em> what it does to hear my own Box vocabulary read back off the page.</li>
+</ol>
+<p><strong>Capture within ten minutes</strong>, in the Beep! Book, flat lines: <em>what I did · what happened.</em> A missed or failed run is a Beep!; the Beep! goes in the book and counts as a completed rep of the loop.</p>
+<p><strong>Callback rep (Module 1's instrument):</strong> once before Module 3, re-run the four-level sentence from Module 1, using a sentence your Box produced this week. Ninety seconds, four levels, out loud. Notice which level the Box's sentence was natively spoken from.</p>
+<hr>
+<h2>Reflection prompts</h2>
+<p>Journal at your own pace. Longhand if you can. Do not write the answers your Box would want you to write.</p>
+<ol>
+<li>Before this module, what did the word <em>me</em> refer to? Has it shifted at all? In what direction?</li>
+<li>Which item on your inventory was the hardest to put on the page? What made it hard? (The hardness is often the door.)</li>
+<li>When you said <em>I have a box. I am not my box.</em>, what did your body do? What did your mind do? Did they agree?</li>
+<li>If your Box is currently in charge of one specific area of your life (a relationship, a recurring decision, an avoidance pattern), name it. Do not write a plan to change it. Name it precisely.</li>
+<li>The Box kept a younger version of you alive. Can you locate the conditions it was built for? You are not required to, but if the answer comes, write it.</li>
+</ol>
+<hr>
+<h2>Safety callouts for this module</h2>
+<p>Module 2 is <strong>Medium-intensity</strong>, the highest of the front-half modules, which is why its header asks for the partner check-in before the practice. The cognitive content is moderate; the disidentification move is the energetic load. For most learners it lands as relief: <em>oh, that's the Box, that's not me.</em> For some it lands briefly as ungroundedness: <em>if that's the Box, then who am I?</em> Both are normal.</p>
+<ul>
+<li><strong>Brief disorientation after the inventory or the disidentification sentence.</strong> When identification with the Box loosens, some learners report a few minutes of floating or "who am I?" sensations. This is the structure giving a millimetre of slack. <strong>Use the 60-second grounding script</strong> (<a href="../Interactive%20Tools/ground.html">ground.html</a>, or Script 1 in the <a href="../Resources/Solo%20Centering%20and%20Grounding%20Scripts.md">Solo Centering and Grounding Scripts</a>). Do not "push through" disorientation; that is the Box trying to take the inventory back.</li>
+<li><strong>The Gremlin gets loud.</strong> In the 24 hours after looking at their Box for the first time, some learners feel a strong urge to declare the course is nonsense, pick a fight, quit, or numb out. That is the Gremlin protecting the Box. Notice it. Name it. Don't act on it. If you are actually about to act on it: call your partner or witness. A 90-second voice message usually defuses it. (Solo path: write the urge in the Beep! Book in flat lines, then take a ten-minute walk before deciding anything.)</li>
+<li><strong>Mistaking the Box for the self.</strong> A common failure mode is treating "I have a box" as new self-criticism: <em>I am bad because I have a box.</em> <strong>The Box is not the enemy.</strong> The Box kept you alive. The work is to disidentify, not to attack. If the inventory becomes a self-flagellation list, stop, ground, re-read <em>"I have a box. I am not my box,"</em> and resume only when the energy is neutral.</li>
+</ul>
+<p>If at any point you notice you are floating, dissociating, or shutting down: stop, ground, decide. This course is not therapy. If looking at your Box surfaces material clearly bigger than this module was built to hold, use the <a href="../Resources/Referral%20List.md">Referral List</a> and contact the CM. The Box will still be here next week.</p>
+<hr>
+<h2>Cohort feed post (suggested)</h2>
+<p>One line each, no more (solo or witness path: same lines, into the Beep! Book):</p>
+<ul>
+<li>The smallest specific surface-Box pattern I caught today: …</li>
+<li>What I noticed in my body when I said "I have a box, I am not my box": …</li>
+<li>(Optional) One question for the group: …</li>
+</ul>
+<hr>
+<h2>Glossary additions</h2>
+<ul>
+<li><strong>Thoughtware:</strong> what you think <em>with</em>; the internal architecture; distinct from the thoughts (content) that run on it</li>
+<li><strong>Thoughtmap:</strong> a specific cognitive map used to navigate; the map is not the territory; a tool, not a doctrine</li>
+<li><strong>Matrix:</strong> the energetic structure you build, through practice, that determines how much consciousness you can hold; thoughtware upgrades install onto it; first mention today, taught in Module 3</li>
+<li><strong>Box:</strong> the survival/protection thoughtware assembled in childhood; what you have been identified with; <em>you have a box, you are not your box</em></li>
+<li><strong>Box layers:</strong> surface (behaviors/habits) · story (beliefs/rules) · survival (identity-level commitments); Module 2 works surface + story</li>
+<li><strong>Disidentification:</strong> the move from <em>I am this</em> to <em>I have this</em>; the precondition for liquid state</li>
+<li><strong>Box detection:</strong> catching, in real time, that you are reacting from a rule set by something that already happened</li>
+<li><strong>Being:</strong> what you actually are, prior to the Box; quieter, slower, with more space; not always locatable, and that's normal</li>
+<li><strong>Gremlin (preview only):</strong> the part of you that wants drama, suffering, righteousness, distraction; protects the Box; worked directly in Modules 7 and 9</li>
+</ul>
+<hr>
+<h2>Close the loop (5 minutes)</h2>
+<p>On the three-word scale from the <a href="../Resources/Learning%20Self-Assessment.md">Learning Self-Assessment</a> (<em>not yet / starting / landed in my body</em>), rate yourself on two statements: <em>"I can describe one surface-layer Box pattern of mine neutrally, without making it wrong"</em> and <em>"I can feel the difference between 'I am' and 'I have' in my body, not just explain it."</em> Rate in the direction of "not yet"; a <em>not yet</em> means one more pass at the inventory or Variation B before Module 3, and nothing more than that.</p>
+<p>Add today's one-distinction entry to <a href="../Practice/My%20Map%20Book.md">My Map Book</a>: one distinction in your own words, one lived example.</p>
+<p>Stepped away and coming back later? Use <a href="../Practice/Coming%20Back.md">Coming Back</a>. The inventory page will still be in the folder.</p>
+<hr>
+<sub>🄯 <strong>World Copyleft 2026</strong> · <em>Expand the Box (Digital)</em> · licensed <strong><a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></strong>, consistent with the spirit of World Copyleft · re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community · this course is an independent re-presentation, <strong>not an official Possibility Management training</strong> · please share, share-alike · Powered by Possibility Management (<a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>) · full terms: <code>LICENSE.md</code> in the course root</sub>
+  </article>
+
+  <nav class="module-nav" aria-label="Module navigation">
+    <a class="prev" href="module-01.html"><span class="nn-label">← Module 01</span>Orientation, New Context, Radical Responsibility</a>
+    <a class="next" href="module-03.html"><span class="nn-label">Module 03 →</span>Liquid State, Center-Ground-Bubble, Five Bodies</a>
+  </nav>
+
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="../index.html">← Course front door</a>
+      <a href="../Map%20Atlas/index.html">Map Atlas →</a>
+      <a href="../Interactive%20Tools/index.html">Interactive Tools →</a>
+    </div>
+    <p class="license"><span class="cc">🄯 World Copyleft 2026 · Expand the Box (Digital).</span> Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>, consistent with the spirit of World Copyleft. Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. This course is an independent re-presentation, <strong>not an official Possibility Management training</strong>. Please share, share-alike. Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>. Full terms: <code>LICENSE.md</code> in the course root.</p>
+    <p class="build-stamp">Generated by build.py · 2026-06-12 · do not hand-edit · source: Days/Day 02 - Thoughtware, Thoughtmaps, Box Technology.md</p>
+  </footer>
+</div>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. This course is an independent re-presentation, not an official Possibility Management training. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

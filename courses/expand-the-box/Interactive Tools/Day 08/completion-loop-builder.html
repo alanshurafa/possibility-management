@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Completion Loop Builder · ETB Day 8</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+  --forest: #1d4d3a;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero { margin: 56px 0 24px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 720px;
+  font-style: italic;
+}
+
+/* progress rail */
+.rail {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 40px 0 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+  flex-wrap: wrap;
+}
+.rail .node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 0;
+  transition: color 0.2s;
+}
+.rail .node:hover { color: var(--ink); }
+.rail .node.active { color: var(--vermillion); }
+.rail .node.done { color: var(--forest); }
+.rail .node .dot {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--ink-mute);
+  border-radius: 50%;
+  background: transparent;
+  transition: all 0.2s;
+}
+.rail .node.active .dot { background: var(--vermillion); border-color: var(--vermillion); }
+.rail .node.done .dot { background: var(--forest); border-color: var(--forest); }
+.rail .connector {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  min-width: 12px;
+}
+
+/* step panels */
+.step {
+  display: none;
+  margin: 32px 0 24px;
+  padding: 36px 40px;
+  background: var(--ivory-shade);
+  border-left: 4px solid var(--vermillion);
+  position: relative;
+}
+.step.active { display: block; }
+.step .prompt {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.step h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.step h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.step .help {
+  font-family: var(--body);
+  font-size: 17px;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-bottom: 26px;
+  max-width: 720px;
+  line-height: 1.55;
+}
+
+.field {
+  margin-bottom: 22px;
+}
+.field-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+@media (max-width: 720px) { .field-row { grid-template-columns: 1fr; } }
+
+input.text, textarea.text {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.45;
+}
+input.text { font-size: 17px; }
+textarea.text { min-height: 80px; }
+input.text:focus, textarea.text:focus {
+  outline: none;
+  border-color: var(--ink);
+  background: white;
+}
+textarea.text.big {
+  min-height: 110px;
+  font-size: 20px;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn.forest { background: var(--forest); border-color: var(--forest); color: var(--ivory); }
+.btn.forest:hover { background: #143829; border-color: #143829; }
+
+.step-nav {
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--rule);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* gap callout for step 2 */
+.gap-callout {
+  margin-top: 14px;
+  padding: 18px 22px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  display: none;
+}
+.gap-callout.show { display: block; }
+.gap-callout .marker {
+  display: inline-block;
+  background: var(--mustard);
+  color: var(--ink);
+  padding: 2px 8px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  margin-right: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.gap-callout .note {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+/* template cards (step 3) */
+.templates {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin: 8px 0 24px;
+}
+@media (max-width: 800px) { .templates { grid-template-columns: 1fr; } }
+
+.template-card {
+  background: var(--ivory);
+  border: 1.5px solid var(--rule);
+  padding: 22px 24px 20px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  position: relative;
+}
+.template-card:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+.template-card.selected {
+  border-color: var(--vermillion);
+  background: var(--vermillion-soft);
+  box-shadow: 0 8px 24px rgba(196, 59, 28, 0.10);
+}
+.template-card .tnum {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--vermillion);
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.template-card .tname {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.template-card .tname em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.template-card .tbody {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.template-card .tbody .blank {
+  background: var(--ivory-shade);
+  padding: 1px 6px;
+  border-bottom: 1px dashed var(--vermillion);
+  color: var(--ink-mute);
+  font-style: normal;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.scratch-toggle {
+  display: inline-block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+.scratch-toggle:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+.scratch-toggle.active { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.editor {
+  margin-top: 20px;
+  padding: 22px 26px;
+  background: var(--ivory);
+  border: 1.5px solid var(--ink);
+  display: none;
+}
+.editor.show { display: block; }
+.editor-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.editor textarea {
+  width: 100%;
+  min-height: 130px;
+  padding: 16px 18px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.editor textarea:focus {
+  outline: none;
+  border-color: var(--vermillion);
+  background: white;
+}
+.editor .editor-help {
+  margin-top: 10px;
+  font-family: var(--body);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-mute);
+}
+
+/* roadblocks (step 4) */
+.roadblock-intro {
+  margin-bottom: 22px;
+  padding: 16px 20px;
+  background: var(--ivory);
+  border-left: 3px solid var(--sky);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.roadblock-intro strong { color: var(--ink); font-weight: 600; }
+
+.roadblock-draft {
+  margin-bottom: 24px;
+  padding: 20px 22px;
+  background: var(--ivory);
+  border: 1.5px solid var(--rule);
+}
+.roadblock-draft .draftlabel {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+}
+.roadblock-draft .drafttext {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.roadblock-draft .drafttext.empty {
+  color: var(--ink-mute);
+  font-style: italic;
+}
+
+.roadblocks {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.rb {
+  display: grid;
+  grid-template-columns: 28px 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 14px 18px;
+  background: var(--ivory);
+  border: 1.5px solid var(--rule);
+  transition: all 0.2s;
+}
+.rb:hover { border-color: var(--ink-mute); }
+.rb.flagged {
+  background: rgba(196, 59, 28, 0.07);
+  border-color: var(--vermillion);
+}
+.rb input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--ink-mute);
+  background: var(--ivory-shade);
+  cursor: pointer;
+  margin-top: 3px;
+  position: relative;
+}
+.rb input[type="checkbox"]:checked {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+}
+.rb input[type="checkbox"]:checked::after {
+  content: '✕';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ivory);
+  font-size: 13px;
+  font-family: var(--mono);
+  font-weight: 700;
+}
+.rb .rb-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.rb .rb-name em {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--ink-mute);
+  margin-top: 4px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+}
+.rb .rb-alt {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 15px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  border-left: 2px solid var(--mustard);
+  padding-left: 12px;
+}
+@media (max-width: 720px) {
+  .rb { grid-template-columns: 28px 1fr; }
+  .rb .rb-alt { grid-column: 1 / -1; padding-left: 30px; border-left: none; border-top: 1px dashed var(--rule); padding-top: 10px; margin-top: 4px; }
+}
+
+.revise-prompt {
+  margin-top: 24px;
+  padding: 18px 22px;
+  background: var(--vermillion-soft);
+  border-left: 3px solid var(--vermillion);
+  display: none;
+}
+.revise-prompt.show { display: block; }
+.revise-prompt .rmarker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.revise-prompt p {
+  font-family: var(--body);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.revise-prompt textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 14px 18px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: white;
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.45;
+}
+
+/* the plan (step 5) summary card */
+.plan-summary {
+  margin-top: 24px;
+  padding: 24px 28px;
+  background: var(--ivory);
+  border: 1.5px solid var(--ink);
+}
+.plan-summary h4 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.plan-summary h4 em { font-style: italic; color: var(--vermillion); font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; }
+.plan-summary .ploop {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.5;
+  padding: 14px 16px;
+  background: var(--ivory-shade);
+  border-left: 3px solid var(--vermillion);
+  margin-bottom: 18px;
+}
+.plan-summary .pmeta {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.plan-summary .pmeta .pcell .plabel {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 4px;
+}
+.plan-summary .pmeta .pcell .pval {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+}
+@media (max-width: 700px) { .plan-summary .pmeta { grid-template-columns: 1fr; } }
+
+/* debrief (step 6) */
+.outcome-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.outcome-btn {
+  padding: 12px 22px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1.5px solid var(--ink-mute);
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.outcome-btn:hover { border-color: var(--ink); color: var(--ink); }
+.outcome-btn.selected {
+  border-color: var(--vermillion);
+  background: var(--vermillion);
+  color: var(--ivory);
+}
+.outcome-btn[data-outcome="yes"].selected {
+  background: var(--forest); border-color: var(--forest);
+}
+.outcome-btn[data-outcome="partial"].selected {
+  background: var(--mustard); border-color: var(--mustard); color: var(--ink);
+}
+
+/* saved loops list */
+.saved-section {
+  margin-top: 48px;
+  padding-top: 36px;
+  border-top: 1px solid var(--rule);
+}
+.saved-section h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 22px;
+  color: var(--ink);
+}
+.saved-section h3 em { font-style: italic; color: var(--vermillion); font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; }
+.loop-item {
+  padding: 22px 24px;
+  margin-bottom: 14px;
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--rule);
+  position: relative;
+}
+.loop-item .lwhen {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-mute);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.loop-item .lwith {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 18px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.loop-item .lwith em { font-style: italic; color: var(--ink-mute); font-weight: 400; font-size: 15px; font-variation-settings: 'opsz' 144, 'SOFT' 100; }
+.loop-item .ldraft {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  line-height: 1.45;
+  padding: 12px 14px;
+  background: var(--ivory);
+  border-left: 3px solid var(--vermillion);
+  margin: 10px 0;
+}
+.loop-item .lstatus {
+  display: inline-block;
+  padding: 4px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-right: 8px;
+}
+.lstatus.planned { background: var(--ivory); color: var(--ink-mute); border: 1px solid var(--ink-mute); }
+.lstatus.ran-yes { background: var(--forest); color: var(--ivory); }
+.lstatus.ran-no { background: var(--vermillion); color: var(--ivory); }
+.lstatus.ran-partial { background: var(--mustard); color: var(--ink); }
+.loop-item .lactions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.loop-item .lactions .miniBtn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  background: transparent;
+  border: 1px solid var(--ink-mute);
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.loop-item .lactions .miniBtn:hover { color: var(--ink); border-color: var(--ink); }
+.loop-item .lactions .miniBtn.del:hover { color: var(--vermillion); border-color: var(--vermillion); }
+
+/* PM voice callout */
+.voice-callout {
+  margin: 40px 0;
+  padding: 28px 32px;
+  background: transparent;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  text-align: center;
+}
+.voice-callout p {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(20px, 2.6vw, 26px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.voice-callout p::before { content: '"'; color: var(--vermillion); font-size: 1.4em; vertical-align: -0.15em; margin-right: 4px; }
+.voice-callout p::after { content: '"'; color: var(--vermillion); font-size: 1.4em; vertical-align: -0.15em; margin-left: 4px; }
+.voice-callout .attrib {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+footer.bottom {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+
+/* print stylesheet — for carrying the completed loop card */
+@media print {
+  @page { margin: 18mm; }
+  body { background: white; }
+  body::before { display: none; }
+  header.top, .rail, .step-nav, .saved-section, .voice-callout, footer.bottom, .hero .lede,
+  .scratch-toggle, .editor, .roadblock-intro, .roadblocks, .revise-prompt, .gap-callout,
+  .outcome-row, #debriefNotes, #debriefNext, .field, .templates { display: none !important; }
+  .wrap { max-width: 100%; padding: 0; }
+  .hero { margin: 0 0 24px; }
+  .hero .eyebrow { color: black; }
+  h1.display { font-size: 38px; color: black; }
+  h1.display em { color: black; font-style: italic; }
+  .step.active { display: block !important; padding: 0; background: white; border-left: none; margin: 0; }
+  .step.active h2, .step.active .help, .step.active .prompt { display: none; }
+  .plan-summary {
+    display: block !important;
+    border: 2px solid black;
+    padding: 24px;
+    background: white;
+  }
+  .plan-summary h4 { font-size: 20px; color: black; }
+  .plan-summary h4 em { color: black; }
+  .plan-summary .ploop {
+    background: #f0f0f0;
+    border-left: 4px solid black;
+    color: black;
+    font-size: 17px;
+  }
+  .plan-summary .pmeta .pcell .pval { color: black; font-size: 15px; }
+  .plan-summary .pmeta .pcell .plabel { color: #555; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 08</span> · EXPAND THE BOX · Completion Loop Builder
+    </div>
+    <a href="index.html">← All Day 8 tools</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Day 8 · Interactive Practice · the loop builder</div>
+    <h1 class="display">A conversation that hasn't <em>ended.</em><br>Build the loop that completes it.</h1>
+    <p class="lede">
+      Pick one communication in your life that has been hanging — paused, said but not landed, walked-away-from.
+      In six steps, you will construct the actual completion loop you could run to finish it.
+    </p>
+  </section>
+
+  <!-- progress rail -->
+  <nav class="rail" id="rail"></nav>
+
+  <!-- STEP 1 -->
+  <section class="step active" data-step="1" id="step1">
+    <div class="prompt">Step 1 · the hanging communication</div>
+    <h2>What conversation is still <em>hanging?</em></h2>
+    <p class="help">Short — the structure, not the script. Recent enough to be locatable; small enough to be your first rep. Don't pick the marriage-during-a-fight one. Pick the small thing you walked away from.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label" for="hangWho">With whom?</label>
+        <input class="text" id="hangWho" aria-label="With whom?" placeholder="A name, a role, an initial — your choice.">
+      </div>
+      <div class="field">
+        <label class="field-label" for="hangWhat">About what?</label>
+        <input class="text" id="hangWhat" aria-label="About what?" placeholder="One phrase. The topic.">
+      </div>
+      <div class="field">
+        <label class="field-label" for="hangWhen">Roughly when?</label>
+        <input class="text" id="hangWhen" aria-label="Roughly when?" placeholder="Last week. Two months ago. 2019.">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="hangSummary">One sentence — what was left unsaid or unconfirmed</label>
+      <textarea class="text" id="hangSummary" aria-label="One sentence — what was left unsaid or unconfirmed" placeholder="e.g. I told them I'd think about it and never came back. The argument we both walked away from."></textarea>
+    </div>
+
+    <div class="step-nav">
+      <span></span>
+      <button class="btn primary" onclick="next()">Next — what you said vs what you meant →</button>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step" data-step="2" id="step2">
+    <div class="prompt">Step 2 · the gap</div>
+    <h2>What you <em>said</em> vs what you <em>meant.</em></h2>
+    <p class="help">Communication has a gap by default. Locate yours. The completion loop's job is to close it.</p>
+
+    <div class="field">
+      <label class="field-label" for="saidActually">What you actually said (verbatim or close)</label>
+      <textarea class="text big" id="saidActually" aria-label="What you actually said (verbatim or close)" placeholder="The words that came out of your mouth — or the words you wish you had said but didn't."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="meantActually">What you actually meant</label>
+      <textarea class="text big" id="meantActually" aria-label="What you actually meant" placeholder="The intention underneath. The thing you were trying to convey."></textarea>
+    </div>
+
+    <button class="btn ghost" onclick="showGap()">Notice the gap?</button>
+
+    <div class="gap-callout" id="gapCallout">
+      <span class="marker">The gap</span>
+      The completion loop's job is to close that gap by checking what the other person actually received — not by saying it louder. They cannot read your intention. They received your encoding. The loop verifies the receipt.
+      <span class="note">PM's account: the gap is not the exception. It is the structural fact. Five named places it can open — intention, encoding, reception, decoding, response. After three turns of unchecked gaps, most conversations are two parallel monologues touching only at the surface.</span>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn ghost" onclick="prev()">← Back</button>
+      <button class="btn primary" onclick="next()">Next — pick a template →</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step" data-step="3" id="step3">
+    <div class="prompt">Step 3 · the loop</div>
+    <h2>Build the <em>loop.</em></h2>
+    <p class="help">Pick one of the four templates to start from, or write from scratch. Then customize with the specifics of your hanging communication.</p>
+
+    <div class="templates" id="templates"></div>
+
+    <div class="scratch-toggle" id="scratchToggle" role="button" tabindex="0" onclick="toggleScratch()">+ Write from scratch instead</div>
+
+    <div class="editor" id="editor">
+      <div class="editor-label" id="loopDraftLabel">Your loop opener — customize the blanks with your specifics</div>
+      <textarea id="loopDraft" aria-label="Your loop opener — customize the blanks with your specifics" placeholder="Pick a template above, or write your own opener here."></textarea>
+      <div class="editor-help">
+        Constraints: small, low-key, non-dramatic. The opener must NOT sound like the start of a breakup or hard conversation. End with an invitation to reflect back — <em>"Can you tell me what landed for you?"</em> — or the equivalent in your own voice.
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn ghost" onclick="prev()">← Back</button>
+      <button class="btn primary" onclick="next()">Next — roadblock check →</button>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step" data-step="4" id="step4">
+    <div class="prompt">Step 4 · the 12 roadblocks</div>
+    <h2>Roadblock <em>check.</em></h2>
+    <p class="help">Before running the loop, check: does your draft contain any of Thomas Gordon's 12 Roadblocks? All twelve look helpful. None of them are listening.</p>
+
+    <div class="roadblock-intro">
+      <strong>These are not "bad."</strong> Most have a domain. The point is to notice that doing any of these instead of listening will quietly break the loop you are trying to close. Tick the ones your draft might contain. The loop-friendly alternative is on the right.
+    </div>
+
+    <div class="roadblock-draft">
+      <div class="draftlabel">Your draft from Step 3 —</div>
+      <div class="drafttext empty" id="draftEcho">[Your loop draft will appear here once written.]</div>
+    </div>
+
+    <div class="roadblocks" id="roadblocks"></div>
+
+    <div class="revise-prompt" id="revisePrompt">
+      <div class="rmarker">Revise</div>
+      <p>You flagged <strong><span id="flaggedCount">0</span></strong> roadblock(s) in your draft. Rewrite below — the goal isn't perfection, it's noticing where helpfulness was sneaking in instead of listening.</p>
+      <textarea id="reviseDraft" aria-label="Rewrite your loop opener with the roadblocks removed" placeholder="Rewrite your loop opener here, with the roadblocks removed."></textarea>
+      <div style="margin-top:14px;">
+        <button class="btn ghost" onclick="useRevise()">Use revised draft</button>
+        <button class="btn ghost" onclick="keepOriginal()">Keep original — I'll notice in the moment</button>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn ghost" onclick="prev()">← Back</button>
+      <button class="btn primary" onclick="next()">Next — the plan →</button>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step" data-step="5" id="step5">
+    <div class="prompt">Step 5 · the plan</div>
+    <h2>When will you <em>run</em> the loop?</h2>
+    <p class="help">Without time on paper, the gremlin keeps the debt open indefinitely. Pick a specific window. Pick the channel. Pick what counts as "complete."</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label" for="planWhen">When</label>
+        <input class="text" id="planWhen" aria-label="When will you run the loop?" placeholder="e.g. Saturday morning. By Tuesday. After dinner tonight.">
+      </div>
+      <div class="field">
+        <label class="field-label" for="planWhere">Where / how</label>
+        <input class="text" id="planWhere" aria-label="Where or how will you run the loop?" placeholder="In person · phone · async voice message.">
+      </div>
+      <div class="field">
+        <label class="field-label" for="planSignal">What tells you it completed?</label>
+        <input class="text" id="planSignal" aria-label="What tells you it completed?" placeholder="They confirm. We both say 'complete.' My body unclenches.">
+      </div>
+    </div>
+
+    <div class="plan-summary" id="planSummary">
+      <h4>Your <em>completion loop</em> — to carry with you</h4>
+      <div class="ploop" id="loopFinal">[Your draft will appear here.]</div>
+      <div class="pmeta">
+        <div class="pcell"><div class="plabel">With</div><div class="pval" id="pmetaWho">—</div></div>
+        <div class="pcell"><div class="plabel">About</div><div class="pval" id="pmetaWhat">—</div></div>
+        <div class="pcell"><div class="plabel">When</div><div class="pval" id="pmetaWhen">—</div></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn ghost" onclick="prev()">← Back</button>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn ghost" onclick="window.print()">Print loop card ⎙</button>
+        <button class="btn primary" onclick="saveLoop()">Save loop · go to debrief →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 6 -->
+  <section class="step" data-step="6" id="step6">
+    <div class="prompt">Step 6 · after running it</div>
+    <h2>I ran <em>the loop.</em> Here is what happened.</h2>
+    <p class="help">Come back here once you have actually run the loop. Not before. The debrief is for the rep, not the plan.</p>
+
+    <div class="field">
+      <label class="field-label">Did it complete?</label>
+      <div class="outcome-row" id="outcomeRow">
+        <button class="outcome-btn" data-outcome="yes" onclick="pickOutcome('yes')">Yes — clean</button>
+        <button class="outcome-btn" data-outcome="partial" onclick="pickOutcome('partial')">Partially</button>
+        <button class="outcome-btn" data-outcome="no" onclick="pickOutcome('no')">No — didn't land</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="debriefNotes">What you noticed</label>
+      <textarea class="text big" id="debriefNotes" aria-label="What you noticed" placeholder="In your body, in the room, in the other person, in the relationship over the next 24 hours. What did the gremlin do when the debt closed — or when the loop wouldn't?"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="debriefNext">If it didn't complete — what's next?</label>
+      <textarea class="text" id="debriefNext" aria-label="If it didn't complete — what's next?" placeholder="Smaller piece? Different time? Different opener? Loop on the loop?"></textarea>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn ghost" onclick="prev()">← Back</button>
+      <button class="btn forest" onclick="saveDebrief()">Log the debrief</button>
+    </div>
+  </section>
+
+  <!-- voice callout -->
+  <div class="voice-callout">
+    <p>A completion loop is not "closure." Closure is what you tell yourself to feel done. A completion loop is what actually finishes the energetic transaction between two people.</p>
+    <span class="attrib">PM voice · Day 8</span>
+  </div>
+
+  <!-- saved loops -->
+  <section class="saved-section" id="savedSection">
+    <h3>Loops on the <em>workbench</em></h3>
+    <div id="savedList"></div>
+  </section>
+
+  <footer class="bottom">
+    <div>Completion Loop Builder · ETB Day 8 · Maps M14 · M15 · M16</div>
+    <div>Source: Day 08 module · 17 - MapofCommunication_EN.mp4</div>
+  </footer>
+</div>
+
+<script>
+const STORAGE_KEY = 'etb_day08_loops';
+const STORAGE_DRAFT_KEY = 'etb_day08_draft';
+
+const STEPS = [
+  { n: 1, label: 'Hanging' },
+  { n: 2, label: 'Said / meant' },
+  { n: 3, label: 'Build' },
+  { n: 4, label: 'Roadblocks' },
+  { n: 5, label: 'Plan' },
+  { n: 6, label: 'Debrief' }
+];
+
+const TEMPLATES = [
+  {
+    id: 't1',
+    num: '01',
+    name: 'Reflective restart',
+    body: 'When I said <span class="blank">[X]</span>, I think what landed for you might have been <span class="blank">[Y]</span>. Is that right?',
+    raw: 'When I said [X], I think what landed for you might have been [Y]. Is that right?'
+  },
+  {
+    id: 't2',
+    num: '02',
+    name: 'Naming the incompleteness',
+    body: 'I notice we never closed the loop on <span class="blank">[topic]</span>. I\'m bringing it back. Can we finish it now?',
+    raw: 'I notice we never closed the loop on [topic]. I\'m bringing it back. Can we finish it now?'
+  },
+  {
+    id: 't3',
+    num: '03',
+    name: 'The clean ask',
+    body: 'I want to make sure we\'re complete on <span class="blank">[topic]</span>. What did you hear me say? I want to know if it matches what I meant.',
+    raw: 'I want to make sure we\'re complete on [topic]. What did you hear me say? I want to know if it matches what I meant.'
+  },
+  {
+    id: 't4',
+    num: '04',
+    name: 'The retraction',
+    body: 'When I said <span class="blank">[X]</span> last <span class="blank">[time]</span>, I was speaking from my Box. What I actually wanted to say was <span class="blank">[Y]</span>. Can we redo that?',
+    raw: 'When I said [X] last [time], I was speaking from my Box. What I actually wanted to say was [Y]. Can we redo that?'
+  }
+];
+
+const ROADBLOCKS = [
+  { name: 'Ordering, directing', example: '"Stop crying. Calm down."', alt: '"I notice I want to direct this. What I actually want is to hear what\'s underneath."' },
+  { name: 'Threatening', example: '"If you keep talking like that, I\'ll leave."', alt: '"This is hard for me to stay in. I\'m noticing the urge to leave. I want to stay."' },
+  { name: 'Moralizing, preaching', example: '"You should… You ought to…"', alt: '"Here is what I want — not as a should, as a request."' },
+  { name: 'Advising, giving solutions', example: '"What I would do if I were you is…"', alt: '"I have advice I\'m holding. Do you want it, or do you want me to listen?"' },
+  { name: 'Lecturing, giving facts', example: '"Statistically, what you\'re describing is…"', alt: '"What I notice in me is information I\'m using to argue. I want to drop it and ask: what\'s true for you?"' },
+  { name: 'Judging, criticizing, blaming', example: '"That was selfish of you."', alt: '"When that happened, what I made it mean was X. I want to check that against what you intended."' },
+  { name: 'Praising, agreeing to control', example: '"You\'re so strong, you\'ve got this."', alt: '(Drop the praise. Say what you actually want them to hear about themselves — or say nothing and listen.)' },
+  { name: 'Name-calling, ridiculing, shaming', example: '"That\'s ridiculous. Don\'t be a baby."', alt: '"I\'m using a label here that\'s shrinking you. The thing under the label I want to say is X."' },
+  { name: 'Interpreting, analyzing, diagnosing', example: '"I think what\'s really going on is your abandonment issues."', alt: '"I have an interpretation running. I want to put it down and just ask: what\'s actually happening for you?"' },
+  { name: 'Reassuring, sympathizing, consoling', example: '"Don\'t worry, it\'ll all be fine."', alt: '"I notice I want to make this OK. I want to stay with the not-OK instead. What\'s here?"' },
+  { name: 'Probing, questioning, interrogating', example: '"When did this start? Why did you do that?"', alt: '(Stop asking. Reflect back what you have heard so far. Let them choose what to add.)' },
+  { name: 'Distracting, diverting, withdrawing', example: '"Anyway, how was your day?" Going on your phone.', alt: '"I notice I want to change the subject because this is uncomfortable. I\'m staying with it. Tell me more."' }
+];
+
+const state = {
+  step: 1,
+  selectedTemplate: null,
+  fromScratch: false,
+  flaggedRoadblocks: new Set(),
+  outcome: null,
+  currentLoopId: null
+};
+
+// ---------- render ----------
+
+function renderRail() {
+  const rail = document.getElementById('rail');
+  rail.innerHTML = STEPS.map((s, i) => `
+    ${i > 0 ? '<div class="connector" aria-hidden="true"></div>' : ''}
+    <div class="node ${s.n === state.step ? 'active' : ''} ${s.n < state.step ? 'done' : ''}" role="button" tabindex="0" aria-label="Go to step ${s.n}: ${s.label}" onclick="goto(${s.n})">
+      <div class="dot" aria-hidden="true"></div>
+      <span>${s.n}. ${s.label}</span>
+    </div>
+  `).join('');
+}
+
+function renderTemplates() {
+  const c = document.getElementById('templates');
+  c.innerHTML = TEMPLATES.map(t => `
+    <div class="template-card ${state.selectedTemplate === t.id ? 'selected' : ''}" id="tc-${t.id}" role="button" tabindex="0" aria-label="Use template ${t.num}: ${t.name}" onclick="pickTemplate('${t.id}')">
+      <div class="tnum">Template ${t.num}</div>
+      <div class="tname">${t.name.replace('restart', '<em>restart</em>').replace('incompleteness', '<em>incompleteness</em>').replace('ask', '<em>ask</em>').replace('retraction', '<em>retraction</em>')}</div>
+      <div class="tbody">"${t.body}"</div>
+    </div>
+  `).join('');
+}
+
+function renderRoadblocks() {
+  const c = document.getElementById('roadblocks');
+  c.innerHTML = ROADBLOCKS.map((r, i) => `
+    <label class="rb ${state.flaggedRoadblocks.has(i) ? 'flagged' : ''}" id="rb-${i}">
+      <input type="checkbox" ${state.flaggedRoadblocks.has(i) ? 'checked' : ''} onchange="toggleRB(${i}, this.checked)">
+      <div class="rb-name">${r.name}<em>${r.example}</em></div>
+      <div class="rb-alt">${r.alt}</div>
+    </label>
+  `).join('');
+}
+
+function updateDraftEcho() {
+  const draft = document.getElementById('loopDraft').value.trim();
+  const echo = document.getElementById('draftEcho');
+  if (draft) {
+    echo.textContent = '"' + draft + '"';
+    echo.classList.remove('empty');
+  } else {
+    echo.textContent = '[Your loop draft will appear here once written.]';
+    echo.classList.add('empty');
+  }
+}
+
+function updatePlanSummary() {
+  const draft = document.getElementById('loopDraft').value.trim();
+  document.getElementById('loopFinal').textContent = draft || '[Write your loop in Step 3 first.]';
+  document.getElementById('pmetaWho').textContent = document.getElementById('hangWho').value.trim() || '—';
+  document.getElementById('pmetaWhat').textContent = document.getElementById('hangWhat').value.trim() || '—';
+  document.getElementById('pmetaWhen').textContent = document.getElementById('planWhen').value.trim() || document.getElementById('hangWhen').value.trim() || '—';
+}
+
+function updateRevisePrompt() {
+  const n = state.flaggedRoadblocks.size;
+  const p = document.getElementById('revisePrompt');
+  const count = document.getElementById('flaggedCount');
+  count.textContent = n;
+  if (n > 0) {
+    p.classList.add('show');
+    if (!document.getElementById('reviseDraft').value) {
+      document.getElementById('reviseDraft').value = document.getElementById('loopDraft').value;
+    }
+  } else {
+    p.classList.remove('show');
+  }
+}
+
+// ---------- interactions ----------
+
+function goto(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  state.step = n;
+  renderRail();
+  if (n === 4) { updateDraftEcho(); updateRevisePrompt(); }
+  if (n === 5) updatePlanSummary();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // move focus to the revealed step's heading for keyboard / AT users
+  const heading = document.querySelector('#step' + n + ' h2');
+  if (heading) {
+    heading.setAttribute('tabindex', '-1');
+    heading.focus({ preventScroll: true });
+  }
+  saveDraft();
+}
+
+/* keyboard support for custom (non-native) controls: Enter / Space fire the click */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+  const t = e.target.closest('.node, .template-card, .scratch-toggle');
+  if (!t) return;
+  e.preventDefault();
+  t.click();
+});
+
+function next() {
+  if (state.step < STEPS.length) goto(state.step + 1);
+}
+function prev() {
+  if (state.step > 1) goto(state.step - 1);
+}
+
+function showGap() {
+  document.getElementById('gapCallout').classList.add('show');
+}
+
+function pickTemplate(id) {
+  state.selectedTemplate = id;
+  const t = TEMPLATES.find(x => x.id === id);
+  // populate editor with raw template
+  document.getElementById('loopDraft').value = t.raw;
+  document.getElementById('editor').classList.add('show');
+  document.getElementById('scratchToggle').classList.remove('active');
+  state.fromScratch = false;
+  renderTemplates();
+  document.getElementById('editor').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  saveDraft();
+}
+
+function toggleScratch() {
+  state.fromScratch = !state.fromScratch;
+  if (state.fromScratch) {
+    state.selectedTemplate = null;
+    document.getElementById('loopDraft').value = '';
+    document.getElementById('editor').classList.add('show');
+    document.getElementById('scratchToggle').classList.add('active');
+    renderTemplates();
+    document.getElementById('loopDraft').focus();
+  } else {
+    document.getElementById('editor').classList.remove('show');
+    document.getElementById('scratchToggle').classList.remove('active');
+  }
+  saveDraft();
+}
+
+function toggleRB(i, checked) {
+  if (checked) state.flaggedRoadblocks.add(i);
+  else state.flaggedRoadblocks.delete(i);
+  document.getElementById('rb-' + i).classList.toggle('flagged', checked);
+  updateRevisePrompt();
+  saveDraft();
+}
+
+function useRevise() {
+  const r = document.getElementById('reviseDraft').value.trim();
+  if (r) {
+    document.getElementById('loopDraft').value = r;
+    updateDraftEcho();
+    state.flaggedRoadblocks.clear();
+    renderRoadblocks();
+    updateRevisePrompt();
+    saveDraft();
+  }
+}
+
+function keepOriginal() {
+  state.flaggedRoadblocks.clear();
+  renderRoadblocks();
+  updateRevisePrompt();
+  saveDraft();
+}
+
+function pickOutcome(o) {
+  state.outcome = o;
+  document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector('.outcome-btn[data-outcome="' + o + '"]').classList.add('selected');
+}
+
+// ---------- persistence ----------
+
+function gatherDraft() {
+  return {
+    hangWho: document.getElementById('hangWho').value.trim(),
+    hangWhat: document.getElementById('hangWhat').value.trim(),
+    hangWhen: document.getElementById('hangWhen').value.trim(),
+    hangSummary: document.getElementById('hangSummary').value.trim(),
+    saidActually: document.getElementById('saidActually').value.trim(),
+    meantActually: document.getElementById('meantActually').value.trim(),
+    selectedTemplate: state.selectedTemplate,
+    fromScratch: state.fromScratch,
+    loopDraft: document.getElementById('loopDraft').value.trim(),
+    flaggedRoadblocks: Array.from(state.flaggedRoadblocks),
+    planWhen: document.getElementById('planWhen').value.trim(),
+    planWhere: document.getElementById('planWhere').value.trim(),
+    planSignal: document.getElementById('planSignal').value.trim(),
+    step: state.step
+  };
+}
+
+function saveDraft() {
+  try {
+    localStorage.setItem(STORAGE_DRAFT_KEY, JSON.stringify(gatherDraft()));
+  } catch (e) {}
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_DRAFT_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.hangWho) document.getElementById('hangWho').value = d.hangWho;
+    if (d.hangWhat) document.getElementById('hangWhat').value = d.hangWhat;
+    if (d.hangWhen) document.getElementById('hangWhen').value = d.hangWhen;
+    if (d.hangSummary) document.getElementById('hangSummary').value = d.hangSummary;
+    if (d.saidActually) document.getElementById('saidActually').value = d.saidActually;
+    if (d.meantActually) document.getElementById('meantActually').value = d.meantActually;
+    if (d.loopDraft) {
+      document.getElementById('loopDraft').value = d.loopDraft;
+      document.getElementById('editor').classList.add('show');
+    }
+    if (d.selectedTemplate) state.selectedTemplate = d.selectedTemplate;
+    if (d.fromScratch) {
+      state.fromScratch = true;
+      document.getElementById('scratchToggle').classList.add('active');
+    }
+    if (d.flaggedRoadblocks && Array.isArray(d.flaggedRoadblocks)) {
+      d.flaggedRoadblocks.forEach(i => state.flaggedRoadblocks.add(i));
+    }
+    if (d.planWhen) document.getElementById('planWhen').value = d.planWhen;
+    if (d.planWhere) document.getElementById('planWhere').value = d.planWhere;
+    if (d.planSignal) document.getElementById('planSignal').value = d.planSignal;
+  } catch (e) {}
+}
+
+function saveLoop() {
+  const draft = document.getElementById('loopDraft').value.trim();
+  const who = document.getElementById('hangWho').value.trim();
+  if (!draft || !who) {
+    alert('Fill in Step 1 (with whom) and Step 3 (the loop opener) before saving.');
+    return;
+  }
+  const loops = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const id = 'loop-' + Date.now();
+  const loop = {
+    id,
+    created: new Date().toISOString(),
+    status: 'planned',
+    outcome: null,
+    debrief: null,
+    debriefNext: null,
+    ranAt: null,
+    ...gatherDraft()
+  };
+  loops.unshift(loop);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(loops.slice(0, 30)));
+  state.currentLoopId = id;
+  renderSavedList();
+  goto(6);
+}
+
+function saveDebrief() {
+  if (!state.currentLoopId) {
+    // load most recent loop as the target if no current
+    const loops = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    if (!loops.length) {
+      alert('Save a loop first (Step 5).');
+      return;
+    }
+    state.currentLoopId = loops[0].id;
+  }
+  if (!state.outcome) {
+    alert('Pick an outcome — yes, partially, or no.');
+    return;
+  }
+  const loops = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const idx = loops.findIndex(l => l.id === state.currentLoopId);
+  if (idx === -1) return;
+  loops[idx].outcome = state.outcome;
+  loops[idx].status = 'ran-' + state.outcome;
+  loops[idx].debrief = document.getElementById('debriefNotes').value.trim();
+  loops[idx].debriefNext = document.getElementById('debriefNext').value.trim();
+  loops[idx].ranAt = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(loops));
+  alert('Debrief logged. Loop status: ' + state.outcome.toUpperCase());
+  renderSavedList();
+  // reset for next loop
+  resetDraft();
+}
+
+function resetDraft() {
+  ['hangWho','hangWhat','hangWhen','hangSummary','saidActually','meantActually','loopDraft','planWhen','planWhere','planSignal','debriefNotes','debriefNext','reviseDraft']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  state.selectedTemplate = null;
+  state.fromScratch = false;
+  state.flaggedRoadblocks.clear();
+  state.outcome = null;
+  state.currentLoopId = null;
+  document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('editor').classList.remove('show');
+  document.getElementById('scratchToggle').classList.remove('active');
+  document.getElementById('gapCallout').classList.remove('show');
+  renderTemplates();
+  renderRoadblocks();
+  updateRevisePrompt();
+  localStorage.removeItem(STORAGE_DRAFT_KEY);
+  goto(1);
+}
+
+function renderSavedList() {
+  const list = document.getElementById('savedList');
+  const loops = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  if (!loops.length) {
+    list.innerHTML = '<p style="font-family:var(--body); font-style:italic; color:var(--ink-mute);">No loops saved yet. Build one above.</p>';
+    return;
+  }
+  list.innerHTML = loops.map(l => {
+    const date = new Date(l.created).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    const statusClass = l.status === 'planned' ? 'planned' : ('ran-' + (l.outcome || 'no'));
+    const statusLabel = l.status === 'planned' ? 'Planned' :
+                        l.outcome === 'yes' ? 'Ran · clean close' :
+                        l.outcome === 'partial' ? 'Ran · partial' :
+                        l.outcome === 'no' ? 'Ran · didn\'t land' : 'Ran';
+    return `
+      <div class="loop-item">
+        <div class="lwhen">${date}</div>
+        <div class="lwith">${escapeHtml(l.hangWho || 'someone')} <em>· ${escapeHtml(l.hangWhat || 'about something')}${l.hangWhen ? ' · ' + escapeHtml(l.hangWhen) : ''}</em></div>
+        <div class="ldraft">"${escapeHtml(l.loopDraft || '')}"</div>
+        <div>
+          <span class="lstatus ${statusClass}">${statusLabel}</span>
+          ${l.planWhen ? '<span style="font-family:var(--mono); font-size:10px; letter-spacing:0.18em; color:var(--ink-mute); text-transform:uppercase;">Window: ' + escapeHtml(l.planWhen) + '</span>' : ''}
+        </div>
+        ${l.debrief ? '<div style="margin-top:14px; font-family:var(--body); font-style:italic; font-size:15px; color:var(--ink-soft); line-height:1.55; padding:12px 14px; background:var(--ivory); border-left:2px solid var(--rule);">' + escapeHtml(l.debrief) + '</div>' : ''}
+        <div class="lactions">
+          ${l.status === 'planned' ? `<button class="miniBtn" onclick="markRan('${l.id}')">I ran it · log debrief</button>` : ''}
+          <button class="miniBtn del" onclick="deleteLoop('${l.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function markRan(id) {
+  state.currentLoopId = id;
+  goto(6);
+  document.getElementById('step6').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function deleteLoop(id) {
+  if (!confirm('Delete this loop from local storage?')) return;
+  let loops = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  loops = loops.filter(l => l.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(loops));
+  renderSavedList();
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+// wire autosave
+document.addEventListener('input', e => {
+  if (e.target.matches('input.text, textarea.text, #loopDraft, #reviseDraft, #debriefNotes, #debriefNext')) {
+    if (e.target.id === 'loopDraft') updateDraftEcho();
+    saveDraft();
+  }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderRail();
+  renderTemplates();
+  renderRoadblocks();
+  loadDraft();
+  renderSavedList();
+  updateDraftEcho();
+});
+</script>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 9 · Interactive Tools · Expand the Box</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --mustard: #d8b04a;
+  --mustard-deep: #b8902c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.05) 0%, transparent 55%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.55;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 48px 56px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 600; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero {
+  margin: 80px 0 56px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 56px;
+  align-items: end;
+}
+@media (max-width: 800px) { .hero { grid-template-columns: 1fr; gap: 32px; } }
+
+.hero .left .eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(52px, 8.5vw, 112px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+h1.display .super {
+  display: block;
+  font-size: 0.24em;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144, 'SOFT' 0;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.hero .right {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-style: italic;
+  border-left: 3px solid var(--vermillion);
+  padding-left: 24px;
+  margin-bottom: 8px;
+}
+
+.intensity-row {
+  margin: 32px 0 40px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.intensity-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.intensity-tag .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--vermillion);
+  border-radius: 50%;
+}
+.intensity-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.intensity-meta strong { color: var(--ink); font-weight: 600; }
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 56px 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 64px;
+  max-width: 720px;
+}
+
+.tool {
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--ink);
+  padding: 40px 36px 32px;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+.tool:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(14, 10, 5, 0.16);
+  background: var(--ivory);
+}
+
+.tool .tool-num {
+  position: absolute;
+  top: -16px;
+  left: 28px;
+  background: var(--ivory);
+  padding: 0 12px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  color: var(--vermillion);
+  line-height: 1;
+}
+
+.tool .kind-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tool .kind {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.tool .kind-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  background: var(--ink);
+  padding: 3px 10px;
+  font-weight: 600;
+}
+.tool .kind-tag .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--vermillion);
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: 1px;
+}
+
+.tool h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 44px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.tool h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+
+.tool .one-liner {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+}
+
+.tool .body-text {
+  font-family: var(--body);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink-mute);
+  margin-bottom: 24px;
+}
+.tool .body-text em { color: var(--ink); font-style: italic; }
+
+.tool .states-strip {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 22px;
+  flex-wrap: wrap;
+}
+.tool .state-chip {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  color: var(--ivory);
+  font-weight: 600;
+}
+.tool .state-chip[data-state="parent"] { background: #b8902c; }
+.tool .state-chip[data-state="adult"] { background: #4a6b7c; }
+.tool .state-chip[data-state="child"] { background: #8a6a3f; }
+.tool .state-chip[data-state="gremlin"] { background: #c43b1c; }
+.tool .state-chip[data-state="demon"] { background: #1a1410; color: var(--mustard); }
+
+.tool .meta {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.tool .meta .open {
+  color: var(--vermillion);
+  font-weight: 600;
+}
+.tool:hover .meta .open { color: var(--vermillion-deep); }
+
+/* about block */
+.about {
+  margin: 0 0 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+}
+@media (max-width: 800px) { .about { grid-template-columns: 1fr; gap: 32px; } }
+.about h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.about h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.about p {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+.about p:last-child { margin-bottom: 0; }
+.about p em { color: var(--ink); font-style: italic; }
+
+/* HIGH callout */
+.high-callout {
+  margin: 0 0 56px;
+  padding: 26px 30px;
+  background: var(--ivory-deep);
+  border: 1.5px solid var(--ink);
+  position: relative;
+}
+.high-callout::before {
+  content: 'HIGH INTENSITY · CONSENT REQUIRED';
+  position: absolute;
+  top: -11px;
+  left: 22px;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  padding: 4px 12px;
+  font-weight: 600;
+}
+.high-callout h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 24px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 12px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.high-callout h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.high-callout p {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+.high-callout p:last-child { margin-bottom: 0; }
+.high-callout strong { color: var(--ink); font-weight: 600; }
+
+footer.bottom {
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+footer.bottom a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+footer.bottom a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.divider {
+  text-align: center;
+  margin: 40px 0;
+  color: var(--rule);
+  font-family: var(--display);
+  font-size: 24px;
+  letter-spacing: 1em;
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+
+/* Maps for this day */
+.daymaps { margin: 8px 0 72px; }
+.daymaps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+.daymap { background: var(--ivory-shade); border: 1.5px solid var(--ink); padding: 16px 16px 18px; text-decoration: none; color: inherit; transition: transform .3s cubic-bezier(0.2,0.7,0.2,1), box-shadow .3s, background .3s; display: flex; flex-direction: column; }
+.daymap:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(14,10,5,0.16); background: var(--ivory); }
+.daymap:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+.daymap img { width: 100%; height: auto; border: 1px solid var(--rule); background: #fff; display: block; }
+.daymap .cap { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 14px; line-height: 1.5; }
+.daymap .cap strong { color: var(--vermillion); }
+.daymap .cap .open { color: var(--vermillion); font-weight: 600; }
+.daymaps .note { font-family: var(--body); font-style: italic; font-size: 17px; line-height: 1.55; color: var(--ink-soft); margin-top: 22px; max-width: 760px; }
+.daymaps .note a { color: var(--vermillion); text-decoration: none; border-bottom: 1px solid transparent; }
+.daymaps .note a:hover { border-bottom-color: var(--vermillion); }
+.daymap-cell { display: flex; flex-direction: column; }
+.daymap-cell .daymap { flex: 1 1 auto; }
+.daymap-tool { display: block; margin-top: 8px; padding: 12px 16px; background: var(--ivory-shade); border: 1.5px solid var(--ink); border-top: none; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--vermillion); text-decoration: none; text-align: center; transition: background .3s, color .3s; }
+.daymap-tool:hover { background: var(--ivory); color: var(--vermillion-deep); }
+.daymap-tool:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 09</span> · EXPAND THE BOX · Interactive Tools
+    </div>
+    <div>
+      <a href="../index.html">All days</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="left">
+      <div class="eyebrow">Possibility Management · Day 9 · Embodied Practice</div>
+      <h1 class="display">
+        <span class="super">Day 9 — Ego States, Problem Ownership, Learning Spiral</span>
+        Five <em>states.</em><br>
+        Locate yours<br>
+        mid-sentence.<br>
+        Then <em>choose.</em>
+      </h1>
+    </div>
+    <div class="right">
+      Day 9 is the integration day. Eight modules each installed a distinction. Today you get the <em>lens</em> that lets you see — in real time — which part of you is speaking, feeling, choosing, or claiming a problem that isn't yours.
+    </div>
+  </section>
+
+  <div class="section-label">Maps for this day</div>
+
+  <section class="daymaps">
+    <div class="daymaps-grid">
+      <div class="daymap-cell">
+        <a class="daymap" href="../../Map%20Notes/M17%20-%20Ego%20States.md">
+        <img src="../../Maps/M17.png" alt="Ego States — Possibility Management map" loading="lazy">
+        <div class="cap"><strong>M17</strong> · Ego States · <span class="open">Map Note →</span></div>
+      </a>
+        <a class="daymap-tool" href="../../Map%20Atlas/M17%20-%20Ego%20States.html">Interactive tool →</a>
+      </div>
+      <div class="daymap-cell">
+        <a class="daymap" href="../../Map%20Notes/M18%20-%20Problem%20Ownership.md">
+        <img src="../../Maps/M18.png" alt="Problem Ownership — Possibility Management map" loading="lazy">
+        <div class="cap"><strong>M18</strong> · Problem Ownership · <span class="open">Map Note →</span></div>
+      </a>
+        <a class="daymap-tool" href="../../Map%20Atlas/M18%20-%20Problem%20Ownership.html">Interactive tool →</a>
+      </div>
+      <div class="daymap-cell">
+        <a class="daymap" href="../../Map%20Notes/M19%20-%20Learning%20Spiral.md">
+        <img src="../../Maps/M19.png" alt="Learning Spiral — Possibility Management map" loading="lazy">
+        <div class="cap"><strong>M19</strong> · Learning Spiral · <span class="open">Map Note →</span></div>
+      </a>
+        <a class="daymap-tool" href="../../Map%20Atlas/M19%20-%20Learning%20Spiral.html">Interactive tool →</a>
+      </div>
+    </div>
+    <p class="note">These are the maps Day 9 installs. Click a map to open its Map Note — what it shows, the key distinctions, how to use it. Full module: <a href="../../Days/Day%2009%20-%20Ego%20States%2C%20Problem%20Ownership%2C%20Learning%20Spiral.md">Day 9 module →</a></p>
+  </section>
+
+  <div class="intensity-row">
+    <span class="intensity-tag"><span class="dot"></span>High intensity</span>
+    <span class="intensity-meta"><strong>~30 min solo</strong> · partner reachable required · do not do under the influence</span>
+  </div>
+
+  <section class="high-callout">
+    <h3>Read <em>before</em> opening the tool.</h3>
+    <p>
+      Day 9 engages <strong>ego state work</strong> directly — including the Gremlin and the <strong>Demon</strong>.
+      Material that has been managed by performance, identification, or denial may surface.
+    </p>
+    <p>
+      Archetypal and ego-state language can amplify <strong>mania, psychosis, or spiritual emergency</strong>.
+      If you have any history of those — diagnosed or suspected — work with a clinician alongside this tool.
+      The Demon section is small and bounded by design. <strong>Do not expand the Demon work solo.</strong>
+    </p>
+    <p>
+      Partner reachable today and tomorrow. 30 uninterrupted minutes. Not in acute crisis. Sober. You know how to ground.
+      You know how to reach the Course Manager. If all of that is true, open the tool below.
+    </p>
+  </section>
+
+  <div class="section-label">The tool</div>
+
+  <section class="tools">
+
+    <a href="ego-state-locator.html" class="tool">
+      <div class="tool-num">I.</div>
+      <div class="kind-row">
+        <span class="kind">Embodied lens · 5 states · ~25 min</span>
+        <span class="kind-tag"><span class="dot"></span>High intensity</span>
+      </div>
+      <h2>Ego State <em>Locator.</em></h2>
+      <div class="one-liner">Type one sentence you actually said. Locate which of the five states it came from. Then ask: what would Adult say?</div>
+      <div class="body-text">
+        Parent · Adult · Child · Gremlin · Demon. <em>Locations, not personality types.</em>
+        You move in and out of all five — sometimes within a single sentence. The tool gives you the linguistic markers and the body cues
+        for each, then asks you to be honest about where the sentence actually sat. <em>The Adult is the rarest of the five.</em>
+        Most learners think they're in Adult when they're in Critical Parent or Gremlin.
+      </div>
+      <div class="states-strip">
+        <span class="state-chip" data-state="parent">Parent</span>
+        <span class="state-chip" data-state="adult">Adult</span>
+        <span class="state-chip" data-state="child">Child</span>
+        <span class="state-chip" data-state="gremlin">Gremlin</span>
+        <span class="state-chip" data-state="demon">Demon</span>
+      </div>
+      <div class="meta">
+        <span>~25 min · solo · partner reachable</span>
+        <span class="open">Begin →</span>
+      </div>
+    </a>
+
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <section class="about">
+    <div>
+      <h3>How to <em>use</em> this.</h3>
+      <p>
+        Read the Day 9 module first (<em>Days/Day 09 - Ego States, Problem Ownership, Learning Spiral.md</em>) and watch the three videos.
+        The tool is the embodied companion — the place you practice the lens with one of your own sentences.
+      </p>
+      <p>
+        Open the locator after the videos, not before. Use a sentence from the last 24 hours, not one you invent for the tool.
+        Honest answers are usually surprising. Save the catch. Come back next week with another.
+      </p>
+      <p>
+        After twenty reps, the pattern will be visible from the outside — including the state you most often <em>claim</em> to be in but aren't.
+      </p>
+    </div>
+    <div>
+      <h3>What the tool <em>saves</em>.</h3>
+      <p>
+        Each saved catch — sentence, identified state, Adult rephrase — stays in your browser's local storage on this device only. Never sent anywhere.
+      </p>
+      <p>
+        Clear your browser data and the tool forgets. That is the design. The log is your practice record, not the course's.
+      </p>
+      <p>
+        The Demon section is deliberately bounded. <em>Naming Demon is the work this tool supports — nothing further.</em>
+        Demon work that goes deeper requires a PM trainer or a trauma-qualified clinician; the GT Gremlin Transformation training is the longer container.
+      </p>
+    </div>
+  </section>
+
+  <footer class="bottom">
+    <div>Day 9 · Interactive Tools · prototype v2.0 · 2026-06-10</div>
+    <div><a href="../index.html">← All days</a></div>
+  </footer>
+</div>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

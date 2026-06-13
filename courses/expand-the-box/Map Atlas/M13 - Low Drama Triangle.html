@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Low Drama Triangle · Map Atlas M13 · Expand the Box</title>
+<meta name="description" content="Interactive teaching tool for the Possibility Management Low Drama Triangle — Persecutor, Victim, Rescuer as one Box-pattern rotating through three faces, producing gremlin food.">
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+/* ============================================================
+   MAP ATLAS — shared design system (template for all 29 maps).
+   Tokens, fonts, paper-grain, GROUND-NOW, reduced-motion and the
+   license comment are inherited from the ETB course design system
+   (see Interactive Tools / feeling-locator.html). Keep in sync.
+   ============================================================ */
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --vermillion-glow: rgba(196, 59, 28, 0.32);
+  --mustard: #d8b04a;
+  --mustard-text: #b8902c;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+/* paper-grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 200;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 18px;
+  text-decoration: none;
+}
+a.skip-link:focus { left: 8px; }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+/* ====================== HEADER BAR ====================== */
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+  gap: 24px;
+}
+header.top .left { display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+header.top .right { display: flex; gap: 22px; flex-wrap: wrap; align-items: baseline; }
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top .brand { color: var(--ink-mute); }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+header.top a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+
+/* ====================== HERO ====================== */
+.hero { margin: 48px 0 24px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 16px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 22px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 760px;
+  font-style: italic;
+}
+
+/* ====================== MAP FIGURE ====================== */
+figure.map-figure {
+  margin: 56px 0 16px;
+  padding: 28px;
+  background: var(--ivory-shade);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--vermillion);
+  text-align: center;
+}
+figure.map-figure a.map-link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  cursor: zoom-in;
+}
+figure.map-figure a.map-link:focus-visible { outline: 3px solid var(--vermillion); outline-offset: 4px; }
+figure.map-figure img {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  border: 1px solid var(--rule);
+  background: var(--ivory);
+  box-shadow: 0 14px 40px rgba(14, 10, 5, 0.16);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s;
+}
+figure.map-figure a.map-link:hover img {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(14, 10, 5, 0.22);
+}
+figure.map-figure figcaption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 20px;
+}
+figure.map-figure figcaption .zoom-hint { color: var(--vermillion); }
+
+/* ====================== SECTION FRAME ====================== */
+.section {
+  margin-top: 56px;
+  padding: 48px 52px;
+  background: var(--ivory-shade);
+  border-top: 3px solid var(--vermillion);
+}
+.section .section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+}
+.section h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.section h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.section .prose {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 760px;
+}
+.section .prose p { margin-bottom: 16px; }
+.section .prose p:last-child { margin-bottom: 0; }
+.section .prose em { color: var(--ink); font-style: italic; }
+.section .prose strong { color: var(--ink); font-weight: 600; }
+.section .prose .emph {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+  font-weight: 400;
+}
+
+/* ====================== STEPPER (distinctions) ====================== */
+.stepper-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin: 28px 0 6px;
+  flex-wrap: wrap;
+}
+.stepper-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.stepper-count .now { color: var(--vermillion); font-weight: 700; }
+.progress {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0 22px;
+}
+.progress .seg {
+  flex: 1;
+  height: 3px;
+  background: var(--rule);
+  transition: background 0.2s;
+}
+.progress .seg.done { background: var(--mustard); }
+.progress .seg.current { background: var(--vermillion); }
+
+.step-card {
+  background: var(--ivory);
+  border: 1.5px solid var(--ink-mute);
+  border-left: 4px solid var(--vermillion);
+  padding: 34px 38px;
+  min-height: 220px;
+  animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.step-card[hidden] { display: none; }
+.step-card .sc-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.step-card .sc-name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(28px, 3.6vw, 42px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.05;
+  color: var(--vermillion);
+  margin-bottom: 16px;
+}
+.step-card .sc-body {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.step-card .sc-body em { color: var(--ink); font-style: italic; }
+.step-card .sc-rows { margin-top: 6px; }
+.step-card .sc-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px dashed var(--rule);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.step-card .sc-row:first-child { border-top: none; }
+.step-card .sc-row .lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  padding-top: 4px;
+}
+.step-card .sc-row .val { color: var(--ink-soft); }
+.step-card .sc-row .val.shadow {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-mute);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====================== FLIP CARDS (misunderstandings) ====================== */
+.flip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 26px;
+}
+@media (max-width: 760px) { .flip-grid { grid-template-columns: 1fr; } }
+
+.flip {
+  background: transparent;
+  perspective: 1400px;
+  min-height: 230px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+  display: block;
+  width: 100%;
+}
+.flip:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 4px; }
+.flip-inner {
+  position: relative;
+  width: 100%;
+  min-height: 230px;
+  height: 100%;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip[aria-pressed="true"] .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.flip-face .fc-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.flip-face .fc-text {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
+  line-height: 1.3;
+}
+.flip-face .fc-hint {
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.flip-front {
+  background: var(--ivory);
+  border: 1.5px solid var(--ink-mute);
+}
+.flip-front .fc-tag { color: var(--ink-mute); }
+.flip-front .fc-tag::before { content: '✗  '; color: var(--ink-mute); }
+.flip-front .fc-text { color: var(--ink); font-style: italic; }
+.flip-front .fc-hint { color: var(--ink-mute); }
+.flip-back {
+  background: var(--ink);
+  border: 1.5px solid var(--ink);
+  transform: rotateY(180deg);
+}
+.flip-back .fc-tag { color: var(--mustard); }
+.flip-back .fc-tag::before { content: '✓  '; color: var(--mustard); }
+.flip-back .fc-text { color: var(--ivory); }
+.flip-back .fc-text em { color: var(--mustard); font-style: italic; }
+.flip-back .fc-hint { color: rgba(244, 236, 220, 0.5); }
+
+/* ====================== SAY IT (verbal) ====================== */
+.quote-block {
+  margin-top: 26px;
+  padding: 40px 44px;
+  background: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(19px, 2.1vw, 23px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 70, 'WONK' 1;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.quote-block p { margin-bottom: 18px; }
+.quote-block p:last-child { margin-bottom: 0; }
+.quote-block .lead-in {
+  font-style: italic;
+  color: var(--vermillion);
+}
+.quote-tools {
+  display: flex;
+  gap: 14px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.read-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ====================== EMBODY (practice) ====================== */
+.practice-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 22px 0 8px;
+}
+ol.practice {
+  list-style: none;
+  counter-reset: practice;
+  margin: 18px 0 0;
+}
+ol.practice > li {
+  counter-increment: practice;
+  position: relative;
+  padding: 18px 0 18px 64px;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+ol.practice > li:first-child { border-top: none; }
+ol.practice > li::before {
+  content: counter(practice);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--vermillion);
+  border: 1.5px solid var(--vermillion);
+  border-radius: 50%;
+}
+ol.practice > li em { color: var(--ink); font-style: italic; }
+ol.practice > li strong { color: var(--ink); font-weight: 600; }
+ol.practice .four-list {
+  list-style: none;
+  margin: 12px 0 4px;
+  padding: 14px 18px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-size: 16px;
+}
+ol.practice .four-list li { padding: 4px 0; color: var(--ink-soft); }
+ol.practice .four-list li b { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mustard-text); margin-right: 8px; }
+
+.practice-closer {
+  margin-top: 24px;
+  padding: 22px 26px;
+  background: var(--ivory);
+  border-left: 3px solid var(--vermillion);
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.practice-capture {
+  margin-top: 24px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.capture-state {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+}
+
+/* ====================== REFLECTION ====================== */
+.reflect-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 22px 0 12px;
+}
+textarea.reflect {
+  width: 100%;
+  padding: 22px 26px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.45;
+  display: block;
+}
+textarea.reflect:focus { outline: none; border-color: var(--vermillion); }
+.reflect-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.reflect-saved {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mustard-text);
+}
+.privacy-note {
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.prior-entry {
+  margin-top: 18px;
+  padding: 18px 22px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.prior-entry[hidden] { display: none; }
+.prior-entry .pe-label {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ====================== BUTTONS ====================== */
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+.btn[disabled]:hover { background: transparent; color: var(--ink); }
+
+/* ====================== FOOTER ====================== */
+footer.bottom {
+  margin-top: 72px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+}
+footer.bottom .nav-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+footer.bottom .nav-row a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+footer.bottom .nav-row a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+footer.bottom .nav-row a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+footer.bottom .license {
+  margin-top: 26px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+  max-width: 860px;
+}
+footer.bottom .license a { color: var(--ink-mute); text-decoration: underline; }
+footer.bottom .license a:hover { color: var(--vermillion); }
+footer.bottom .license .cc { color: var(--ink-soft); font-weight: 600; letter-spacing: 0.06em; }
+
+/* ====================== GROUND NOW — floating safety button ====================== */
+.ground-now {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  background: var(--vermillion);
+  color: var(--ivory);
+  border: 2px solid var(--vermillion-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 22px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(196, 59, 28, 0.28);
+  transition: all 0.25s ease;
+  line-height: 1.1;
+}
+.ground-now:hover {
+  background: var(--vermillion-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(196, 59, 28, 0.36);
+}
+.ground-now:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.ground-now .small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* ====================== GROUNDING MODAL ====================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(14, 10, 5, 0.86);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.modal.show { display: flex; }
+.modal-inner {
+  max-width: 620px;
+  width: 100%;
+  background: var(--ivory);
+  border: 2px solid var(--vermillion);
+  padding: 44px 40px 36px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-inner::before {
+  content: 'GROUNDING · 60 SECONDS';
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.modal-inner h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.modal-inner h2 em { font-style: italic; color: var(--vermillion); }
+.modal-inner ol {
+  margin: 0 0 22px 22px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.modal-inner ol li { margin-bottom: 12px; }
+.modal-inner ol li strong { color: var(--ink); }
+.modal-inner .session-paused {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+.modal-inner .modal-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+@media (max-width: 760px) {
+  .wrap { padding: 24px 20px 60px; }
+  .section { padding: 32px 26px; }
+  .step-card { padding: 28px 24px; }
+  .quote-block { padding: 30px 26px; }
+  .ground-now { top: 16px; right: 16px; padding: 12px 16px; font-size: 11px; }
+  .modal-inner { padding: 36px 24px 28px; }
+}
+
+/* ====================== REDUCED MOTION ====================== */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+    scroll-behavior:auto!important;
+  }
+  .flip[aria-pressed="true"] .flip-inner { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to map</a>
+
+<!-- floating safety button — always available; this tool engages the emotional body -->
+<button class="ground-now" id="groundNowBtn" type="button" onclick="openGround()" aria-haspopup="dialog">
+  GROUND NOW
+  <span class="small">60-second pause</span>
+</button>
+
+<div class="wrap">
+
+  <!-- ====================== 1 · HEADER BAR ====================== -->
+  <header class="top">
+    <div class="left">
+      <span><span class="num">MAP ATLAS · M13</span></span>
+      <span class="brand">Possibility Management</span>
+    </div>
+    <div class="right">
+      <a href="index.html">← All maps</a>
+      <a href="../Days/Day%2007%20-%20Low%20Drama%2C%20Gremlin%20Food%2C%20Shifting%20to%20Responsible%20Game.md">Taught in Day 7 →</a>
+    </div>
+  </header>
+
+  <!-- ====================== 2 · HERO ====================== -->
+  <section class="hero" id="main">
+    <div class="eyebrow">Map · Drama &amp; the Gremlin</div>
+    <h1 class="display">Low Drama <em>Triangle.</em></h1>
+    <p class="lede">
+      Three drama positions — Persecutor, Victim, Rescuer — that look like three different people but are one Box-pattern rotating through three faces. The triangle also names what the drama is for: gremlin food. Low drama is produced, not received.
+    </p>
+  </section>
+
+  <!-- ====================== 3 · THE MAP ====================== -->
+  <figure class="map-figure">
+    <a class="map-link" href="../Maps/M13.png" target="_blank" rel="noopener" aria-label="Open the full-size Low Drama map in a new tab">
+      <img src="../Maps/M13.png"
+           alt="The Low Drama map: a triangle with three corners — Persecutor, Victim, and Rescuer — and arrows showing how one person rotates between them, producing gremlin food.">
+    </a>
+    <figcaption>Low Drama · <span class="zoom-hint">click the map to open full-size →</span></figcaption>
+  </figure>
+
+  <!-- ====================== 4 · WHAT THIS MAP SHOWS ====================== -->
+  <section class="section" aria-labelledby="shows-h">
+    <div class="section-label">What this map shows</div>
+    <h2 id="shows-h">Three positions, <em>one machine.</em></h2>
+    <div class="prose">
+      <p>
+        Three positions a person rotates through whenever they are producing drama: <strong>Persecutor</strong> ("it's your fault"), <strong>Victim</strong> ("I have no choice"), <strong>Rescuer</strong> ("let me fix it for you"). These are not three personality types — they are three faces of one Box-pattern, and the same person flips between them inside a single conversation.
+      </p>
+      <p>
+        The triangle also names what the drama is <em>for</em>: <span class="emph">gremlin food</span>. Being right. Being wronged. Being special. Being needed. Being above it all. The drama is paying out a substance the gremlin wants. Naming the gremlin is not condemnation — you have a gremlin, you are not your gremlin — but the gremlin is the engine that keeps the triangle running.
+      </p>
+      <p>
+        Load-bearing claim: low drama is <strong>produced, not received</strong>. You are not in the triangle because someone put you there. You are in it because something in you eats what the position generates. "Getting pulled in" is itself a Victim framing — and a clue about your preferred food.
+      </p>
+      <p>
+        The move out is the <strong>Responsible Game</strong>: notice, name, step out, then ask three questions — what is actually happening, what do I actually want, what can I actually choose? A warning comes with it. At first the Responsible Game feels <em>less alive</em>, because the gremlin is starving and the body reads the absence of the charge as something missing. That passes. Staying with it is the work.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================== 5 · WALK THE DISTINCTIONS (stepper) ====================== -->
+  <section class="section" aria-labelledby="walk-h">
+    <div class="section-label">Walk the distinctions</div>
+    <h2 id="walk-h">Take them <em>one at a time.</em></h2>
+    <p class="prose">Step through the load-bearing distinctions this map draws — the three positions, the rotation between them, and the way out. Move at the pace of your body, not your reading speed.</p>
+
+    <div class="stepper-head">
+      <div class="stepper-count">Distinction <span class="now" id="stepNow">1</span> of <span id="stepTotal">8</span></div>
+    </div>
+    <div class="progress" id="stepProgress" aria-hidden="true"></div>
+
+    <div id="stepRegion" aria-live="polite">
+      <!-- step cards injected by JS -->
+    </div>
+
+    <div class="quote-tools" style="margin-top: 22px;">
+      <button class="btn ghost" id="stepPrev" type="button" onclick="stepBy(-1)" disabled>← Prev</button>
+      <button class="btn primary" id="stepNext" type="button" onclick="stepBy(1)">Next →</button>
+    </div>
+  </section>
+
+  <!-- ====================== 6 · COMMON MISUNDERSTANDINGS (flip cards) ====================== -->
+  <section class="section" aria-labelledby="mis-h">
+    <div class="section-label">Common misunderstandings</div>
+    <h2 id="mis-h">Each card shows the <em>wrong</em> belief. Flip it for the correction.</h2>
+    <p class="prose">Click a card — or focus it and press Enter or Space — to turn it over.</p>
+    <div class="flip-grid" id="flipGrid">
+      <!-- flip cards injected by JS -->
+    </div>
+  </section>
+
+  <!-- ====================== 7 · SAY IT (verbal) ====================== -->
+  <section class="section" aria-labelledby="say-h">
+    <div class="section-label">Say it · the verbal map</div>
+    <h2 id="say-h">Now <em>explain it aloud.</em></h2>
+    <p class="prose">This is the spoken version of the map. Read it through once, then close your eyes and say it in your own words. You teach the map by speaking it.</p>
+    <blockquote class="quote-block">
+      <p><span class="lead-in">The triangle has three positions.</span> Persecutor at one corner — <em>it's your fault.</em> Attacks, blames, makes wrong. Victim at the bottom — <em>I have no choice, this is happening to me.</em> Collapsed, often controlling the room through misery. Rescuer at the third corner — <em>let me fix it for you.</em> Steps in unasked, takes over, builds dependency.</p>
+      <p>These are not three kinds of people. They are three positions one person rotates through, often inside a single conversation. The Rescuer who doesn't get appreciated becomes Persecutor. The Persecutor who gets challenged collapses into Victim. The Victim who finally gets angry weaponizes the helplessness. One machine. Three faces.</p>
+      <p>Why does anyone produce this? Because the gremlin eats what the positions produce. Being right. Being wronged. Being special. Being needed. Being above it all. Being beneath it all. The drama is gremlin food production. The gremlin is the part of you that wants the food. Naming the gremlin is not condemnation — you have a gremlin, you are not your gremlin. But the gremlin is the engine that keeps the triangle running.</p>
+      <p>The move out is called shifting to the Responsible Game. Four parts. First, notice you are in a position — the body usually knows first. Tight jaw is often Persecutor. Collapsed chest is often Victim. Pulled-forward toward someone else's problem is often Rescuer. Second, name the position, out loud or silently — <em>I am in Persecutor right now.</em> The naming itself is a small step out. Third, drop the posture — change your stance, breathe, ground. Fourth, ask three questions. What is actually happening, in fact, without my story? What do I actually want? What can I actually choose, from here?</p>
+      <p>A warning. The Responsible Game feels less alive at first. The drama was producing a charge and you mistook the charge for aliveness. Without the food, the gremlin is starving and your body reads the starvation as something missing. That passes. Stay with it. The gremlin is patient — when one food source dries up it finds another. Catching it is the work at week one, year five, year fifteen.</p>
+      <p>If you have met Karpman's drama triangle from transactional analysis, the shape is the same but the account is different. Karpman frames the roles as dysfunctional patterns. Possibility Management frames them as gremlin food production. The exit isn't "stop being dysfunctional." It's see the food, name it, and feed yourself differently.</p>
+    </blockquote>
+    <div class="quote-tools">
+      <button class="btn ghost" id="saidBtn" type="button" onclick="markSaid()" aria-pressed="false">I said it aloud</button>
+      <span class="read-status" id="saidStatus" role="status"></span>
+    </div>
+  </section>
+
+  <!-- ====================== 8 · EMBODY IT (practice) ====================== -->
+  <section class="section" aria-labelledby="embody-h">
+    <div class="section-label">Embody it · solo practice</div>
+    <h2 id="embody-h">The <em>three-corner stand.</em></h2>
+    <p class="prose">Find a room with enough floor for three spots about three steps apart, in a triangle. Mark them — coins, post-its. Label in your head: <em>Persecutor</em> at one corner, <em>Victim</em> at one corner, <em>Rescuer</em> at one corner. Bring to mind one small recent drama from the last seven days — not the biggest. The sigh, the eye-roll, the forty-five seconds of internal rehearsal, the conversation you walked away from with a story about what the other person <em>really</em> meant.</p>
+    <div class="practice-meta">Solo · ~10 minutes · room to move · notebook</div>
+
+    <ol class="practice">
+      <li>Stand on <strong>Persecutor.</strong> Take the posture — chest out, jaw set, weight forward. Out loud, say what your inner Persecutor would say about this situation. One or two sentences. Feel the charge. Name the food — <em>being right; being the one who sees clearly.</em></li>
+      <li>Step to <strong>Victim.</strong> Take the posture — chest collapsed, shoulders down, weight back. Out loud, say what your inner Victim would say. <em>I had no choice. Look what is happening to me.</em> Feel the charge. Name the food — <em>being wronged; being innocent; being special in suffering.</em></li>
+      <li>Step to <strong>Rescuer.</strong> Take the posture — leaning forward, hands ready, eyes on the other person's problem. Out loud, say what your inner Rescuer would say. <em>Let me handle it. Don't worry.</em> Feel the charge. Name the food — <em>being needed; being good; being above the problem.</em></li>
+      <li>Now step <strong>off</strong> the triangle. Stand in the middle, equidistant from all three corners. Breathe. Drop the postures. Ground — feet on the floor, weight down, eyes soft. Out loud, ask the three Responsible Game questions:
+        <ul class="four-list">
+          <li><b>Fact</b> What is actually happening here, in fact, without my story?</li>
+          <li><b>Want</b> What do I actually want?</li>
+          <li><b>Choose</b> What can I actually choose, right now?</li>
+        </ul>
+      </li>
+      <li>Sit with each. Notice — the off-triangle spot is quieter, less charged. The gremlin will protest: <em>this is boring, nothing is happening.</em> That protest is the gremlin spotting the starvation. Notice it. <strong>Stay in the middle anyway.</strong></li>
+    </ol>
+
+    <div class="practice-closer">
+      Write two sentences about what you noticed when you stepped off the triangle. By Day 7 most learners discover they run all three positions, often in the same conversation — with one preferred entry point. The off-triangle stand is not a place you arrive at once; it is a move you make again and again, every time the body reports a position.
+    </div>
+
+    <div class="practice-capture">
+      <button class="btn" id="practiceBtn" type="button" onclick="togglePractice()" aria-pressed="false">Start the three-corner stand</button>
+      <span class="capture-state" id="practiceState" role="status"></span>
+    </div>
+  </section>
+
+  <!-- ====================== 9 · REFLECTION CAPTURE ====================== -->
+  <section class="section" aria-labelledby="reflect-h">
+    <div class="section-label">Reflection</div>
+    <h2 id="reflect-h">What <em>landed?</em></h2>
+    <p class="prose">One or two lines is plenty. Which corner was your preferred entry point? What food were you eating there? What changed in your body when you stepped off the triangle into the middle?</p>
+
+    <div class="prior-entry" id="priorEntry" hidden>
+      <span class="pe-label">Your last reflection · this device</span>
+      <span id="priorEntryText"></span>
+    </div>
+
+    <label class="reflect-label" for="reflectInput">Your reflection on the Low Drama Triangle</label>
+    <textarea class="reflect" id="reflectInput" aria-label="Your reflection on the Low Drama Triangle — what landed for you" placeholder="What landed…"></textarea>
+    <div class="reflect-row">
+      <button class="btn primary" type="button" onclick="saveReflection()">Save reflection</button>
+      <button class="btn ghost" type="button" onclick="clearReflection()">Clear</button>
+      <span class="reflect-saved" id="reflectSaved" role="status"></span>
+    </div>
+    <p class="privacy-note">Saved on this device only, in your browser (localStorage). Nothing is uploaded. No accounts, no telemetry, no external calls except the web-font request.</p>
+  </section>
+
+  <!-- ====================== 10 · FOOTER ====================== -->
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="index.html">← All maps · Map Atlas</a>
+      <a href="../Days/Day%2007%20-%20Low%20Drama%2C%20Gremlin%20Food%2C%20Shifting%20to%20Responsible%20Game.md">Taught in Day 7 →</a>
+    </div>
+    <p class="license">
+      <span class="cc">🄯 World Copyleft 2026 · Expand the Box (Digital).</span>
+      Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+      Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. Please share, share-alike.
+      Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>.
+      Full terms: <code>LICENSE.md</code> in the course root.
+    </p>
+  </footer>
+</div>
+
+<!-- modal: grounding (60-second sequence) -->
+<div class="modal" id="groundModal" role="dialog" aria-modal="true" aria-labelledby="groundModalTitle">
+  <div class="modal-inner">
+    <h2 id="groundModalTitle">Ground. <em>Now.</em></h2>
+    <ol>
+      <li><strong>Stop.</strong> Stand up — both feet flat on the floor. Feel the contact.</li>
+      <li><strong>Breathe out, longer than in</strong> — three slow exhales.</li>
+      <li><strong>Name three things you can see</strong> in this room. Out loud is best.</li>
+      <li><strong>Name one thing you can hear.</strong> The fridge. Traffic. Your own breath.</li>
+      <li><strong>One hand on your sternum, one on your belly.</strong> Notice your body is here.</li>
+      <li><strong>Then decide:</strong> continue, pause 10 minutes, or stop for today. Any of the three is fine.</li>
+    </ol>
+    <p class="session-paused">Take as long as you need.</p>
+    <div class="modal-actions">
+      <button class="btn primary" type="button" onclick="closeGround()">I'm grounded — continue</button>
+      <a href="index.html" class="btn ghost">Stop — return to the Atlas</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   M13 — Low Drama Triangle. Teaching content is sourced
+   verbatim from Map Note "M13 - Low Drama Triangle.md".
+   Local-only: the single localStorage key etb_atlas_M13.
+   ============================================================ */
+
+/* ---------------------- DATA: distinctions (stepper) ---------------------- */
+/* The three drama positions as structured cards, then the cross-cutting
+   distinctions — rotation, gremlin food, the Karpman difference, the
+   internal version, the way out, and the warning. Straight from the Map Note. */
+const DISTINCTIONS = [
+  {
+    kicker: 'Position 1 of 3',
+    name: 'Persecutor.',
+    rows: [
+      ['Line', '"It\'s your fault."'],
+      ['Move', 'Attacks · blames · makes wrong.'],
+      ['Body', 'Often a tight jaw, chest out, weight forward.'],
+      ['Food', 'Being right · being the one who sees clearly.']
+    ]
+  },
+  {
+    kicker: 'Position 2 of 3',
+    name: 'Victim.',
+    rows: [
+      ['Line', '"I have no choice — this is happening to me."'],
+      ['Move', 'Collapses · declares helplessness · controls the room through misery.'],
+      ['Body', 'Often a collapsed chest, shoulders down, weight back.'],
+      ['Food', 'Being wronged · being innocent · being special in suffering.']
+    ]
+  },
+  {
+    kicker: 'Position 3 of 3',
+    name: 'Rescuer.',
+    rows: [
+      ['Line', '"Let me fix it for you."'],
+      ['Move', 'Steps in unasked · takes over · builds dependency.'],
+      ['Body', 'Often pulled forward toward someone else\'s problem.'],
+      ['Food', 'Being needed · being good · being above the problem.']
+    ]
+  },
+  {
+    kicker: 'The mechanism',
+    name: 'Rotation is structural.',
+    body: 'The Rescuer who is not appreciated becomes Persecutor — <em>after everything I did for you.</em> The Persecutor who is challenged collapses into Victim — <em>nobody understands me.</em> The Victim who finally gets angry weaponizes helplessness — <em>look what you made me do.</em> Same Box, three costumes.'
+  },
+  {
+    kicker: 'What it is for',
+    name: 'All three feed gremlin food.',
+    body: 'The drama is paying out a substance the gremlin wants. Knowing the food is the first move toward declining it. Load-bearing claim: low drama is <em>produced, not received.</em> You are in the triangle because something in you eats what the position generates.'
+  },
+  {
+    kicker: 'Same shape, different mechanism',
+    name: 'Distinct from Karpman.',
+    body: "Karpman (transactional analysis, 1968) named the same three roles. Possibility Management differs in the account of what they are <em>for</em>: not 'dysfunctional patterns' to escape, but gremlin food production to be seen and starved. Same shape, different mechanism, different exit."
+  },
+  {
+    kicker: 'It runs inside, too',
+    name: 'The internal version is real.',
+    body: 'You can run the entire triangle between parts of yourself — Persecutor of an internal Victim, Rescuer trying to mediate. <em>"A certain kind of telenovela with yourself."</em>'
+  },
+  {
+    kicker: 'The way out',
+    name: 'The Responsible Game.',
+    body: 'Notice → name → step out → ask three questions: what is actually happening, what do I actually want, what can I actually choose? A warning: it feels <em>less alive</em> at first. The gremlin is starving, and the body reads the absence of the charge as something missing. Real aliveness from the Responsible Game is quieter and takes time to recognize.'
+  }
+];
+
+/* ---------------------- DATA: misunderstandings (flip cards) ---------------------- */
+const MISUNDERSTANDINGS = [
+  {
+    wrong: '"I am a Rescuer. That is my type."',
+    right: 'You are not a type. You are a person who rotates through all three positions, with a preferred entry point. By Day 7 most learners discover they run all three, <em>often in the same conversation.</em>'
+  },
+  {
+    wrong: '"Drama is something other people do to me. I get pulled in."',
+    right: 'Drama is something you produce, on purpose, because something in you wants the food. <em>Getting pulled in</em> is itself a Victim framing — and a clue about your preferred food.'
+  },
+  {
+    wrong: '"Low drama means small, mild, harmless drama."',
+    right: '<em>Low</em> means below the threshold of noticing — woven into ordinary life so seamlessly that you do not see it. Most relationships die from low drama, not from anything theatrical.'
+  },
+  {
+    wrong: '"If I shift to the Responsible Game I will feel better."',
+    right: 'At first you feel <em>less alive,</em> because the gremlin is starving. Real aliveness from the Responsible Game is quieter and takes time to recognize.'
+  },
+  {
+    wrong: '"The triangle is just Karpman\'s drama triangle."',
+    right: 'The shape is the same. The mechanism Possibility Management names underneath it — <em>gremlin food production</em> — is different, and the exit is different. Karpman tells you the roles are unhealthy. PM tells you what they are paying out and how to feed yourself differently.'
+  },
+  {
+    wrong: '"Once I see my pattern, I will be free of it."',
+    right: 'Seeing it is the first move, not the last. The gremlin is patient. The same discipline is required at <em>year five as at week one.</em>'
+  }
+];
+
+const STORE_KEY = 'etb_atlas_M13';
+
+/* ---------------------- A11Y HELPERS ---------------------- */
+/* keyboard activation for custom (non-native) controls */
+function kb(e, fn) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    fn();
+  }
+}
+
+/* ---------------------- STEPPER ---------------------- */
+let stepIndex = 0;
+
+function buildProgress() {
+  const p = document.getElementById('stepProgress');
+  p.innerHTML = DISTINCTIONS.map(() => '<div class="seg"></div>').join('');
+  document.getElementById('stepTotal').textContent = DISTINCTIONS.length;
+}
+
+function renderStep(focusCard) {
+  const d = DISTINCTIONS[stepIndex];
+  const region = document.getElementById('stepRegion');
+  let inner = `<div class="sc-kicker">${d.kicker}</div><div class="sc-name">${d.name}</div>`;
+  if (d.rows) {
+    inner += '<div class="sc-rows">';
+    for (const [lbl, val] of d.rows) {
+      const shadow = lbl === 'Shadow' ? ' shadow' : '';
+      inner += `<div class="sc-row"><div class="lbl">${lbl}</div><div class="val${shadow}">${val}</div></div>`;
+    }
+    inner += '</div>';
+  } else {
+    inner += `<div class="sc-body">${d.body}</div>`;
+  }
+  region.innerHTML = `<article class="step-card" id="stepCard" tabindex="-1" aria-label="${d.name}">${inner}</article>`;
+
+  document.getElementById('stepNow').textContent = stepIndex + 1;
+  document.querySelectorAll('#stepProgress .seg').forEach((s, i) => {
+    s.classList.remove('done', 'current');
+    if (i < stepIndex) s.classList.add('done');
+    else if (i === stepIndex) s.classList.add('current');
+  });
+
+  document.getElementById('stepPrev').disabled = stepIndex === 0;
+  document.getElementById('stepNext').disabled = stepIndex === DISTINCTIONS.length - 1;
+
+  // move focus to the freshly-revealed card for keyboard / SR users
+  if (focusCard) {
+    const card = document.getElementById('stepCard');
+    if (card) card.focus({ preventScroll: true });
+  }
+}
+
+function stepBy(delta) {
+  const next = stepIndex + delta;
+  if (next < 0 || next >= DISTINCTIONS.length) return;
+  stepIndex = next;
+  renderStep(true);
+}
+
+/* ---------------------- FLIP CARDS ---------------------- */
+function buildFlipCards() {
+  const grid = document.getElementById('flipGrid');
+  grid.innerHTML = MISUNDERSTANDINGS.map((m, i) => `
+    <button class="flip" type="button" id="flip${i}" aria-pressed="false"
+            aria-label="Misunderstanding ${i + 1}: ${m.wrong.replace(/"/g, '')} — activate to reveal the correction"
+            onclick="toggleFlip(${i})" onkeydown="kb(event,()=>toggleFlip(${i}))">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <div class="fc-tag">Common belief</div>
+          <div class="fc-text">${m.wrong}</div>
+          <div class="fc-hint">Flip for the correction →</div>
+        </div>
+        <div class="flip-face flip-back">
+          <div class="fc-tag">On this map</div>
+          <div class="fc-text">${m.right}</div>
+          <div class="fc-hint">← Flip back</div>
+        </div>
+      </div>
+    </button>
+  `).join('');
+}
+
+function toggleFlip(i) {
+  const el = document.getElementById('flip' + i);
+  const flipped = el.getAttribute('aria-pressed') === 'true';
+  el.setAttribute('aria-pressed', flipped ? 'false' : 'true');
+}
+
+/* ---------------------- SAY IT ---------------------- */
+function markSaid() {
+  const btn = document.getElementById('saidBtn');
+  const pressed = btn.getAttribute('aria-pressed') === 'true';
+  btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+  document.getElementById('saidStatus').textContent = pressed ? '' : 'Said aloud ✓ — say it again until it is yours.';
+  saveState();
+}
+
+/* ---------------------- EMBODY ---------------------- */
+function togglePractice() {
+  const btn = document.getElementById('practiceBtn');
+  const state = document.getElementById('practiceState');
+  const phase = btn.dataset.phase || 'idle';
+  if (phase === 'idle') {
+    btn.dataset.phase = 'running';
+    btn.textContent = 'Mark the stand done';
+    btn.setAttribute('aria-pressed', 'true');
+    state.textContent = 'Stand started — move through all three corners, then step off and mark done.';
+  } else {
+    btn.dataset.phase = 'idle';
+    btn.textContent = 'Start the three-corner stand';
+    btn.setAttribute('aria-pressed', 'false');
+    state.textContent = 'Stand complete ✓';
+    saveState();
+  }
+}
+
+/* ---------------------- REFLECTION + STATE ---------------------- */
+function loadState() {
+  let data = {};
+  try {
+    data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+  } catch (e) {
+    data = {};
+  }
+  if (data.reflection) {
+    document.getElementById('reflectInput').value = data.reflection;
+    const prior = document.getElementById('priorEntry');
+    document.getElementById('priorEntryText').textContent = data.reflection;
+    prior.hidden = false;
+    if (data.savedAt) {
+      document.getElementById('reflectSaved').textContent = 'Last saved ' + new Date(data.savedAt).toLocaleString();
+    }
+  }
+  if (data.said) {
+    const btn = document.getElementById('saidBtn');
+    btn.setAttribute('aria-pressed', 'true');
+    document.getElementById('saidStatus').textContent = 'Said aloud ✓ — say it again until it is yours.';
+  }
+  if (data.embodied) {
+    document.getElementById('practiceState').textContent = 'Stand completed before ✓';
+  }
+}
+
+function currentData() {
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { data = {}; }
+  return data;
+}
+
+function saveState() {
+  const data = currentData();
+  data.said = document.getElementById('saidBtn').getAttribute('aria-pressed') === 'true';
+  const ps = document.getElementById('practiceState').textContent;
+  if (ps.indexOf('complete') !== -1 || ps.indexOf('completed') !== -1) data.embodied = true;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+function saveReflection() {
+  const val = document.getElementById('reflectInput').value.trim();
+  const data = currentData();
+  data.reflection = val;
+  data.savedAt = new Date().toISOString();
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    document.getElementById('reflectSaved').textContent = val ? 'Saved ✓ · ' + new Date().toLocaleString() : 'Saved (empty) ✓';
+    const prior = document.getElementById('priorEntry');
+    if (val) {
+      document.getElementById('priorEntryText').textContent = val;
+      prior.hidden = false;
+    } else {
+      prior.hidden = true;
+    }
+  } catch (e) {
+    document.getElementById('reflectSaved').textContent = 'Could not save (storage blocked).';
+  }
+}
+
+function clearReflection() {
+  document.getElementById('reflectInput').value = '';
+  const data = currentData();
+  delete data.reflection;
+  delete data.savedAt;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+  document.getElementById('priorEntry').hidden = true;
+  document.getElementById('reflectSaved').textContent = 'Cleared.';
+}
+
+/* ---------------------- GROUNDING MODAL ---------------------- */
+let _groundReturnFocus = null;
+function openGround() {
+  _groundReturnFocus = document.activeElement;
+  const modal = document.getElementById('groundModal');
+  modal.classList.add('show');
+  const firstBtn = modal.querySelector('.modal-actions .btn');
+  if (firstBtn) firstBtn.focus();
+}
+function closeGround() {
+  document.getElementById('groundModal').classList.remove('show');
+  if (_groundReturnFocus && typeof _groundReturnFocus.focus === 'function') _groundReturnFocus.focus();
+  _groundReturnFocus = null;
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('groundModal');
+    if (modal.classList.contains('show')) closeGround();
+  }
+});
+
+/* ---------------------- INIT ---------------------- */
+window.addEventListener('DOMContentLoaded', () => {
+  buildProgress();
+  renderStep(false);
+  buildFlipCards();
+  loadState();
+});
+</script>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

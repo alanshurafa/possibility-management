@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Chain · ETB Day 1</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #5c4f3d;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap { max-width: 1280px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero { margin: 56px 0 32px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(48px, 7vw, 96px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 720px;
+  font-style: italic;
+}
+
+/* mode switch */
+.modes {
+  display: flex;
+  gap: 0;
+  margin: 36px 0 56px;
+  border: 1.5px solid var(--ink);
+  width: fit-content;
+}
+.mode-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 26px;
+  background: transparent;
+  color: var(--ink);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.mode-btn:hover { background: var(--ivory-shade); }
+.mode-btn.active {
+  background: var(--ink);
+  color: var(--ivory);
+}
+
+/* the chain */
+.chain-rail {
+  position: relative;
+  margin: 32px 0 48px;
+  padding: 64px 0 24px;
+}
+
+.chain-rail::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 1px;
+  background: repeating-linear-gradient(to right, var(--rule), var(--rule) 4px, transparent 4px, transparent 10px);
+  z-index: 0;
+}
+
+.chain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+  overflow-x: auto;
+  padding: 8px 4px;
+}
+
+.link {
+  flex: 0 0 auto;
+  width: 134px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.link:hover { transform: translateY(-3px); }
+
+.link .circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin: 0 auto;
+  background: var(--ivory);
+  border: 1.5px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  position: relative;
+}
+.link:hover .circle {
+  background: var(--ink);
+  color: var(--ivory);
+  box-shadow: 0 6px 16px rgba(14,10,5,0.18);
+}
+.link.active .circle {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.link.filled .circle {
+  background: var(--mustard);
+  border-color: var(--mustard);
+}
+.link.dim .circle { opacity: 0.32; }
+
+.link .ord {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  opacity: 0.75;
+}
+.link .num {
+  font-family: var(--display);
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 0;
+  font-weight: 400;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.link .name {
+  margin-top: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink-soft);
+  line-height: 1.3;
+}
+
+.link .arrow {
+  position: absolute;
+  top: 41px;
+  right: -18px;
+  width: 24px;
+  height: 12px;
+  color: var(--rule);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+.link:last-child .arrow { display: none; }
+.link.dim .arrow { opacity: 0.4; }
+
+/* expansion panel */
+.expand-panel {
+  display: none;
+  margin-top: 24px;
+  padding: 48px 56px;
+  background: var(--ivory-shade);
+  border-top: 3px solid var(--vermillion);
+  position: relative;
+  animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.expand-panel.show { display: grid; grid-template-columns: 1fr 1.4fr; gap: 56px; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.expand-meta { border-right: 1px solid var(--rule); padding-right: 40px; }
+.expand-meta .link-num {
+  font-family: var(--display);
+  font-size: 96px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 0;
+  font-weight: 300;
+  line-height: 0.9;
+  color: var(--vermillion);
+  margin-bottom: 6px;
+}
+.expand-meta .link-ord {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.expand-meta h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 44px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1;
+  margin: 18px 0 24px;
+  color: var(--ink);
+}
+.expand-meta h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+
+.expand-body p {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+}
+.expand-body p:first-child { font-size: 22px; color: var(--ink); line-height: 1.5; }
+.expand-body .example {
+  border-left: 3px solid var(--vermillion);
+  padding: 14px 20px;
+  background: var(--ivory);
+  margin-top: 18px;
+  font-style: italic;
+  font-family: var(--display);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  font-size: 18px;
+}
+.expand-body .example strong {
+  display: block;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 6px;
+}
+
+/* backward walk */
+.walk { display: none; max-width: 920px; }
+.walk.show { display: block; }
+
+.walk-prompt {
+  margin: 32px 0 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.walk-prompt .stage {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  white-space: nowrap;
+}
+.walk-prompt h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.walk-prompt h3 em {
+  font-style: italic;
+  color: var(--vermillion);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+
+.walk-input {
+  width: 100%;
+  padding: 18px 22px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.4;
+  display: block;
+  margin-bottom: 16px;
+}
+.walk-input:focus {
+  outline: none;
+  border-color: var(--vermillion);
+  background: var(--ivory);
+}
+
+.walk-actions { display: flex; gap: 14px; margin: 8px 0 32px; }
+
+.walk-history {
+  margin: 32px 0;
+  padding: 32px 36px;
+  background: var(--ivory-shade);
+  border-left: 4px solid var(--mustard);
+}
+.walk-history .h-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 16px;
+}
+.walk-history .h-item {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 24px;
+  padding: 14px 0;
+  border-top: 1px dashed var(--rule);
+  align-items: baseline;
+}
+.walk-history .h-item:first-of-type { border-top: none; padding-top: 0; }
+.walk-history .h-stage {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 500;
+}
+.walk-history .h-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.walk-conclusion {
+  margin: 40px 0;
+  padding: 36px 40px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+  display: none;
+}
+.walk-conclusion.show { display: block; }
+.walk-conclusion .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-bottom: 14px;
+}
+.walk-conclusion h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+.walk-conclusion h3 em {
+  font-style: italic;
+  color: var(--mustard);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+.walk-conclusion p {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ivory-shade);
+  margin-bottom: 12px;
+}
+
+/* buttons */
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+
+.legend {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+}
+.legend-item {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--ink-mute);
+  line-height: 1.55;
+}
+.legend-item .dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+footer.bottom {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 900px) {
+  .expand-panel.show { grid-template-columns: 1fr; gap: 24px; }
+  .expand-meta { border-right: none; border-bottom: 1px solid var(--rule); padding-right: 0; padding-bottom: 24px; }
+  .wrap { padding: 24px 20px 60px; }
+  .legend { grid-template-columns: 1fr; gap: 18px; }
+  .walk-history .h-item { grid-template-columns: 1fr; gap: 4px; }
+}
+
+.link:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 4px; }
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 01</span> · EXPAND THE BOX · The Chain
+    </div>
+    <a href="index.html">← All Day 1 tools</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Day 1 · Interactive Map · M01</div>
+    <h1 class="display">The <em>Chain.</em></h1>
+    <p class="lede">
+      Everything you do flows down a chain.
+      The leftmost link is the most leveraged and the most invisible.
+      Click any link to see what it is. Then walk it backwards from a result you don't like, and find where it bent.
+    </p>
+  </section>
+
+  <div class="modes">
+    <button class="mode-btn active" onclick="setMode('read')">Read forward</button>
+    <button class="mode-btn" onclick="setMode('walk')">Walk it backward</button>
+  </div>
+
+  <!-- READ MODE -->
+  <section id="readMode">
+    <div class="chain-rail">
+      <div class="chain" id="chainForward">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div class="expand-panel" id="expandPanel">
+      <div class="expand-meta">
+        <div class="link-num" id="expandNum">I</div>
+        <div class="link-ord" id="expandOrd">First link</div>
+        <h2 id="expandTitle"></h2>
+      </div>
+      <div class="expand-body" id="expandBody"></div>
+    </div>
+  </section>
+
+  <!-- WALK MODE -->
+  <section class="walk" id="walkMode">
+    <div class="chain-rail">
+      <div class="chain" id="chainBackward">
+        <!-- populated by JS, in reverse -->
+      </div>
+    </div>
+
+    <div id="walkSteps">
+      <!-- prompts injected here -->
+    </div>
+
+    <div class="walk-conclusion" id="walkConclusion">
+      <div class="label">The link where the chain bent</div>
+      <h3 id="conclusionTitle"></h3>
+      <p id="conclusionText"></p>
+      <div class="walk-actions" style="margin-top: 20px;">
+        <button class="btn" style="background:transparent; color:var(--ivory); border-color:var(--ivory);" onclick="saveWalk()">Save this walk</button>
+        <button class="btn" style="background:transparent; color:var(--mustard); border-color:var(--mustard);" onclick="resetWalk()">Walk another</button>
+      </div>
+    </div>
+
+    <div id="savedWalks"></div>
+  </section>
+
+  <div class="legend">
+    <div class="legend-item">
+      <span class="dot" style="background: var(--vermillion);"></span>
+      Active link — currently being read or named
+    </div>
+    <div class="legend-item">
+      <span class="dot" style="background: var(--mustard);"></span>
+      Filled link — your answer for this part of the chain
+    </div>
+    <div class="legend-item">
+      <span class="dot" style="background: var(--ivory); border: 1.5px solid var(--ink);"></span>
+      Default — waiting for you to engage it
+    </div>
+  </div>
+
+  <footer class="bottom">
+    <div>The chain · ETB Day 1 · Map M01</div>
+    <div>Source: 01 - New Context_EN.mp4 + Map of Thoughtmaps</div>
+  </footer>
+</div>
+
+<script>
+const CHAIN = [
+  {
+    ord: 'I', name: 'New Context',
+    title: 'Context',
+    italic: 'is the space inside which everything else happens.',
+    body: [
+      'In PM, context is not "mindset" or "background." It is the invisible source-frame that determines what actions, meanings, and results are even available.',
+      'Two people in the same content — same room, same conversation, same task — can be in radically different contexts and produce radically different results.',
+      'You don\'t change context by changing what you think. You change context by declaring a different one.'
+    ],
+    example: { label: 'Example', text: '"This meeting is about being right." vs. "This meeting is about creating what is needed." Same meeting. Two contexts. Two different sets of words become available.' }
+  },
+  {
+    ord: 'II', name: 'Thoughtware',
+    title: 'Thoughtware',
+    italic: 'is what you think with — not what you think about.',
+    body: [
+      'Your beliefs, opinions, rules, conclusions — those are the OUTPUT of your thoughtware. The thoughtware itself is the internal architecture that makes those outputs possible, and makes other outputs invisible.',
+      'You can\'t see your thoughtware while you\'re wearing it. The way you can\'t see your glasses while you\'re looking through them.',
+      'The new context is what lets new thoughtware install. Without the context shift, you only have your existing thoughtware to work with — which produced what you have now.'
+    ],
+    example: { label: 'Example', text: 'A person operating from "I am alone" thoughtware will hear an invitation as "they want something from me." A person operating from "I belong" thoughtware will hear the same words as "they\'re glad to see me." Same content. Different thoughtware. Different reception.' }
+  },
+  {
+    ord: 'III', name: 'Thoughtmaps',
+    title: 'Thoughtmaps',
+    italic: 'are the specific maps you use to navigate.',
+    body: [
+      'A thoughtmap is a cognitive tool. The Box is one. The Five Bodies is one. The Low Drama Triangle is one. The New Map of Feelings is one. PM gives you about twenty.',
+      'A thoughtmap is not reality. It is a perceptual cut that makes some moves visible. The Box-map makes Box defenses visible. The Drama Triangle makes drama positions visible. Without the map, the territory is undifferentiated.',
+      'Different thoughtmaps reveal different things about the same territory. PM uses many maps because no single one shows everything.'
+    ],
+    example: { label: 'Example', text: 'Looking at an argument with no map: "we\'re fighting again." With the Low Drama Triangle: "I\'m in Persecutor, she\'s in Victim, the gremlin is being fed."' }
+  },
+  {
+    ord: 'IV', name: 'Options',
+    title: 'Options',
+    italic: 'are the moves that become visible to you.',
+    body: [
+      'In the old context, with the old thoughtware, with the old thoughtmaps — your options were limited to what those allowed you to see. Options that exist objectively were invisible because you had no apparatus to perceive them.',
+      'When the upstream links shift, options that have always existed suddenly appear. This is not "new" options being created. It is your perception expanding to see what was always there.',
+      'A learner often reports "I never even considered that" — which is true. They didn\'t consider it because their thoughtware filtered it out.'
+    ],
+    example: { label: 'Example', text: 'Option that was invisible: "I could simply not respond to that email." Option that becomes visible after a context shift: same option. But now you can see it. And feel it as a choice, not a transgression.' }
+  },
+  {
+    ord: 'V', name: 'Choices',
+    title: 'Choices',
+    italic: 'are the moves you actually take from the visible options.',
+    body: [
+      'A choice is an option you actually choose. You can have many options visible and still default to the old one out of habit, fear, or unconsciousness.',
+      'Choosing requires presence. PM calls this the first of the Three Powers — the Power of Choosing. To own that you chose, even when the choice felt automatic.',
+      'You don\'t have to like the choice or be sure of it. You have to make it consciously, knowing it was yours.'
+    ],
+    example: { label: 'Example', text: 'Five options visible: respond now, respond later, ask a clarifying question, decline, ignore. The choice is which one you actually pick — and that you know you picked it.' }
+  },
+  {
+    ord: 'VI', name: 'Behavior',
+    title: 'Behavior',
+    italic: 'is what you actually do.',
+    body: [
+      'Behavior is the only link in the chain that is publicly visible. Everything upstream is invisible to others — and often to you.',
+      'Most "personal development" tries to start here. "Just do the thing differently." It fails because the upstream links haven\'t shifted; the old behavior was the output of the old chain.',
+      'The same behavior performed from a new context lands differently. Same words. Same actions. Different result.'
+    ],
+    example: { label: 'Example', text: 'Behavior: "I said no to the request." From a Victim-context Box, this lands as resentment. From a radically-responsible context, the same "no" lands as clarity, no apology, no charge.' }
+  },
+  {
+    ord: 'VII', name: 'Results',
+    title: 'Results',
+    italic: 'are what then shows up in your life.',
+    body: [
+      'Results are downstream of everything else. They are the link you can see, measure, and complain about.',
+      'When you try to "change your results" without working upstream, you produce more of the same results dressed in slightly different costume. This is the loop most people are in.',
+      'When the upstream links shift, results shift on their own. Often before you notice.',
+      'When you don\'t like a result, walk the chain backwards. Find the link that bent. That\'s where the work is.'
+    ],
+    example: { label: 'Example', text: 'Result: "I am exhausted and resentful at work, again." Walk backwards: which behavior? Which choice? Which option-set? Which thoughtmap? Which thoughtware? Which context? The bent link is usually a context you didn\'t choose — you inherited.' }
+  }
+];
+
+const WALK_PROMPTS = [
+  { stage: 'VII / Result', text: 'Name a <em>result</em> in your life you don\'t like.', placeholder: 'e.g. I am exhausted at work, again.' },
+  { stage: 'VI / Behavior', text: 'What <em>behavior</em> produced that result?', placeholder: 'e.g. I said yes to every meeting.' },
+  { stage: 'V / Choice', text: 'What <em>choice</em> produced that behavior?', placeholder: 'e.g. I chose to never decline.' },
+  { stage: 'IV / Options', text: 'What <em>options</em> were visible to you when you chose?', placeholder: 'e.g. Saying yes, or quitting. Nothing between.' },
+  { stage: 'III / Thoughtmap', text: 'What <em>thoughtmap</em> made those the only visible options?', placeholder: 'e.g. The "I owe them everything" map.' },
+  { stage: 'II / Thoughtware', text: 'What <em>thoughtware</em> made that thoughtmap the easiest one to reach?', placeholder: 'e.g. The "if I disappoint anyone I lose everything" architecture.' },
+  { stage: 'I / Context', text: 'What <em>context</em> were you operating from when all of that ran?', placeholder: 'e.g. The context of survival. The context of "I have no choice."' }
+];
+
+let currentLink = -1;
+let mode = 'read';
+let walkAnswers = [];
+let walkIndex = 0;
+
+/* fire the element's click on Enter/Space for keyboard operability */
+function keyActivate(el){ el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } }); }
+
+/* --- Build forward chain --- */
+function buildForward() {
+  const c = document.getElementById('chainForward');
+  c.innerHTML = '';
+  CHAIN.forEach((link, i) => {
+    const el = document.createElement('div');
+    el.className = 'link';
+    el.dataset.idx = i;
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('aria-label', `Link ${link.ord} of VII — ${link.name}. Open detail.`);
+    el.innerHTML = `
+      <div class="circle">
+        <div class="ord">${link.ord}</div>
+      </div>
+      <div class="name">${link.name}</div>
+      <div class="arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M0 6 Q 12 0 22 6 M18 3 L22 6 L18 9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    `;
+    el.addEventListener('click', () => expand(i));
+    keyActivate(el);
+    c.appendChild(el);
+  });
+}
+
+function expand(i, focusHeading = true) {
+  currentLink = i;
+  document.querySelectorAll('#chainForward .link').forEach((el, j) => {
+    el.classList.toggle('active', j === i);
+  });
+  const link = CHAIN[i];
+  document.getElementById('expandNum').textContent = link.ord;
+  document.getElementById('expandOrd').textContent = `Link ${link.ord} of VII`;
+  document.getElementById('expandTitle').innerHTML = `${link.title} <em>${link.italic}</em>`;
+  const body = document.getElementById('expandBody');
+  body.innerHTML = link.body.map(p => `<p>${p}</p>`).join('') +
+    `<div class="example"><strong>${link.example.label}</strong>${link.example.text}</div>`;
+  document.getElementById('expandPanel').classList.add('show');
+  const heading = document.getElementById('expandTitle');
+  heading.setAttribute('tabindex', '-1');
+  if (focusHeading) {
+    document.getElementById('expandPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    heading.focus({ preventScroll: true });
+  }
+}
+
+/* --- Build backward chain (right-to-left visualization) --- */
+function buildBackward() {
+  const c = document.getElementById('chainBackward');
+  c.innerHTML = '';
+  // reverse order: VII, VI, V, IV, III, II, I
+  const reversed = [...CHAIN].reverse();
+  reversed.forEach((link, i) => {
+    const el = document.createElement('div');
+    el.className = 'link dim';
+    el.dataset.stageIdx = i;
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = `
+      <div class="circle">
+        <div class="ord">${link.ord}</div>
+      </div>
+      <div class="name">${link.name}</div>
+      <div class="arrow" style="transform: rotate(180deg);" aria-hidden="true">
+        <svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M0 6 Q 12 0 22 6 M18 3 L22 6 L18 9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    `;
+    c.appendChild(el);
+  });
+}
+
+function renderWalkStep() {
+  const container = document.getElementById('walkSteps');
+  if (walkIndex >= WALK_PROMPTS.length) {
+    container.innerHTML = '';
+    showConclusion();
+    return;
+  }
+  const p = WALK_PROMPTS[walkIndex];
+  const previousHTML = walkAnswers.length > 0 ? `
+    <div class="walk-history">
+      <div class="h-label">Your walk so far</div>
+      ${walkAnswers.map((a, i) => `
+        <div class="h-item">
+          <div class="h-stage">${WALK_PROMPTS[i].stage}</div>
+          <div class="h-text">${escapeHtml(a)}</div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  const promptLabel = (p.stage + ' — ' + p.text.replace(/<[^>]+>/g, '')).replace(/"/g, '&quot;');
+  container.innerHTML = `
+    ${previousHTML}
+    <div class="walk-prompt">
+      <span class="stage">${p.stage}</span>
+      <h3 id="walkPromptHeading" tabindex="-1">${p.text}</h3>
+    </div>
+    <textarea class="walk-input" id="walkInput" placeholder="${p.placeholder}" rows="2" aria-label="${promptLabel}"></textarea>
+    <div class="walk-actions">
+      <button class="btn primary" onclick="submitWalkStep()">Continue walking backward →</button>
+      ${walkIndex > 0 ? `<button class="btn ghost" onclick="walkBack()">← Back one step</button>` : ''}
+    </div>
+  `;
+  document.getElementById('walkInput').focus();
+
+  // light up the corresponding chain circle (reverse order)
+  const links = document.querySelectorAll('#chainBackward .link');
+  links.forEach((el, i) => {
+    el.classList.remove('active', 'filled', 'dim');
+    if (i < walkIndex) el.classList.add('filled');
+    else if (i === walkIndex) el.classList.add('active');
+    else el.classList.add('dim');
+  });
+}
+
+function submitWalkStep() {
+  const input = document.getElementById('walkInput');
+  const val = input.value.trim();
+  if (!val) { input.focus(); return; }
+  walkAnswers.push(val);
+  walkIndex++;
+  renderWalkStep();
+}
+
+function walkBack() {
+  if (walkIndex === 0) return;
+  walkIndex--;
+  walkAnswers.pop();
+  renderWalkStep();
+}
+
+function showConclusion() {
+  // mark all links as filled
+  document.querySelectorAll('#chainBackward .link').forEach(el => {
+    el.classList.remove('active', 'dim');
+    el.classList.add('filled');
+  });
+  // the last answer is the CONTEXT (link I)
+  const c = document.getElementById('walkConclusion');
+  document.getElementById('conclusionTitle').innerHTML = `The context where it began: <em>${escapeHtml(walkAnswers[6])}</em>`;
+  document.getElementById('conclusionText').innerHTML = `
+    This is the leftmost link. It is upstream of every other link in your chain.
+    You don't have to "fix" it. Just <em style="color:var(--mustard);">see</em> it.
+    Next time the same situation comes around, you'll have an option you didn't have before: to enter that situation from a different context.
+    That's where the chain stops bending the same way.
+  `;
+  c.classList.add('show');
+  c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const heading = document.getElementById('conclusionTitle');
+  heading.setAttribute('tabindex', '-1');
+  heading.focus({ preventScroll: true });
+}
+
+function saveWalk() {
+  const walks = JSON.parse(localStorage.getItem('etb_chain_walks') || '[]');
+  walks.unshift({ date: new Date().toISOString(), answers: walkAnswers });
+  localStorage.setItem('etb_chain_walks', JSON.stringify(walks.slice(0, 10)));
+  renderSavedWalks();
+  alert('Walk saved. You can review it any time on this device.');
+}
+
+function resetWalk() {
+  walkAnswers = [];
+  walkIndex = 0;
+  document.getElementById('walkConclusion').classList.remove('show');
+  renderWalkStep();
+}
+
+function renderSavedWalks() {
+  const walks = JSON.parse(localStorage.getItem('etb_chain_walks') || '[]');
+  const c = document.getElementById('savedWalks');
+  if (!walks.length) { c.innerHTML = ''; return; }
+  c.innerHTML = `
+    <div class="walk-history" style="border-color: var(--ink-mute); margin-top: 48px;">
+      <div class="h-label">Previously saved walks · this device only</div>
+      ${walks.map(w => `
+        <div style="padding: 12px 0; border-top: 1px dashed var(--rule);">
+          <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--ink-mute); margin-bottom: 6px;">
+            ${new Date(w.date).toLocaleString()}
+          </div>
+          <div style="font-family: var(--display); font-style: italic; font-size: 17px; font-variation-settings: 'opsz' 144, 'SOFT' 100; color: var(--ink-soft);">
+            Result: ${escapeHtml(w.answers[0])} → Context: ${escapeHtml(w.answers[6] || '—')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && m === 'read') || (i === 1 && m === 'walk'));
+  });
+  document.getElementById('readMode').style.display = m === 'read' ? 'block' : 'none';
+  document.getElementById('walkMode').classList.toggle('show', m === 'walk');
+  if (m === 'walk' && walkAnswers.length === 0) renderWalkStep();
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  buildForward();
+  buildBackward();
+  expand(0, false);
+  renderSavedWalks();
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

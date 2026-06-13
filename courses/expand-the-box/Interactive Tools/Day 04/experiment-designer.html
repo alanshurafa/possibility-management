@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiment Designer · ETB Day 4</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero { margin: 56px 0 32px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 720px;
+  font-style: italic;
+}
+
+/* step blocks */
+.step {
+  margin: 48px 0 32px;
+  padding: 36px 40px;
+  background: var(--ivory-shade);
+  border-left: 4px solid var(--rule);
+  position: relative;
+  transition: border-color 0.3s;
+}
+.step.active { border-left-color: var(--vermillion); }
+.step.complete { border-left-color: var(--sky); }
+.step .step-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.step.complete .step-num { color: var(--sky); }
+.step h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.step h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.step .step-sub {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-mute);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* domain chips */
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 18px 18px;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  line-height: 1.4;
+  position: relative;
+}
+.chip:hover {
+  border-color: var(--ink);
+  background: white;
+}
+.chip.selected {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.chip .chip-day {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--ink-mute);
+  margin-bottom: 6px;
+}
+.chip.selected .chip-day { color: rgba(244, 236, 220, 0.7); }
+
+/* template list */
+.template-list { display: flex; flex-direction: column; gap: 14px; }
+.template {
+  padding: 20px 24px;
+  background: var(--ivory);
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.template:hover {
+  border-color: var(--ink);
+  background: white;
+}
+.template.selected {
+  border-color: var(--vermillion);
+  border-left-width: 4px;
+  background: white;
+}
+.template .t-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.template.selected .t-num { color: var(--vermillion); }
+.template .t-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+.template .t-desc {
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.template.scratch {
+  border-style: dashed;
+}
+.template.scratch .t-title { color: var(--ink-mute); }
+.template.scratch.selected .t-title { color: var(--vermillion); }
+
+/* form */
+.form-grid { display: flex; flex-direction: column; gap: 22px; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 500;
+}
+.field-label .req { color: var(--vermillion); margin-left: 4px; }
+.field-hint {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-mute);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.field textarea, .field input[type="text"] {
+  width: 100%;
+  padding: 16px 20px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.4;
+}
+.field textarea { min-height: 80px; }
+.field textarea:focus, .field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--ink);
+  background: white;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 700px) { .field-row { grid-template-columns: 1fr; } }
+
+/* buttons */
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn.tiny { padding: 7px 12px; font-size: 10px; letter-spacing: 0.15em; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn:disabled:hover { background: transparent; color: var(--ink); }
+
+.actions-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+/* confirmation card / printable */
+.confirm-card {
+  margin: 36px 0;
+  padding: 0;
+  background: var(--ivory);
+  border: 1.5px solid var(--ink);
+  position: relative;
+}
+.confirm-card .card-stamp {
+  position: absolute;
+  top: -14px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.confirm-card .card-body { padding: 40px 44px 36px; }
+.confirm-card .card-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.confirm-card h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 24px;
+  letter-spacing: -0.015em;
+}
+.confirm-card h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.confirm-card .row {
+  padding: 16px 0;
+  border-top: 1px dashed var(--rule);
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 24px;
+  align-items: baseline;
+}
+.confirm-card .row .row-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 600;
+}
+.confirm-card .row .row-val {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+/* my experiments list */
+.saved {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+}
+.saved h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 8px;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+.saved h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.saved .saved-sub {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-mute);
+  margin-bottom: 28px;
+}
+.saved .empty {
+  font-family: var(--body);
+  font-style: italic;
+  color: var(--ink-mute);
+  font-size: 16px;
+  padding: 14px 0;
+}
+
+.exp-item {
+  margin: 16px 0;
+  padding: 24px 28px;
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--rule);
+  border-left-width: 4px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.exp-item[data-status="PENDING"] { border-left-color: var(--mustard); }
+.exp-item[data-status="RUNNING"] { border-left-color: var(--vermillion); }
+.exp-item[data-status="COMPLETED"] { border-left-color: var(--sky); }
+.exp-item[data-status="ABANDONED"] { border-left-color: var(--ink-mute); opacity: 0.78; }
+
+.exp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.exp-head .left {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.exp-head .left .domain-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--ivory);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.status-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.status-btn {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  padding: 5px 9px;
+  background: transparent;
+  color: var(--ink-mute);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.15s;
+}
+.status-btn:hover { color: var(--ink); border-color: var(--ink); }
+.status-btn.active { background: var(--ink); color: var(--ivory); border-color: var(--ink); }
+.exp-item[data-status="PENDING"] .status-btn.active[data-status-val="PENDING"] { background: var(--mustard); color: var(--ink); border-color: var(--mustard); }
+.exp-item[data-status="RUNNING"] .status-btn.active[data-status-val="RUNNING"] { background: var(--vermillion); color: var(--ivory); border-color: var(--vermillion); }
+.exp-item[data-status="COMPLETED"] .status-btn.active[data-status-val="COMPLETED"] { background: var(--sky); color: var(--ivory); border-color: var(--sky); }
+.exp-item[data-status="ABANDONED"] .status-btn.active[data-status-val="ABANDONED"] { background: var(--ink-mute); color: var(--ivory); border-color: var(--ink-mute); }
+
+.exp-row {
+  padding: 10px 0;
+  border-top: 1px dashed var(--rule);
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 18px;
+  align-items: baseline;
+}
+.exp-row:first-of-type { border-top: 1px solid var(--rule); margin-top: 4px; }
+.exp-row .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.exp-row .val {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.exp-row .val.muted { color: var(--ink-mute); font-style: italic; font-family: var(--body); font-size: 15px; }
+
+.outcome-block {
+  margin-top: 16px;
+  padding: 18px 20px;
+  background: var(--ivory);
+  border-left: 3px solid var(--sky);
+}
+.outcome-block .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sky);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.outcome-block textarea {
+  width: 100%;
+  min-height: 70px;
+  padding: 12px 14px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--rule);
+  color: var(--ink);
+  resize: vertical;
+  line-height: 1.4;
+}
+.outcome-block textarea:focus { outline: none; border-color: var(--sky); background: white; }
+.outcome-block .saved-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.5;
+  padding: 6px 0;
+}
+.outcome-actions { margin-top: 10px; display: flex; gap: 8px; }
+
+.exp-foot {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.exp-foot .delete-btn {
+  background: none;
+  border: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  cursor: pointer;
+  padding: 0;
+}
+.exp-foot .delete-btn:hover { color: var(--vermillion); }
+
+/* aside callout */
+.callout {
+  margin: 36px 0;
+  padding: 24px 28px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 20px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.callout .callout-tag {
+  display: block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #b8902c;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+footer.bottom {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hidden { display: none !important; }
+
+/* print stylesheet — printable index-card output */
+@media print {
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+  }
+  body::before { display: none; }
+  .wrap { padding: 0; max-width: none; }
+  header.top, .hero, .step, .saved h3, .saved-sub, .actions-row, .callout, footer.bottom, .btn, .status-row, .delete-btn, .outcome-actions, .exp-foot { display: none !important; }
+
+  .confirm-card, .exp-item {
+    page-break-inside: avoid;
+    page-break-after: always;
+    border: 2px solid black !important;
+    background: white !important;
+    margin: 0 0 16pt;
+    padding: 0;
+    box-shadow: none;
+    opacity: 1 !important;
+  }
+  .confirm-card .card-stamp, .exp-item[data-status]::before {
+    background: black !important;
+    color: white !important;
+  }
+  .confirm-card .card-body { padding: 24pt; }
+  .exp-item { padding: 24pt; }
+
+  .confirm-card h3, .exp-row .val, .outcome-block .saved-text {
+    color: black !important;
+  }
+  .confirm-card .row-label, .exp-row .label, .outcome-block .label {
+    color: black !important;
+  }
+  .confirm-card .row, .exp-row {
+    border-top: 1px dashed #888 !important;
+  }
+  .outcome-block { background: #f4f4f4 !important; border-left: 3px solid black !important; }
+  .saved, .saved-list { display: block !important; }
+  .exp-item[data-status="ABANDONED"] { display: none !important; }
+  .exp-item .exp-head .left .domain-tag { background: white !important; border: 1px solid black !important; color: black !important; }
+}
+
+@media (max-width: 820px) {
+  .wrap { padding: 24px 20px 60px; }
+  .step { padding: 24px 22px; }
+  .confirm-card .card-body { padding: 28px 24px; }
+  .confirm-card .row { grid-template-columns: 1fr; gap: 6px; }
+  .exp-row { grid-template-columns: 1fr; gap: 4px; }
+  h1.display { font-size: clamp(36px, 8vw, 64px); }
+}
+
+/* visible keyboard focus for custom (non-native) interactive controls */
+.template:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 04</span> · EXPAND THE BOX · Experiment Designer
+    </div>
+    <a href="index.html">← All Day 4 tools</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Day 4 · Interactive Practice · the rep, designed</div>
+    <h1 class="display">Design <em>one</em> experiment.<br>Run it. <em>Notice.</em></h1>
+    <p class="lede">
+      An experiment is the operational unit of PM practice. <em>What I will do / by when / what I will notice.</em>
+      If any of the three is missing, it is not yet an experiment — it is a wish. This tool gives you the scaffold,
+      a library of starters, and a place to track the reps. Reps compound.
+    </p>
+  </section>
+
+  <!-- STEP 1 -->
+  <div class="step active" id="step1">
+    <div class="step-num">Step 1 · Pick a domain</div>
+    <h2>What part of the work is this experiment <em>for?</em></h2>
+    <p class="step-sub">The domain is just a way in. Pick the one the Box is most uncomfortable with right now.</p>
+    <div class="domain-grid" id="domainGrid"></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step hidden" id="step2">
+    <div class="step-num">Step 2 · Pick a starter — or write your own</div>
+    <h2>A <em>menu.</em> Not a script.</h2>
+    <p class="step-sub">Pick the one that produces "I'd rather not, actually." The Box's resistance is the signal you are at the right experiment.</p>
+    <div class="template-list" id="templateList"></div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step hidden" id="step3">
+    <div class="step-num">Step 3 · Write the experiment</div>
+    <h2>What / by when / what I will <em>notice.</em></h2>
+    <p class="step-sub">Concrete enough that a witness could verify. If it's vague, it's a wish.</p>
+
+    <div class="form-grid">
+      <div class="field">
+        <label class="field-label" for="f-what">What I will do<span class="req">*</span></label>
+        <div class="field-hint">One specific behavior, in a real situation. Not "be more present" — write the actual sentence, the actual move, the actual rep.</div>
+        <textarea id="f-what" placeholder="e.g. Sunday's call with my father, when he starts on politics, I say one sentence: 'Dad, I'm not in this conversation today,' then change the subject." rows="3"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f-when">By when<span class="req">*</span></label>
+        <div class="field-hint">A specific window — date, event, or time-bound. Not "this week." Usually within 48 hours.</div>
+        <textarea id="f-when" placeholder="e.g. Sunday 6–7 pm. / Before next Tuesday's standup. / Three consecutive mornings starting tomorrow." rows="2"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f-notice">What I will notice<span class="req">*</span></label>
+        <div class="field-hint">The data you'll collect. What in your body, what in the room, what in the other person. What would tell you the rep produced new information.</div>
+        <textarea id="f-notice" placeholder="e.g. What happened in my body before / during / after the sentence. What he said back. Whether I went numb afterwards. Whether the Box ran a punishment script." rows="3"></textarea>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="f-capture">How will I capture what I noticed?</label>
+          <div class="field-hint">Beep! Book, voice memo, note in this tool. Most learning is lost in the first hour — pick a method you'll actually use within 10 minutes.</div>
+          <input type="text" id="f-capture" placeholder="e.g. Voice memo within 10 min, then Beep! Book that evening.">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="f-witness">Witness (optional)</label>
+          <div class="field-hint">A pairing partner, a friend in transformational context — or NONE. An experiment without a witness is not invalid; it is just smaller in ripples.</div>
+          <input type="text" id="f-witness" placeholder="e.g. Mira (pairing partner) / NONE">
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-row">
+      <button class="btn primary" onclick="saveExperiment()">Save the experiment</button>
+      <button class="btn ghost" onclick="resetWizard()">Start over</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 confirmation card -->
+  <div id="confirmArea" class="hidden">
+    <div class="confirm-card" id="confirmCard">
+      <div class="card-stamp">Experiment · saved</div>
+      <div class="card-body" id="confirmCardBody"></div>
+    </div>
+    <div class="actions-row">
+      <button class="btn primary" onclick="resetWizard()">Design another</button>
+      <button class="btn" onclick="window.print()">Print this card</button>
+      <button class="btn ghost" onclick="scrollToSaved()">Go to my experiments ↓</button>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">PM voice · the loop</span>
+      Reps compound. One experiment doesn't transform you. Thirty in a row do.
+    </div>
+  </div>
+
+  <!-- saved experiments -->
+  <div class="saved" id="savedArea">
+    <h3>My <em>experiments.</em></h3>
+    <p class="saved-sub">Stored in this browser only. Toggle status as the rep moves through PENDING → RUNNING → COMPLETED (or ABANDONED — that's data too).</p>
+    <div id="savedList"></div>
+  </div>
+
+  <div class="callout">
+    <span class="callout-tag">PM voice · ABANDONED is data</span>
+    ABANDONED is data too. It tells you the experiment was too big or the Box too defended that day. Design a smaller one.
+  </div>
+
+  <div class="callout">
+    <span class="callout-tag">PM voice · the witness</span>
+    An experiment without a witness is not invalid — it's just smaller in ripples. PM experiments compound faster when witnessed.
+  </div>
+
+  <footer class="bottom">
+    <div>Experiment Designer · ETB Day 4</div>
+    <div>Source: Day 04 module + Experiment Bank</div>
+  </footer>
+</div>
+
+<script>
+// ----- DOMAINS + TEMPLATES (from Experiment Bank) -----
+const DOMAINS = [
+  {
+    key: 'context',
+    name: 'Context',
+    day: 'Day 1–2',
+    templates: [
+      { num: 1, title: 'The silent context shift in a meeting', what: "In the next meeting you walk into, silently choose the context 'I am at cause here' before crossing the threshold. Hold it for the full meeting. Make no announcement.", whenSug: "The next meeting on your calendar.", noticeSug: "Where does your contribution come from differently? Where does the Box pull you back into spectator? What did you say or not say that you would not have without the held context?" },
+      { num: 2, title: 'Walking the chain backwards', what: "Pick one result this week you do not like. Walk the chain backwards out loud, on paper or to your partner, link by link — result → behavior → choice → option → thoughtmap → thoughtware → context.", whenSug: "Within 48 hours of catching the unwanted result.", noticeSug: "At which link did the chain originally bend? Most learners find it bent two links upstream of where they thought." },
+      { num: 4, title: 'Ask: from which context am I about to do this?', what: "Before three discrete activities tomorrow — a meal, a conversation, a piece of work — pause for 15 seconds and ask out loud or silently: 'From which context am I about to do this?' Name the context. Then do the activity.", whenSug: "Tomorrow.", noticeSug: "How often is the answer 'the context of getting through the day'? What changes when you name a different context — 'the context of being curious about this person' — before starting?" },
+      { num: 7, title: 'First-thing-in-the-morning context', what: "For three consecutive mornings, before checking the phone, sit upright and out loud name the context you are choosing to operate from today. One sentence.", whenSug: "Three mornings, before any screen.", noticeSug: "How often does the context default to 'surviving today' if you do not actively choose? What changes in the day when you have chosen?" },
+      { num: 6, title: 'The content swap test', what: "Find a recent low-grade conflict in your week. Mentally substitute a different person — same content, different relationship — and notice if your interpretation of the content changes.", whenSug: "24 hours.", noticeSug: "If the content reads completely differently when the person changes, your conflict was about context (the relationship-frame), not the content." }
+    ]
+  },
+  {
+    key: 'box',
+    name: 'Box',
+    day: 'Day 2',
+    templates: [
+      { num: 9, title: 'Catch yourself in one Box defense', what: "In the next 48 hours, catch yourself once in the act of defending the Box. The tell is usually a sudden tightness, a rehearsed sentence, or an internal 'yes but…'", whenSug: "48 hours.", noticeSug: "Whose voice does the defense use? What is it defending? What would happen if you did not defend?" },
+      { num: 10, title: 'Name a Box rule out loud to a witness', what: "Pick one Box rule you can name in plain language ('I do not raise my voice,' 'I do not ask for help,' 'I finish what I start,' 'I do not look stupid'). Tell your pairing partner the rule, when it was installed, and who enforces it.", whenSug: "Next partner exchange.", noticeSug: "Speaking the rule out loud changes its weight. Often the rule, once named, becomes optional — without you doing anything else." },
+      { num: 11, title: "Do one small thing your Box says you don't do", what: "Pick one thing your Box says 'you don't do that' about. Smallest version possible. Eat a meal alone in a restaurant. Take a nap at 2pm. Wear something out of character. Ask a stranger a question.", whenSug: "48 hours.", noticeSug: "What did your Box predict would happen? What actually happened? The gap between prediction and reality is the size of the Box's exaggeration." },
+      { num: 14, title: 'One Box rule you decline', what: "Pick one Box rule you have named and decline it for 24 hours. Just one. ('Today I will ask for help on one thing.' 'Today I will not over-explain when I make a request.' 'Today I will be late once and not apologize.')", whenSug: "One 24-hour window.", noticeSug: "What did the Box do when you declined? Did it escalate? Did it punish you afterwards with shame or doubt? That is the Box defending its territory." },
+      { num: 16, title: "Naming the Box's costume", what: "When the Box runs today, name the costume it is wearing out loud (or in your head with witness). 'That's my Helpful Box.' 'That's my Doesn't-Need-Anything Box.' 'That's my Smart Box.'", whenSug: "One full day.", noticeSug: "By the end of the day, you will have catalogued four to seven costumes. The Box is not one thing — it is a wardrobe of rehearsed performances." },
+      { num: 12, title: "The Box's morning sentence", what: "For three mornings, the first sentence the Box says when you wake — write it down before doing anything else.", whenSug: "Three consecutive mornings.", noticeSug: "The sentence is consistent. It is the Box's daily directive. It is not you." }
+    ]
+  },
+  {
+    key: 'liquid',
+    name: 'Liquid State + 5 Bodies',
+    day: 'Day 3',
+    templates: [
+      { num: 17, title: 'Notice which body you spent the most time in today', what: "At the end of one day, list how much of the day each body was the primary location of your attention — intellectual, emotional, physical, energetic, archetypal. Rough percentages.", whenSug: "End of one day.", noticeSug: "For most office-working adults the intellectual body gets 80%+. The bodies that got little or no time are the ones the course is asking you to develop." },
+      { num: 18, title: 'Drop a grounding cord during a phone call', what: "In one phone call today, silently drop your grounding cord at the start of the call. Do nothing else differently.", whenSug: "Next phone call.", noticeSug: "What was different in the call? Did you interrupt less? Did you stay in the conversation when you would normally have started typing in another window? Did the other person speak differently to you?" },
+      { num: 19, title: 'Set a bubble before a difficult environment', what: "Before entering one environment you find draining — a particular meeting, a particular relative's house, public transit at rush hour — pause at the threshold and set your bubble.", whenSug: "Next time you enter the environment.", noticeSug: "What was different at the exit? How much of 'their stuff' did you bring out with you compared to before?" },
+      { num: 22, title: 'The 90-second center recovery', what: "In the next 48 hours, the next time you notice you have gone off-center — caught the Box running, lost composure in a meeting, snapped at someone, become reactive — take 90 seconds within the next 5 minutes to find center, drop cord, set bubble.", whenSug: "Next off-center moment.", noticeSug: "Recovery time. How quickly does the equipment work when you actually run it under pressure?" },
+      { num: 21, title: 'Body-mismatch detection in a conversation', what: "In one conversation today, notice if your bodies are saying different things — intellectual body agreeing, emotional body angry, physical body wanting to leave, energetic body collapsing.", whenSug: "Next medium-stakes conversation.", noticeSug: "When the bodies say different things, which one wins in your speech? Which one wins in your action? Which one was right?" }
+    ]
+  },
+  {
+    key: 'feedback',
+    name: 'Feedback + Coaching',
+    day: 'Day 4',
+    templates: [
+      { num: 25, title: 'Ask one person for PM-grade feedback', what: "Ask one person already in transformational context with you (pairing partner, PM-aware friend, a coach) for PM-grade feedback on one specific thing. Script: 'I'm running an experiment. I want PM-grade feedback on one thing — [name it specifically]. What did you actually witness?' Receive without rebuttal. Write what they said.", whenSug: "48 hours.", noticeSug: "What was the rebuttal you almost made? The rebuttal is the Box defending. Catching it is the win." },
+      { num: 26, title: 'Give one person PM-grade feedback', what: "If they want it. Ask: 'Can I offer PM-grade feedback on one thing?' If yes — give it. Specific, observable, no story. ('I noticed in the meeting this morning you said X three times. I am not naming this to fix you. I am offering a Beep.')", whenSug: "48 hours.", noticeSug: "How much pull is there toward making the feedback nicer than it actually is? PM-grade feedback declines the niceness pull." },
+      { num: 28, title: 'The Beep capture experiment', what: "For three days, each time something does not work the way you expected, write the Beep within ten minutes — what you did, what happened, what the Beep was, what the Shift would be. Do not yet act on the Shifts; capture.", whenSug: "Three consecutive days.", noticeSug: "By Day 3 you should have 6–20 Beeps. Patterns emerge. Some Beeps repeat. The repeating ones are pointing at the same Box rule from different angles." },
+      { num: 29, title: 'The one-sentence experiment', what: "Pick one conversation this week that would normally go a particular way. Plan one sentence — true, short, sourced from your body — that would shift the conversation off its track. Say it.", whenSug: "Next predictable conversation.", noticeSug: "What happened in your body before saying it? What happened in the other person? Most learners report the room rearranges around one sentence." },
+      { num: 31, title: 'The coaching-versus-fixing audit', what: "In one conversation where someone brings you a problem, notice whether you offer fixing (your answer) or PM coaching (possibilities the other person picks from).", whenSug: "Next such conversation.", noticeSug: "The pull toward fixing is enormous. PM coaching is 'here are five possibilities, you choose' — radically different from 'here is what to do.' Which were you doing?" }
+    ]
+  },
+  {
+    key: 'feelings',
+    name: 'Feelings',
+    day: 'Day 5',
+    templates: [
+      { num: 32, title: 'Name one feeling out loud each day for a week', what: "Each evening, out loud or to your partner: 'Today the feeling that was most present was [anger / sadness / fear / joy], at about [%] intensity, and the sensation was [location and quality].'", whenSug: "Seven consecutive days.", noticeSug: "Which feeling shows up most? Which never showed up — likely meaning the Numbness Bar is still covering it?" },
+      { num: 34, title: 'Lower the Numbness Bar on one specific feeling', what: "Pick the feeling you most reliably do not register (often anger or joy). For three days, set three phone reminders per day. At each reminder, pause 30 seconds and ask: 'Is there 2% of [the feeling] in my emotional body right now?'", whenSug: "Three days, nine reminders.", noticeSug: "By Day 3, the 2% becomes visible where it was not on Day 1. The Bar has moved one notch." },
+      { num: 38, title: 'Feeling vs thought-about-feeling drill', what: "In the next 24 hours, three times: notice yourself 'thinking about a feeling' rather than feeling it. Drop into the sensation.", whenSug: "24 hours.", noticeSug: "The mind goes to 'I am angry because…' — the because is the story. The actual anger is in the bones. Can you find it without the story?" },
+      { num: 39, title: 'One clean feeling, said cleanly', what: "In one conversation in the next 48 hours, name one feeling cleanly, in the moment, without story or blame. 'Right now I feel some anger about what you just said.' No follow-up explanation.", whenSug: "48 hours.", noticeSug: "What did the other person do? What did you do next? Most learners discover that one clean feeling-statement changes the conversation more than 20 minutes of explanation does." },
+      { num: 33, title: 'The 5-minute test on a mixed state', what: "The next time you find yourself in a difficult internal state — irritation, anxiety, sadness — quietly start a stopwatch. Is this still happening after 5 minutes? After 15?", whenSug: "Next difficult state.", noticeSug: "If past 5 minutes, you are in an emotion. Which one of the four is underneath?" }
+    ]
+  },
+  {
+    key: 'mixed',
+    name: 'Mixed Emotions / EHP',
+    day: 'Day 6',
+    templates: [
+      { num: 40, title: "Identify one stored emotion's components", what: "Pick one stored emotion you carry. Identify its components — which of the four feelings are in it, in what mix. ('My chronic resentment toward [person] is about 60% anger, 30% sadness, 10% fear.')", whenSug: "One sitting this week.", noticeSug: "Most stored emotions are mixes of three of the four. Once decomposed, each component can be worked separately. The mix is what made the emotion seem un-processable." },
+      { num: 42, title: "Distinguish today's grief from old grief", what: "In one current loss — a person, a relationship, a phase of life, a chapter — notice the present-time sadness versus the layers of old sadness that are also activated.", whenSug: "One sitting, when the loss is alive.", noticeSug: "The present is often the trigger, not the source. How much of the current grief is for today, and how much is finally available to be felt because today made room?" },
+      { num: 43, title: 'The body-storage location audit', what: "For three stored emotions you carry, locate where each lives in your body. Be specific. ('My grief about my mother lives in my throat and the upper chest. My resentment about my old job lives in my jaw and shoulders.')", whenSug: "One sitting this week.", noticeSug: "Bodies store emotions in geography. The geography is consistent across years. Locating gives you somewhere to bring breath, attention, EHP work." },
+      { num: 44, title: 'Trigger-versus-source detection', what: "In the next emotional reaction you have that lasts past 5 minutes, ask: 'What is the trigger and what is the source?' Trigger = today's content. Source = the older emotion the trigger activated.", whenSug: "Next stuck emotional state.", noticeSug: "The course's most expensive misunderstanding is treating triggers as sources. Once distinguished, the present-day situation can be addressed cleanly and the older emotion can be queued for the right container." }
+    ]
+  },
+  {
+    key: 'drama',
+    name: 'Low Drama',
+    day: 'Day 7',
+    templates: [
+      { num: 46, title: 'Catch one drama position in 48 hours', what: "In the next 48 hours, catch yourself once in Persecutor, Victim, or Rescuer. Name which. Do not stop performing it; just see it.", whenSug: "48 hours.", noticeSug: "Most learners catch their default position first (it is the easiest). The other two are harder to see because they show up under different conditions. Which is your default?" },
+      { num: 47, title: 'Name one of your gremlin foods out loud', what: "Pick one gremlin food you can admit to (being right, being misunderstood, being a victim, being a savior, being uniquely-burdened, being above-it-all). Tell your pairing partner: 'One of my gremlin foods is [X].'", whenSug: "Next partner exchange.", noticeSug: "The discomfort of naming. The gremlin food works in the dark. Naming dims its energy. Often by 50% in the moment of speaking." },
+      { num: 48, title: "Decline drama once and notice what's left", what: "In one situation in the next 48 hours where drama would normally happen — a habitual complaint conversation, a re-running of the same fight, a familiar gossip exchange — decline. Step out.", whenSug: "48 hours.", noticeSug: "What is left when the drama is declined? Often: silence, awkwardness, a feeling of emptiness, a glimpse of what the drama was substituting for. The emptiness is data, not a problem." },
+      { num: 49, title: 'Catch the fighting-reality move', what: "Notice the next time you think, out loud or silently: 'this should not be happening.' That is the first move of every low drama.", whenSug: "24 hours.", noticeSug: "How many times a day does this thought arise? For most learners, dozens. Each one initiates a drama. Catching the thought is catching the drama at the source." },
+      { num: 51, title: 'The Responsible Game move', what: "In one drama you have caught, run the move out: notice → name → step out → ask 'what is actually happening, what do I actually want, what can I actually choose.'", whenSug: "Next drama you catch.", noticeSug: "The Responsible Game feels less stimulating because the gremlin is not being fed. That flatness is not boredom; it is the absence of drama-food." }
+    ]
+  },
+  {
+    key: 'speaking',
+    name: 'Listening + Speaking',
+    day: 'Day 8',
+    templates: [
+      { num: 54, title: 'Run a completion loop on one stuck conversation', what: "Pick one conversation in your life that has been incomplete — left half-said for weeks, months, or years. Initiate. Speak the unfinished piece cleanly. Ask the other person to reflect back. Confirm or correct. Acknowledge. Name the conversation as complete, out loud.", whenSug: "Within one week.", noticeSug: "The energy that is released when a long-unfinished conversation is closed. Most learners report it is far larger than they expected." },
+      { num: 57, title: 'Hold a vacuum listening space for 5 minutes', what: "In one conversation, hold a vacuum listening space for 5 minutes. No nodding, no smiling, no 'yes,' no question, no comment. Present. Empty.", whenSug: "Next medium-stakes conversation.", noticeSug: "The pull to fill the space. The Box's hunger to comment. What did the speaker do in the unfilled space? Most learners report the speaker said things they had never said before." },
+      { num: 59, title: 'The one-true-sentence experiment', what: "In one conversation today, say one true sentence — sourced from your body, not your script. Short. Direct.", whenSug: "24 hours.", noticeSug: "What did your body do before saying it? What did the other person do after? Most learners discover one true sentence shifts a conversation more than an hour of careful explanation." },
+      { num: 56, title: 'Refuse one roadblock you usually deploy', what: "Pick one of the 12 Roadblocks (advising, reassuring, interrogating, judging, comparing, etc.) you reach for most. For 24 hours, refuse it.", whenSug: "24 hours.", noticeSug: "The empty space where the roadblock used to be. What happens in the conversation when you do not deploy it? Often the other person speaks differently because they have been given room." },
+      { num: 60, title: 'The reflection request', what: "In one conversation today, after you say something that matters to you, ask: 'Can I check what landed for you?' Listen to what they say without correcting.", whenSug: "24 hours.", noticeSug: "The gap between what you said and what they heard. The gap is the reason completion loops exist." }
+    ]
+  },
+  {
+    key: 'ego',
+    name: 'Ego States + Problem Ownership',
+    day: 'Day 9',
+    templates: [
+      { num: 62, title: 'Name your ego state mid-sentence', what: "In the next 48 hours, catch yourself once in the middle of a sentence — out loud, in conversation — and silently ask: 'Which ego state am I speaking from right now?' Notice. Do not change. Do not announce.", whenSug: "48 hours.", noticeSug: "You will almost certainly catch a state you did not expect to be in. Often Critical Parent when you thought you were in Adult." },
+      { num: 63, title: 'Give back one misowned problem', what: "Identify one problem you have been carrying that is not actually yours — someone else's life decision, someone else's emotion, someone else's responsibility you took on. Give it back. Stop fixing, stop researching, stop strategizing on their behalf.", whenSug: "Within one week.", noticeSug: "The space that opens when a misowned problem is set down. Often the other person picks it up faster than you expected." },
+      { num: 65, title: 'The I-statement / you-statement audit', what: "For one day, listen to your own speech. Each time you say 'you,' check: is the problem you are speaking about theirs (correctly assigned) or yours (misowned)?", whenSug: "One day.", noticeSug: "Most 'you-statements' in adult conflict are misowned problems. 'You make me feel…' is a mis-ownership; the feeling is yours. The owned version is 'I feel… when…'" },
+      { num: 66, title: 'Catch the Gremlin once a day', what: "For three days, catch your Gremlin speaking once per day. The Gremlin uses a sotto voce voice, often a sentence that 'feels true' but in your stomach knows it isn't. ('You're not actually going to do this.' 'They never appreciate you.')", whenSug: "Three days.", noticeSug: "The Gremlin's vocabulary is repetitive. By Day 3 you can predict its lines. Knowing them in advance is part of declining them." },
+      { num: 68, title: 'The Free Child invitation', what: "In the next 48 hours, do one thing from Free Child — spontaneous, curious, alive, without justifying to your Adult or Critical Parent. Dance in your kitchen. Buy something foolish. Tell a joke that might not land.", whenSug: "48 hours.", noticeSug: "How quickly does the Adapted Child or Critical Parent show up to manage the Free Child? Each interruption is data about which state your daily life is currently being run from." }
+    ]
+  },
+  {
+    key: 'possibility',
+    name: 'Possibility + Three Powers',
+    day: 'Day 10 + post-course',
+    templates: [
+      { num: 70, title: 'Ask one dangerous question', what: "Ask yourself one dangerous question this week and sit with the answer for at least 20 minutes. No journaling. No solving. Just sit. ('What am I pretending not to know?' 'Who would I be if I dropped this story about myself?' 'What would I have to be willing to feel in order to leave this?')", whenSug: "This week.", noticeSug: "The dangerous question dissolves the floor; what surfaces in the 20 minutes is what was underneath. Do not act on it within the hour. Let it work." },
+      { num: 71, title: 'Run a 30-day declaration', what: "Make one declaration about something specific you commit to for the next 30 days. ('I am running the daily Box catch for 30 days.' 'I am asking one dangerous question a week.') Write the date. Tell your partner.", whenSug: "This week. Then 30 days.", noticeSug: "The first three days are easy. Day 7–10 the Box starts producing reasons to drop the declaration. That moment is the test. Each rep past Day 10 changes who you are." },
+      { num: 72, title: 'Choose one bright principle to source from for a week', what: "From the bright principles list, pick one (possibility, courage, integrity, joy, intimacy, service). For one week, in any moment of decision, source from that principle. ('I am sourcing from courage this week.')", whenSug: "One week.", noticeSug: "Sourcing from a principle is different from 'trying to embody it.' Sourcing means: in a decision moment, ask what action this principle would take here. Then take that action." },
+      { num: 75, title: 'The Power-of-Choosing practice', what: "In one moment today where you reacted on autopilot, after the fact, declare: 'I am the one who chose this.' Even though the choice was made unconsciously. Especially though.", whenSug: "Today.", noticeSug: "The Power of Choosing is the radically responsible move of owning the unconscious choice as a chosen choice. From there, the second move can be chosen on purpose." },
+      { num: 76, title: 'The declaration test', what: "Test a possible declaration before committing. Out loud, say it. Notice whether your body recognizes it as true or whether the room feels off. ('I am writing the book.' 'I am leaving this marriage.' 'I am starting the company.')", whenSug: "This week.", noticeSug: "True declarations land in the body with a kind of weight. Off ones leave a fizz. The body knows." }
+    ]
+  }
+];
+
+// ----- STATE -----
+let selectedDomain = null;
+let selectedTemplate = null; // template object or 'scratch'
+const STORAGE_KEY = 'etb_day04_experiments';
+
+// ----- HTML escape -----
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+function uid() {
+  return 'exp_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+}
+
+// keyboard activation for custom (non-native) controls: Enter or Space fires the action
+function kb(e, fn) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    fn();
+  }
+}
+
+// move focus to a freshly-revealed step heading so keyboard/SR users land in the new section
+function focusHeading(selector) {
+  setTimeout(() => {
+    const h = document.querySelector(selector);
+    if (h) {
+      h.setAttribute('tabindex', '-1');
+      h.focus({ preventScroll: true });
+    }
+  }, 80);
+}
+
+// ----- STEP 1: domains -----
+function renderDomains() {
+  const grid = document.getElementById('domainGrid');
+  grid.innerHTML = DOMAINS.map(d => `
+    <button class="chip" data-domain="${d.key}" onclick="selectDomain('${d.key}')">
+      <span class="chip-day">${d.day}</span>
+      ${d.name}
+    </button>
+  `).join('');
+}
+function selectDomain(key) {
+  selectedDomain = DOMAINS.find(d => d.key === key);
+  selectedTemplate = null;
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('selected', c.dataset.domain === key);
+  });
+  document.getElementById('step1').classList.add('complete');
+  renderTemplates();
+  document.getElementById('step2').classList.remove('hidden');
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('confirmArea').classList.add('hidden');
+  document.getElementById('step2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  focusHeading('#step2 h2');
+}
+
+// ----- STEP 2: templates -----
+function renderTemplates() {
+  const list = document.getElementById('templateList');
+  const items = selectedDomain.templates.map(t => `
+    <div class="template" data-tnum="${t.num}" role="button" tabindex="0" onclick="selectTemplate(${t.num})" onkeydown="kb(event,()=>selectTemplate(${t.num}))">
+      <div class="t-num">Experiment ${String(t.num).padStart(2, '0')} · ${esc(selectedDomain.name)}</div>
+      <div class="t-title">${esc(t.title)}</div>
+      <div class="t-desc">${esc(t.what.slice(0, 180))}${t.what.length > 180 ? '…' : ''}</div>
+    </div>
+  `).join('');
+  const scratch = `
+    <div class="template scratch" data-tnum="scratch" role="button" tabindex="0" onclick="selectTemplate('scratch')" onkeydown="kb(event,()=>selectTemplate('scratch'))">
+      <div class="t-num">Or — write from scratch</div>
+      <div class="t-title">Write my own experiment</div>
+      <div class="t-desc">If none of the starters fit your week, design one yourself. The form on the next step gives you the scaffold.</div>
+    </div>
+  `;
+  list.innerHTML = items + scratch;
+}
+function selectTemplate(numOrScratch) {
+  if (numOrScratch === 'scratch') {
+    selectedTemplate = 'scratch';
+  } else {
+    selectedTemplate = selectedDomain.templates.find(t => t.num === numOrScratch);
+  }
+  document.querySelectorAll('.template').forEach(t => {
+    const v = t.dataset.tnum;
+    t.classList.toggle('selected', v === String(numOrScratch));
+  });
+  document.getElementById('step2').classList.add('complete');
+  prefillStep3();
+  document.getElementById('step3').classList.remove('hidden');
+  document.getElementById('confirmArea').classList.add('hidden');
+  document.getElementById('step3').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  focusHeading('#step3 h2');
+}
+
+// ----- STEP 3: prefill + save -----
+function prefillStep3() {
+  const fWhat = document.getElementById('f-what');
+  const fWhen = document.getElementById('f-when');
+  const fNotice = document.getElementById('f-notice');
+  const fCapture = document.getElementById('f-capture');
+  const fWitness = document.getElementById('f-witness');
+
+  if (selectedTemplate && selectedTemplate !== 'scratch') {
+    fWhat.value = selectedTemplate.what;
+    fWhen.value = selectedTemplate.whenSug;
+    fNotice.value = selectedTemplate.noticeSug;
+  } else {
+    fWhat.value = '';
+    fWhen.value = '';
+    fNotice.value = '';
+  }
+  if (!fCapture.value) fCapture.value = '';
+  if (!fWitness.value) fWitness.value = '';
+}
+
+function saveExperiment() {
+  const what = document.getElementById('f-what').value.trim();
+  const when = document.getElementById('f-when').value.trim();
+  const notice = document.getElementById('f-notice').value.trim();
+  const capture = document.getElementById('f-capture').value.trim();
+  const witness = document.getElementById('f-witness').value.trim();
+
+  if (!what || !when || !notice) {
+    alert('What / by when / what I will notice are all required. If any is missing, it is not yet an experiment — it is a wish.');
+    return;
+  }
+
+  const exp = {
+    id: uid(),
+    created: new Date().toISOString(),
+    domain: selectedDomain.key,
+    domainName: selectedDomain.name,
+    templateNum: (selectedTemplate && selectedTemplate !== 'scratch') ? selectedTemplate.num : null,
+    templateTitle: (selectedTemplate && selectedTemplate !== 'scratch') ? selectedTemplate.title : 'Own design',
+    what, when, notice, capture, witness,
+    status: 'PENDING',
+    outcome: ''
+  };
+
+  const list = loadExperiments();
+  list.unshift(exp);
+  saveAll(list);
+
+  document.getElementById('step3').classList.add('complete');
+  renderConfirm(exp);
+  document.getElementById('confirmArea').classList.remove('hidden');
+  document.getElementById('confirmCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  renderSaved();
+  focusHeading('#confirmCard h3');
+}
+
+function renderConfirm(exp) {
+  const body = document.getElementById('confirmCardBody');
+  body.innerHTML = `
+    <div class="card-meta">
+      ${esc(new Date(exp.created).toLocaleString())} · Domain: ${esc(exp.domainName)} · Status: PENDING
+      ${exp.templateNum ? ` · Template #${exp.templateNum}` : ' · own design'}
+    </div>
+    <h3>Experiment — <em>${esc(exp.templateTitle)}</em></h3>
+    <div class="row"><div class="row-label">What</div><div class="row-val">${esc(exp.what)}</div></div>
+    <div class="row"><div class="row-label">By when</div><div class="row-val">${esc(exp.when)}</div></div>
+    <div class="row"><div class="row-label">What I'll notice</div><div class="row-val">${esc(exp.notice)}</div></div>
+    ${exp.capture ? `<div class="row"><div class="row-label">Capture</div><div class="row-val">${esc(exp.capture)}</div></div>` : ''}
+    ${exp.witness ? `<div class="row"><div class="row-label">Witness</div><div class="row-val">${esc(exp.witness)}</div></div>` : ''}
+  `;
+}
+
+// ----- reset wizard -----
+function resetWizard() {
+  selectedDomain = null;
+  selectedTemplate = null;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('step1').classList.remove('complete');
+  document.getElementById('step2').classList.remove('complete');
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step3').classList.remove('complete');
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('confirmArea').classList.add('hidden');
+  ['f-what','f-when','f-notice','f-capture','f-witness'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('step1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ----- saved list -----
+function loadExperiments() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch (e) { return []; }
+}
+function saveAll(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+function updateExp(id, patch) {
+  const list = loadExperiments();
+  const idx = list.findIndex(e => e.id === id);
+  if (idx === -1) return;
+  list[idx] = { ...list[idx], ...patch };
+  saveAll(list);
+  renderSaved();
+}
+function deleteExp(id) {
+  if (!confirm('Delete this experiment? This cannot be undone.')) return;
+  const list = loadExperiments().filter(e => e.id !== id);
+  saveAll(list);
+  renderSaved();
+}
+function setStatus(id, status) {
+  const patch = { status };
+  updateExp(id, patch);
+}
+function saveOutcome(id) {
+  const el = document.getElementById('outcome-' + id);
+  const val = el.value.trim();
+  updateExp(id, { outcome: val });
+}
+
+function renderSaved() {
+  const list = loadExperiments();
+  const container = document.getElementById('savedList');
+  if (!list.length) {
+    container.innerHTML = `<div class="empty">No experiments yet. Design one above — the first rep is the hardest.</div>`;
+    return;
+  }
+  container.innerHTML = list.map(e => `
+    <div class="exp-item" data-status="${e.status}" data-id="${e.id}">
+      <div class="exp-head">
+        <div class="left">
+          <span class="domain-tag">${esc(e.domainName)}</span>
+          ${esc(new Date(e.created).toLocaleString())}
+          ${e.templateNum ? ` · #${e.templateNum}` : ' · own design'}
+        </div>
+        <div class="status-row">
+          ${['PENDING','RUNNING','COMPLETED','ABANDONED'].map(s => `
+            <button class="status-btn ${e.status === s ? 'active' : ''}" data-status-val="${s}"
+              onclick="setStatus('${e.id}', '${s}')">${s}</button>
+          `).join('')}
+        </div>
+      </div>
+      <div class="exp-row"><div class="label">Title</div><div class="val">${esc(e.templateTitle)}</div></div>
+      <div class="exp-row"><div class="label">What</div><div class="val">${esc(e.what)}</div></div>
+      <div class="exp-row"><div class="label">By when</div><div class="val">${esc(e.when)}</div></div>
+      <div class="exp-row"><div class="label">Will notice</div><div class="val">${esc(e.notice)}</div></div>
+      ${e.capture ? `<div class="exp-row"><div class="label">Capture</div><div class="val muted">${esc(e.capture)}</div></div>` : ''}
+      ${e.witness ? `<div class="exp-row"><div class="label">Witness</div><div class="val muted">${esc(e.witness)}</div></div>` : ''}
+
+      ${(e.status === 'COMPLETED' || e.status === 'ABANDONED' || e.outcome) ? `
+        <div class="outcome-block">
+          <div class="label">What I actually noticed ${e.status === 'ABANDONED' ? '· (ABANDONED is data — what made it too big?)' : ''}</div>
+          ${e.outcome ? `<div class="saved-text">${esc(e.outcome)}</div>` : ''}
+          <textarea id="outcome-${e.id}" placeholder="${e.status === 'ABANDONED' ? 'What got in the way? Box defense? Wrong time? Too big a leap? Design a smaller next experiment.' : 'What happened in your body. What the other person did. What the Beep was. What the next Shift is.'}">${esc(e.outcome || '')}</textarea>
+          <div class="outcome-actions">
+            <button class="btn tiny primary" onclick="saveOutcome('${e.id}')">Save notice</button>
+          </div>
+        </div>
+      ` : ''}
+
+      <div class="exp-foot">
+        <div style="font-family:var(--mono); font-size:10px; letter-spacing:0.18em; color:var(--ink-mute);">
+          Status: ${e.status}
+        </div>
+        <button class="delete-btn" onclick="deleteExp('${e.id}')">delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function scrollToSaved() {
+  document.getElementById('savedArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ----- init -----
+window.addEventListener('DOMContentLoaded', () => {
+  renderDomains();
+  renderSaved();
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

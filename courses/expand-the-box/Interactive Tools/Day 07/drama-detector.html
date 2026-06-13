@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drama Position Detector · ETB Day 7</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* position-specific accents */
+  --persecutor: #962a13;
+  --victim: #4a6b7c;
+  --rescuer: #7d6c50;
+  --responsible: #1d4d3a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+}
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+.hero { margin: 56px 0 40px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 720px;
+  font-style: italic;
+}
+
+/* stepper rail */
+.stepper {
+  display: flex;
+  gap: 0;
+  margin: 8px 0 40px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 18px 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.stepper .crumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 22px;
+  white-space: nowrap;
+}
+.stepper .crumb + .crumb { padding-left: 22px; border-left: 1px dashed var(--rule); }
+.stepper .crumb .n {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-mute);
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--ivory);
+}
+.stepper .crumb.active { color: var(--vermillion); font-weight: 600; }
+.stepper .crumb.active .n { background: var(--vermillion); color: var(--ivory); border-color: var(--vermillion); }
+.stepper .crumb.done .n { background: var(--mustard); color: var(--ink); border-color: var(--mustard); }
+.stepper .crumb.done { color: var(--ink-soft); }
+
+/* step panel */
+.step {
+  display: none;
+  margin-bottom: 32px;
+  animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.step.show { display: block; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+@keyframes triangle-glow {
+  0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+  50% { filter: drop-shadow(0 0 12px rgba(196, 59, 28, 0.35)); }
+}
+
+.step-block {
+  padding: 36px 40px;
+  background: var(--ivory-shade);
+  border-left: 4px solid var(--vermillion);
+  position: relative;
+}
+.step-block .prompt {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.step-block h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  color: var(--ink);
+}
+.step-block h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.step-block .instruction {
+  font-family: var(--body);
+  font-size: 17px;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+  line-height: 1.5;
+  max-width: 760px;
+}
+.step-block .pm-voice {
+  margin: 20px 0 8px;
+  padding: 14px 20px;
+  background: var(--ivory);
+  border-left: 3px solid var(--mustard);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.step-block .pm-voice::before {
+  content: 'PM ·';
+  display: inline-block;
+  margin-right: 8px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--vermillion);
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+textarea.main-input, textarea.sub-input {
+  width: 100%;
+  padding: 20px 24px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 21px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.4;
+  display: block;
+}
+textarea.main-input:focus, textarea.sub-input:focus {
+  outline: none;
+  border-color: var(--ink);
+  background: white;
+}
+.field-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 22px 0 10px;
+  font-weight: 500;
+}
+.field-label.first { margin-top: 0; }
+.sub-input {
+  font-size: 18px;
+  min-height: 70px;
+}
+
+/* triangle visualization */
+.triangle-wrap {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 48px;
+  margin-top: 28px;
+  align-items: center;
+}
+@media (max-width: 980px) { .triangle-wrap { grid-template-columns: 1fr; gap: 24px; } }
+
+.triangle-svg-container {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 0.92;
+}
+.triangle-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.triangle-svg .edge {
+  fill: none;
+  stroke: var(--ink-mute);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 4 6;
+  opacity: 0.6;
+}
+.triangle-svg .arrow-path {
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.triangle-svg .arrow-head {
+  fill: var(--rule);
+}
+.triangle-svg .center-dot {
+  fill: var(--rule);
+  opacity: 0.6;
+}
+.triangle-svg .center-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  fill: var(--ink-mute);
+}
+
+.corner-node {
+  position: absolute;
+  width: 168px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.corner-node:hover { transform: translate(-50%, -50%) scale(1.04); }
+.corner-node .badge {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  background: var(--ivory);
+  border: 1.5px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s;
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 400;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  color: var(--ink);
+  font-style: italic;
+}
+.corner-node[data-pos="persecutor"] .badge:hover { background: var(--persecutor); color: var(--ivory); border-color: var(--persecutor); }
+.corner-node[data-pos="victim"] .badge:hover { background: var(--victim); color: var(--ivory); border-color: var(--victim); }
+.corner-node[data-pos="rescuer"] .badge:hover { background: var(--rescuer); color: var(--ivory); border-color: var(--rescuer); }
+
+.corner-node.selected .badge {
+  animation: pulse 1.8s ease-in-out infinite;
+  box-shadow: 0 0 0 6px rgba(196, 59, 28, 0.12);
+}
+.corner-node[data-pos="persecutor"].selected .badge { background: var(--persecutor); color: var(--ivory); border-color: var(--persecutor); }
+.corner-node[data-pos="victim"].selected .badge { background: var(--victim); color: var(--ivory); border-color: var(--victim); }
+.corner-node[data-pos="rescuer"].selected .badge { background: var(--rescuer); color: var(--ivory); border-color: var(--rescuer); }
+.corner-node.secondary .badge {
+  border-width: 2px;
+  border-style: dashed;
+}
+.corner-node[data-pos="persecutor"].secondary .badge { background: rgba(150, 42, 19, 0.18); border-color: var(--persecutor); color: var(--persecutor); }
+.corner-node[data-pos="victim"].secondary .badge { background: rgba(74, 107, 124, 0.18); border-color: var(--victim); color: var(--victim); }
+.corner-node[data-pos="rescuer"].secondary .badge { background: rgba(125, 108, 80, 0.18); border-color: var(--rescuer); color: var(--rescuer); }
+
+.corner-node .pos-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* position info panel */
+.position-info {
+  padding: 32px 36px;
+  background: var(--ivory);
+  border: 1.5px solid var(--rule);
+  position: relative;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+.position-info .placeholder {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-mute);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  margin: auto 0;
+  line-height: 1.5;
+}
+.position-info.has-content .placeholder { display: none; }
+.position-info .pos-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  display: inline-block;
+  align-self: flex-start;
+  margin-bottom: 14px;
+  font-weight: 600;
+  color: var(--ivory);
+}
+.position-info h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 42px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+.position-info h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+.position-info .signature {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 19px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed var(--rule);
+}
+.position-info .markers-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.position-info .markers li {
+  list-style: none;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.4;
+  padding: 4px 0 4px 16px;
+  position: relative;
+}
+.position-info .markers li::before {
+  content: '“';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  font-size: 22px;
+  color: var(--rule);
+  font-style: normal;
+}
+.position-info .body-cue {
+  margin-top: 18px;
+  padding: 12px 16px;
+  background: var(--ivory-shade);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.position-info .body-cue strong {
+  font-weight: 600;
+  color: var(--vermillion);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 10px;
+  display: block;
+  margin-bottom: 4px;
+}
+.position-info[data-pos="persecutor"] .pos-tag { background: var(--persecutor); }
+.position-info[data-pos="persecutor"] h3 em { color: var(--persecutor); }
+.position-info[data-pos="victim"] .pos-tag { background: var(--victim); }
+.position-info[data-pos="victim"] h3 em { color: var(--victim); }
+.position-info[data-pos="rescuer"] .pos-tag { background: var(--rescuer); }
+.position-info[data-pos="rescuer"] h3 em { color: var(--rescuer); }
+
+.secondary-prompt {
+  display: none;
+  margin-top: 24px;
+  padding: 20px 26px;
+  background: var(--ivory);
+  border: 1.5px dashed var(--mustard);
+  font-family: var(--body);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.secondary-prompt.show { display: block; }
+.secondary-prompt .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-style: normal;
+  display: block;
+}
+.secondary-prompt em {
+  color: var(--vermillion);
+  font-weight: 500;
+}
+
+/* gremlin food chips */
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 22px;
+  margin-bottom: 22px;
+}
+@media (max-width: 900px) { .food-grid { grid-template-columns: repeat(2, 1fr); } }
+.food-chip {
+  background: var(--ivory);
+  border: 1.5px solid var(--rule);
+  padding: 14px 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-soft);
+  line-height: 1.25;
+  position: relative;
+  user-select: none;
+}
+.food-chip:hover {
+  border-color: var(--ink);
+  background: white;
+}
+.food-chip.selected {
+  background: var(--ink);
+  color: var(--ivory);
+  border-color: var(--ink);
+}
+.food-chip.selected::after {
+  content: '·';
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-family: var(--mono);
+  color: var(--mustard);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.gremlin-aside {
+  margin-top: 18px;
+  padding: 18px 22px;
+  background: var(--ink);
+  color: var(--ivory-shade);
+  border-left: 4px solid var(--mustard);
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.gremlin-aside .who {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* responsible game block */
+.responsible-block {
+  border-left-color: var(--responsible);
+}
+.responsible-block .prompt { color: var(--responsible); }
+.responsible-block h2 em { color: var(--responsible); }
+.responsible-block textarea.sub-input:focus { border-color: var(--responsible); }
+
+/* summary card */
+.summary-card {
+  margin-top: 28px;
+  padding: 40px 44px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-left: 4px solid var(--mustard);
+}
+.summary-card .card-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+.summary-card h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.summary-card h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--mustard);
+}
+.summary-card .row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 24px;
+  padding: 14px 0;
+  border-top: 1px dashed rgba(216, 176, 74, 0.3);
+  align-items: baseline;
+}
+.summary-card .row:first-of-type { border-top: none; padding-top: 0; }
+.summary-card .row .lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  font-weight: 500;
+}
+.summary-card .row .val {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ivory);
+  line-height: 1.45;
+}
+.summary-card .closing {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(216, 176, 74, 0.3);
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ivory-shade);
+  line-height: 1.55;
+}
+
+/* buttons */
+.btn-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.responsible { background: var(--responsible); border-color: var(--responsible); color: var(--ivory); }
+.btn.responsible:hover { background: #143628; border-color: #143628; }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn.inverted { background: transparent; color: var(--ivory); border-color: var(--ivory); }
+.btn.inverted:hover { background: var(--ivory); color: var(--ink); }
+.btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.btn[disabled]:hover { background: transparent; color: inherit; }
+
+/* drama log */
+.log-section {
+  margin-top: 64px;
+  padding-top: 36px;
+  border-top: 1px solid var(--rule);
+}
+.log-section h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.log-section h3 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.log-section .sub {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-mute);
+  margin-bottom: 28px;
+  max-width: 640px;
+}
+
+.log-empty {
+  padding: 28px 32px;
+  background: var(--ivory-shade);
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-mute);
+  border-left: 3px solid var(--rule);
+}
+
+.log-entries { display: flex; flex-direction: column; gap: 14px; }
+.log-entry {
+  background: var(--ivory-shade);
+  border-left: 3px solid var(--vermillion);
+  padding: 22px 26px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  gap: 24px;
+  align-items: start;
+}
+.log-entry[data-pos="victim"] { border-left-color: var(--victim); }
+.log-entry[data-pos="rescuer"] { border-left-color: var(--rescuer); }
+.log-entry[data-pos="persecutor"] { border-left-color: var(--persecutor); }
+@media (max-width: 800px) {
+  .log-entry { grid-template-columns: 1fr; gap: 12px; }
+}
+.log-entry .when {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.log-entry .when .pos {
+  display: block;
+  margin-top: 8px;
+  color: var(--vermillion);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+}
+.log-entry[data-pos="victim"] .when .pos { color: var(--victim); }
+.log-entry[data-pos="rescuer"] .when .pos { color: var(--rescuer); }
+.log-entry[data-pos="persecutor"] .when .pos { color: var(--persecutor); }
+.log-entry .body p {
+  margin: 0 0 8px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.log-entry .body p:last-child { margin-bottom: 0; }
+.log-entry .body p .key {
+  display: block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 3px;
+  font-weight: 500;
+}
+.log-entry .delete-btn {
+  background: transparent;
+  border: 1px solid var(--ink-mute);
+  color: var(--ink-mute);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: start;
+}
+.log-entry .delete-btn:hover {
+  border-color: var(--vermillion);
+  color: var(--vermillion);
+}
+
+/* pattern hint */
+.pattern-hint {
+  margin-top: 24px;
+  padding: 20px 26px;
+  background: var(--ivory);
+  border: 1.5px dashed var(--mustard);
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  display: none;
+}
+.pattern-hint.show { display: block; }
+.pattern-hint .label {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+.pattern-hint strong {
+  color: var(--ink);
+  font-weight: 600;
+  font-style: normal;
+}
+
+footer.bottom {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .wrap { padding: 24px 20px 60px; }
+  .step-block { padding: 24px 22px; }
+  .summary-card { padding: 28px 24px; }
+  .summary-card .row { grid-template-columns: 1fr; gap: 4px; }
+  h1.display { font-size: clamp(36px, 8vw, 64px); }
+  .stepper { font-size: 9px; letter-spacing: 0.14em; gap: 0; overflow-x: auto; }
+  .stepper .crumb { padding-right: 14px; }
+  .stepper .crumb + .crumb { padding-left: 14px; }
+}
+
+/* ============================================================
+   SAFETY ADDITIONS — consent gate + grounding affordance
+   (consent block adapted from Day 9; grounding from Day 6)
+   ============================================================ */
+
+/* consent block, HIGH intensity */
+.consent {
+  margin: 36px 0 32px;
+  border: 1.5px solid var(--ink);
+  background: var(--ivory-deep);
+  padding: 28px 32px 26px;
+  position: relative;
+}
+.consent::before {
+  content: 'HIGH INTENSITY · CONSENT REQUIRED';
+  position: absolute;
+  top: -11px;
+  left: 24px;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  padding: 4px 12px;
+  font-weight: 600;
+}
+.consent h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 24px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  margin-bottom: 14px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.consent h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.consent p {
+  font-family: var(--body);
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+.consent p strong { color: var(--ink); font-weight: 600; }
+.consent ul {
+  margin: 12px 0 18px 4px;
+  padding-left: 0;
+}
+.consent ul li {
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  padding: 4px 0 4px 22px;
+  position: relative;
+  list-style: none;
+}
+.consent ul li::before {
+  content: '·';
+  position: absolute;
+  left: 8px;
+  color: var(--vermillion);
+  font-weight: 700;
+}
+.consent .warn-callout {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: var(--vermillion-soft);
+  border-left: 3px solid var(--vermillion);
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.consent .warn-callout strong {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.consent .consent-action {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.consent .consent-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  user-select: none;
+}
+.consent .consent-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--vermillion);
+  cursor: pointer;
+}
+
+.gated {
+  opacity: 0.35;
+  pointer-events: none;
+  filter: grayscale(0.4);
+  transition: opacity 0.35s, filter 0.35s;
+}
+.gated.open {
+  opacity: 1;
+  pointer-events: auto;
+  filter: none;
+}
+
+/* GROUND NOW — floating safety button (visible from the gate screen, the whole visit) */
+.ground-now {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  background: var(--vermillion);
+  color: var(--ivory);
+  border: 2px solid var(--vermillion-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 22px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(196, 59, 28, 0.28);
+  transition: all 0.25s ease;
+  line-height: 1.1;
+  display: none;
+}
+.ground-now.show { display: block; }
+.ground-now:hover {
+  background: var(--vermillion-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(196, 59, 28, 0.36);
+}
+.ground-now .small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* modal — grounding overlay */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(14, 10, 5, 0.86);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.modal.show { display: flex; }
+.modal-inner {
+  max-width: 620px;
+  width: 100%;
+  background: var(--ivory);
+  border: 2px solid var(--vermillion);
+  padding: 44px 40px 36px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-inner::before {
+  content: 'GROUNDING · 60 SECONDS';
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.modal-inner h2 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.modal-inner ol {
+  margin: 0 0 22px 22px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.modal-inner ol li { margin-bottom: 12px; }
+.modal-inner ol li strong { color: var(--ink); }
+.modal-inner .session-paused {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+.modal-inner .modal-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+@media (max-width: 900px) {
+  .ground-now { top: 16px; right: 16px; padding: 12px 16px; font-size: 11px; }
+  .modal-inner { padding: 36px 24px 28px; }
+}
+
+/* keyboard focus visibility for custom controls */
+.corner-node:focus-visible .badge,
+.food-chip:focus-visible {
+  outline: 2px solid var(--vermillion);
+  outline-offset: 3px;
+}
+
+/* save-time privacy note (matches Day 6 hint style) */
+.save-privacy-note {
+  margin-top: 22px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<!-- floating safety button — revealed once the tool body is open -->
+<button class="ground-now show" id="groundNowBtn" onclick="openGround()">
+  GROUND NOW
+  <span class="small">60-second pause</span>
+</button>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="num">DAY 07</span> · EXPAND THE BOX · Drama Position Detector
+    </div>
+    <a href="index.html">← All Day 7 tools</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Day 7 · Interactive Practice · low drama detector</div>
+    <h1 class="display">A drama from your week. <em>Find where you were in it.</em></h1>
+    <p class="lede">
+      The Low Drama Triangle has three positions. A person rotates through all three.
+      Pick one specific drama from the last seven days, name the position you were in,
+      name what your gremlin was eating, and construct the move out.
+    </p>
+  </section>
+
+  <!-- HIGH consent prompt — re-armed every visit, never persisted -->
+  <section class="consent" id="consentBlock">
+    <h2>Before you <em>begin.</em></h2>
+    <p>
+      This module engages your <strong>daily-life drama patterns</strong> and the <strong>gremlin</strong> directly.
+      You pick a real conflict from your week and look at the position you took inside it. Material you have
+      not looked at — old scorekeeping, a habitual corner of the triangle — may surface.
+    </p>
+    <div class="warn-callout">
+      <strong>Day 7 is High intensity · partner required</strong>
+      Per the course Safety Framework, this is not a solo-only exercise. Confirm your pairing partner is reachable
+      <em>today and tomorrow</em> before you start, so there is someone to debrief with if the drama opens further than expected.
+    </div>
+    <p>Before continuing, confirm to yourself:</p>
+    <ul>
+      <li>My pairing partner is reachable today and tomorrow.</li>
+      <li>I have roughly 90 uninterrupted minutes ahead of me.</li>
+      <li>I am not in acute crisis or under the influence right now.</li>
+      <li>I know how to ground — and the GROUND NOW button (top right) is there the whole time.</li>
+      <li>I know how to reach the Course Manager if I need to.</li>
+    </ul>
+    <div class="consent-action">
+      <label class="consent-check">
+        <input type="checkbox" id="consentBox" onchange="onConsent()">
+        I have read this and I choose to continue.
+      </label>
+      <button class="btn ghost" onclick="window.location.href='index.html'">Step back</button>
+    </div>
+  </section>
+
+  <div id="toolBody" class="gated" inert>
+
+  <nav class="stepper" id="stepper">
+    <div class="crumb" data-step="1"><span class="n">1</span> The drama</div>
+    <div class="crumb" data-step="2"><span class="n">2</span> The position</div>
+    <div class="crumb" data-step="3"><span class="n">3</span> The food</div>
+    <div class="crumb" data-step="4"><span class="n">4</span> Responsible Game</div>
+    <div class="crumb" data-step="5"><span class="n">5</span> Save & reflect</div>
+  </nav>
+
+  <!-- STEP 1 -->
+  <section class="step" data-step="1" id="step1">
+    <div class="step-block">
+      <div class="prompt">Step 1 · Name the conflict</div>
+      <h2 tabindex="-1">A drama from the <em>last seven days.</em></h2>
+      <p class="instruction">Not the biggest drama of your life. A small one. The kind you would not normally have noticed.</p>
+
+      <label class="field-label first" for="dramaText">Describe it — short, just the structure. Not the story to make yourself look good.</label>
+      <textarea class="main-input" id="dramaText" aria-label="Describe the drama — short, just the structure" placeholder="e.g. The argument with my partner about who was supposed to call the plumber." rows="3"></textarea>
+
+      <label class="field-label" for="dramaContext">When, where, with whom? (structure, not narrative)</label>
+      <textarea class="sub-input" id="dramaContext" aria-label="When, where, with whom" placeholder="e.g. Sunday morning, kitchen, my partner." rows="2"></textarea>
+
+      <div class="pm-voice">You can't decline drama from within drama. Step out first. Then choose.</div>
+
+      <div class="btn-row">
+        <button class="btn primary" onclick="next(1)">To the triangle →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step" data-step="2" id="step2">
+    <div class="step-block">
+      <div class="prompt">Step 2 · The triangle</div>
+      <h2 tabindex="-1">Click the corner you were <em>primarily</em> in.</h2>
+      <p class="instruction">Try the first one that comes. The body usually knows before the intellect. Each corner is keyboard-focusable — Tab to it, press Enter or Space to select.</p>
+
+      <div class="triangle-wrap">
+        <div class="triangle-svg-container" id="triangleContainer">
+          <svg class="triangle-svg" id="triangleSvg" viewBox="0 0 520 480" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+            <!-- triangle edges (hand-drawn feel: slightly wavy) -->
+            <path class="edge" d="M 110 100 Q 270 88, 410 102" />
+            <path class="edge" d="M 410 102 Q 350 280, 260 410" />
+            <path class="edge" d="M 260 410 Q 170 290, 110 100" />
+
+            <!-- rotation arrows around the inside -->
+            <g opacity="0.55">
+              <!-- P → V (left-down) -->
+              <path class="arrow-path" d="M 180 180 Q 200 280, 230 360" />
+              <polygon class="arrow-head" points="226,356 234,360 230,368" transform="rotate(15 230 362)" />
+              <!-- V → R (up-right) -->
+              <path class="arrow-path" d="M 290 360 Q 320 280, 340 180" />
+              <polygon class="arrow-head" points="336,184 344,180 340,188" transform="rotate(-15 340 184)"/>
+              <!-- R → P (across-top) -->
+              <path class="arrow-path" d="M 320 130 Q 260 110, 200 130" />
+              <polygon class="arrow-head" points="196,128 204,128 200,136" transform="rotate(180 200 130)" />
+            </g>
+
+            <!-- center text -->
+            <circle class="center-dot" cx="260" cy="225" r="3" />
+            <text class="center-label" x="260" y="252" text-anchor="middle">gremlin · feeding</text>
+          </svg>
+
+          <!-- corner nodes positioned absolutely over SVG percentages -->
+          <div class="corner-node" data-pos="persecutor" style="left: 21%; top: 21%;" role="button" tabindex="0" aria-label="Persecutor — select this triangle position" onclick="selectPosition('persecutor')" onkeydown="cornerKey(event,'persecutor')">
+            <div class="badge">P</div>
+            <div class="pos-name">Persecutor</div>
+          </div>
+          <div class="corner-node" data-pos="rescuer" style="left: 79%; top: 21%;" role="button" tabindex="0" aria-label="Rescuer — select this triangle position" onclick="selectPosition('rescuer')" onkeydown="cornerKey(event,'rescuer')">
+            <div class="badge">R</div>
+            <div class="pos-name">Rescuer</div>
+          </div>
+          <div class="corner-node" data-pos="victim" style="left: 50%; top: 85%;" role="button" tabindex="0" aria-label="Victim — select this triangle position" onclick="selectPosition('victim')" onkeydown="cornerKey(event,'victim')">
+            <div class="badge">V</div>
+            <div class="pos-name">Victim</div>
+          </div>
+        </div>
+
+        <div class="position-info" id="positionInfo">
+          <div class="placeholder">Click a corner. The position will unfold here, with the linguistic markers and the body cue.</div>
+        </div>
+      </div>
+
+      <div class="secondary-prompt" id="secondaryPrompt">
+        <span class="label">Often we rotate</span>
+        Was there a <em>second</em> position you also visited during this drama, even briefly? (optional)
+        Click another corner to mark it as secondary, or continue.
+      </div>
+
+      <div class="pm-voice">If you can't see your position, you're probably in Rescuer mode — it's the most invisible to itself.</div>
+
+      <div class="btn-row">
+        <button class="btn ghost" onclick="back(2)">← Back</button>
+        <button class="btn primary" id="step2Next" onclick="next(2)" disabled>Continue →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step" data-step="3" id="step3">
+    <div class="step-block">
+      <div class="prompt">Step 3 · Name the gremlin food</div>
+      <h2 tabindex="-1">What was your gremlin <em>eating</em> in this drama?</h2>
+      <p class="instruction">Notice which naming makes your body do something — a flinch, a flush, a quiet <em>oh</em>. That somatic response is the gremlin being spotted. Multi-select OK.</p>
+
+      <div class="food-grid" id="foodGrid" role="group" aria-label="Gremlin food options — multi-select">
+        <!-- chips injected by JS -->
+      </div>
+
+      <label class="field-label" for="foodOwn">Your own gremlin food — name it more precisely if the chips don't fit.</label>
+      <textarea class="sub-input" id="foodOwn" aria-label="Your own gremlin food, in your words" placeholder="e.g. I wanted to prove I have been carrying this relationship and she does not appreciate it." rows="2"></textarea>
+
+      <div class="gremlin-aside">
+        <span class="who">The gremlin</span>
+        I don't die when you starve me. I look for new food. Naming the food is half the work. The uncomfortable one is usually the most operational — it is the one I have been eating in secret.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn ghost" onclick="back(3)">← Back</button>
+        <button class="btn primary" onclick="next(3)">To the Responsible Game →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step" data-step="4" id="step4">
+    <div class="step-block responsible-block">
+      <div class="prompt">Step 4 · The Responsible Game move</div>
+      <h2 tabindex="-1">What's left when you <em>decline</em> the drama.</h2>
+      <p class="instruction">
+        The Responsible Game feels less alive at first because the gremlin is starving. That's not a sign of failure — it's the work.
+        Walk through the three questions. Don't write the story. Write the facts.
+      </p>
+
+      <label class="field-label first" for="rg1">What is actually happening? <span style="opacity:0.6">(strip the story — describe it as a camera would)</span></label>
+      <textarea class="sub-input" id="rg1" aria-label="What is actually happening — strip the story" placeholder="e.g. The plumber wasn't called. Neither of us called. The kitchen sink is still leaking." rows="3"></textarea>
+
+      <label class="field-label" for="rg2">What do you actually want? <span style="opacity:0.6">(the underlying want — not the gremlin's want)</span></label>
+      <textarea class="sub-input" id="rg2" aria-label="What do you actually want — the underlying want" placeholder="e.g. I want us to share household logistics without one of us silently keeping score." rows="3"></textarea>
+
+      <label class="field-label" for="rg3">What can you actually choose? <span style="opacity:0.6">(one concrete move you could make from here)</span></label>
+      <textarea class="sub-input" id="rg3" aria-label="What can you actually choose — one concrete move" placeholder="e.g. I will call the plumber today. Tomorrow I will ask her to sit for 15 minutes and split the next month's logistics list." rows="3"></textarea>
+
+      <div class="pm-voice">The Responsible Game is not heroic. It is not virtuous. It is what becomes available when you stop producing food.</div>
+
+      <div class="btn-row">
+        <button class="btn ghost" onclick="back(4)">← Back</button>
+        <button class="btn responsible" onclick="next(4)">See the summary →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step" data-step="5" id="step5">
+    <div class="summary-card" id="summaryCard">
+      <div class="card-label">What you saw — this device only</div>
+      <h2>One drama. One position. One <em>move out.</em></h2>
+
+      <div class="row">
+        <div class="lbl">The drama</div>
+        <div class="val" id="sumDrama">—</div>
+      </div>
+      <div class="row">
+        <div class="lbl">Position(s)</div>
+        <div class="val" id="sumPosition">—</div>
+      </div>
+      <div class="row">
+        <div class="lbl">Gremlin food</div>
+        <div class="val" id="sumFood">—</div>
+      </div>
+      <div class="row">
+        <div class="lbl">What's actually happening</div>
+        <div class="val" id="sumRg1">—</div>
+      </div>
+      <div class="row">
+        <div class="lbl">What you actually want</div>
+        <div class="val" id="sumRg2">—</div>
+      </div>
+      <div class="row">
+        <div class="lbl">What you can choose</div>
+        <div class="val" id="sumRg3">—</div>
+      </div>
+
+      <div class="closing">
+        Run this once a day for a week. The position becomes easier to catch in real-time. By Day 7-of-doing-Day-7,
+        you can usually spot the rotation while it is happening — not just afterward.
+      </div>
+    </div>
+
+    <p class="save-privacy-note">Saved on this device only, in your browser — not encrypted, never sent anywhere. Clear your browser data to remove it.</p>
+
+    <div class="btn-row">
+      <button class="btn ghost" onclick="back(5)">← Edit responsible game</button>
+      <button class="btn primary" onclick="saveDetection()">Save to drama log</button>
+      <button class="btn" onclick="resetAll()">Start a new drama</button>
+    </div>
+  </section>
+
+  <!-- DRAMA LOG -->
+  <section class="log-section">
+    <h3>My <em>drama log</em></h3>
+    <p class="sub">The pattern becomes visible across time. Two or three detections is interesting. A week of them tells you which corner you live in.</p>
+    <div class="pattern-hint" id="patternHint"></div>
+    <div id="logList"></div>
+  </section>
+
+  </div><!-- /toolBody -->
+
+  <footer class="bottom">
+    <div>Drama Position Detector · ETB Day 7 · Map M13</div>
+    <div>Source: 09 - LowDrama_EN.mp4 + M13 - Low Drama Triangle</div>
+  </footer>
+</div>
+
+<!-- modal: grounding (60-second sequence) -->
+<div class="modal" id="groundModal">
+  <div class="modal-inner">
+    <h2>Ground. <em>Now.</em></h2>
+    <ol>
+      <li><strong>Stop.</strong> Let go of the drama for a moment — it will keep.</li>
+      <li><strong>Stand up.</strong> Both feet flat on the floor. Feel the contact.</li>
+      <li><strong>Breathe out, long</strong> — three slow exhales, each longer than the in-breath.</li>
+      <li><strong>Name three things you can see</strong> in this room. Out loud is best.</li>
+      <li><strong>Name one thing you can hear.</strong> The fridge. Traffic. Your own breath.</li>
+      <li><strong>Hand on your chest.</strong> Feel it rise and fall. You are here, now.</li>
+      <li><strong>Decide:</strong> continue, pause, or stop. Any of the three is fine.</li>
+    </ol>
+    <p class="session-paused">The detector is paused. Take as long as you need.</p>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="closeGround()">I'm grounded — continue</button>
+      <button class="btn ghost" onclick="window.location.href='index.html'">Stop — return to Day 7 tools</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const POSITIONS = {
+  persecutor: {
+    name: 'Persecutor',
+    title: 'The',
+    italic: 'Persecutor',
+    signature: '"It\'s your fault. Let me show you why."',
+    markers: [
+      "It's always you.",
+      "I told you so.",
+      "Why can't you just…",
+      "If you had only listened…"
+    ],
+    body: "Tight jaw. Chest out. Voice over the top. Scans for what is not right and announces it. The most refined Persecutors do it quietly — the precisely-worded email, the calm comparison."
+  },
+  victim: {
+    name: 'Victim',
+    title: 'The',
+    italic: 'Victim',
+    signature: '"I have no choice. This is happening to me."',
+    markers: [
+      "I had no choice.",
+      "Why does this always happen to me?",
+      "I can't.",
+      "Nobody helps me."
+    ],
+    body: "Collapsed chest. Shoulders down. Weight back. The collapsed energy is itself a control: if you don't rescue me, you are cruel. The misery is part of the food."
+  },
+  rescuer: {
+    name: 'Rescuer',
+    title: 'The',
+    italic: 'Rescuer',
+    signature: '"Let me fix it for you. Don\'t worry."',
+    markers: [
+      "Let me handle it.",
+      "Don't worry, I'll take care of it.",
+      "You shouldn't have to deal with this.",
+      "I was just trying to help."
+    ],
+    body: "Pulled forward. Hands ready. Eyes locked on someone else's problem. The most morally camouflaged position — rescuing looks like kindness and is often praised. The damage is structural."
+  }
+};
+
+const FOODS = [
+  'Being right',
+  'Being wronged',
+  'Being special',
+  'Being misunderstood',
+  'Being a victim',
+  'Being a savior',
+  'Being above it all',
+  'Being beneath it all'
+];
+
+let state = {
+  step: 1,
+  drama: '',
+  context: '',
+  primary: null,
+  secondary: null,
+  foods: new Set(),
+  foodOwn: '',
+  rg1: '',
+  rg2: '',
+  rg3: ''
+};
+
+/* ---- navigation ---- */
+function showStep(n) {
+  state.step = n;
+  document.querySelectorAll('.step').forEach(el => {
+    el.classList.toggle('show', parseInt(el.dataset.step) === n);
+  });
+  document.querySelectorAll('#stepper .crumb').forEach(el => {
+    const s = parseInt(el.dataset.step);
+    el.classList.remove('active', 'done');
+    if (s === n) el.classList.add('active');
+    else if (s < n) el.classList.add('done');
+  });
+  // focus management — move focus to the new step's heading so screen-reader
+  // and keyboard users land in context. Step 2 (triangle) has no textarea, so
+  // heading focus is what makes the revealed step reachable.
+  setTimeout(() => {
+    const heading = document.querySelector('.step.show h2');
+    if (heading) heading.focus({ preventScroll: true });
+  }, 60);
+  // scroll into view
+  const target = document.getElementById('step' + n);
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function next(from) {
+  // capture state
+  if (from === 1) {
+    state.drama = document.getElementById('dramaText').value.trim();
+    state.context = document.getElementById('dramaContext').value.trim();
+    if (!state.drama) {
+      document.getElementById('dramaText').focus();
+      flash('Name the drama first — even one sentence.');
+      return;
+    }
+  } else if (from === 2) {
+    if (!state.primary) {
+      flash('Click a corner of the triangle first.');
+      return;
+    }
+  } else if (from === 3) {
+    state.foodOwn = document.getElementById('foodOwn').value.trim();
+    if (state.foods.size === 0 && !state.foodOwn) {
+      flash('Name at least one gremlin food.');
+      return;
+    }
+  } else if (from === 4) {
+    state.rg1 = document.getElementById('rg1').value.trim();
+    state.rg2 = document.getElementById('rg2').value.trim();
+    state.rg3 = document.getElementById('rg3').value.trim();
+    if (!state.rg1 && !state.rg2 && !state.rg3) {
+      flash('Fill at least one of the three Responsible Game questions.');
+      return;
+    }
+    renderSummary();
+  }
+  showStep(from + 1);
+}
+function back(from) {
+  showStep(from - 1);
+}
+
+function flash(msg) {
+  // simple non-blocking inline feedback
+  const existing = document.getElementById('flashMsg');
+  if (existing) existing.remove();
+  const f = document.createElement('div');
+  f.id = 'flashMsg';
+  f.textContent = msg;
+  f.style.cssText = 'position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--ink);color:var(--ivory);padding:14px 22px;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;z-index:1000;border-left:3px solid var(--vermillion);';
+  document.body.appendChild(f);
+  setTimeout(() => f.remove(), 2400);
+}
+
+/* keyboard activation for the triangle corner nodes (Enter / Space) */
+function cornerKey(e, pos) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    selectPosition(pos);
+  }
+}
+
+/* ---- step 2 — triangle selection ---- */
+function selectPosition(pos) {
+  if (!state.primary) {
+    state.primary = pos;
+    document.querySelector(`.corner-node[data-pos="${pos}"]`).classList.add('selected');
+    showPositionInfo(pos);
+    document.getElementById('secondaryPrompt').classList.add('show');
+    document.getElementById('step2Next').disabled = false;
+  } else if (pos === state.primary) {
+    // clicking the primary again clears it
+    state.primary = state.secondary;
+    state.secondary = null;
+    document.querySelectorAll('.corner-node').forEach(n => n.classList.remove('selected', 'secondary'));
+    if (state.primary) {
+      document.querySelector(`.corner-node[data-pos="${state.primary}"]`).classList.add('selected');
+      showPositionInfo(state.primary);
+    } else {
+      clearPositionInfo();
+      document.getElementById('secondaryPrompt').classList.remove('show');
+      document.getElementById('step2Next').disabled = true;
+    }
+  } else if (state.secondary === pos) {
+    // clicking the secondary again clears just it
+    state.secondary = null;
+    document.querySelector(`.corner-node[data-pos="${pos}"]`).classList.remove('secondary');
+  } else {
+    // set or replace secondary
+    if (state.secondary) {
+      document.querySelector(`.corner-node[data-pos="${state.secondary}"]`).classList.remove('secondary');
+    }
+    state.secondary = pos;
+    document.querySelector(`.corner-node[data-pos="${pos}"]`).classList.add('secondary');
+  }
+}
+
+function showPositionInfo(pos) {
+  const p = POSITIONS[pos];
+  const el = document.getElementById('positionInfo');
+  el.dataset.pos = pos;
+  el.classList.add('has-content');
+  el.innerHTML = `
+    <span class="pos-tag">${p.name}</span>
+    <h3>${p.title} <em>${p.italic}.</em></h3>
+    <div class="signature">${p.signature}</div>
+    <div class="markers-label">You'll often say —</div>
+    <ul class="markers">
+      ${p.markers.map(m => `<li>${m}</li>`).join('')}
+    </ul>
+    <div class="body-cue"><strong>Body cue</strong>${p.body}</div>
+  `;
+}
+function clearPositionInfo() {
+  const el = document.getElementById('positionInfo');
+  el.classList.remove('has-content');
+  el.removeAttribute('data-pos');
+  el.innerHTML = '<div class="placeholder">Click a corner. The position will unfold here, with the linguistic markers and the body cue.</div>';
+}
+
+/* ---- step 3 — food chips ---- */
+function buildFoodChips() {
+  const g = document.getElementById('foodGrid');
+  g.innerHTML = FOODS.map(f => `<div class="food-chip" data-food="${f}" role="button" tabindex="0" aria-pressed="false" aria-label="Gremlin food: ${f}" onclick="toggleFood('${f}')" onkeydown="foodKey(event,'${f}')">${f}</div>`).join('');
+}
+/* keyboard activation for food chips (Enter / Space) */
+function foodKey(e, f) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    toggleFood(f);
+  }
+}
+function toggleFood(f) {
+  const el = document.querySelector(`.food-chip[data-food="${f}"]`);
+  if (state.foods.has(f)) {
+    state.foods.delete(f);
+    el.classList.remove('selected');
+    el.setAttribute('aria-pressed', 'false');
+  } else {
+    state.foods.add(f);
+    el.classList.add('selected');
+    el.setAttribute('aria-pressed', 'true');
+  }
+}
+
+/* ---- step 5 — summary ---- */
+function renderSummary() {
+  document.getElementById('sumDrama').textContent =
+    state.drama + (state.context ? ' — ' + state.context : '');
+  let posText = POSITIONS[state.primary].name;
+  if (state.secondary) posText += ' → rotated into ' + POSITIONS[state.secondary].name;
+  document.getElementById('sumPosition').textContent = posText;
+
+  const foods = [...state.foods];
+  if (state.foodOwn) foods.push(state.foodOwn);
+  document.getElementById('sumFood').textContent = foods.length ? foods.join(' · ') : '—';
+
+  document.getElementById('sumRg1').textContent = state.rg1 || '—';
+  document.getElementById('sumRg2').textContent = state.rg2 || '—';
+  document.getElementById('sumRg3').textContent = state.rg3 || '—';
+}
+
+/* ---- save / log ---- */
+const STORE_KEY = 'etb_day07_detections';
+
+function saveDetection() {
+  const entry = {
+    date: new Date().toISOString(),
+    drama: state.drama,
+    context: state.context,
+    primary: state.primary,
+    secondary: state.secondary,
+    foods: [...state.foods],
+    foodOwn: state.foodOwn,
+    rg1: state.rg1,
+    rg2: state.rg2,
+    rg3: state.rg3
+  };
+  const all = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+  all.unshift(entry);
+  localStorage.setItem(STORE_KEY, JSON.stringify(all.slice(0, 60)));
+  renderLog();
+  flash('Saved to your drama log.');
+  setTimeout(() => {
+    document.querySelector('.log-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 400);
+}
+
+function renderLog() {
+  const all = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+  const list = document.getElementById('logList');
+  if (!all.length) {
+    list.innerHTML = '<div class="log-empty">No detections logged yet. Run the detector above with a recent specific drama. The pattern emerges across multiple entries.</div>';
+    document.getElementById('patternHint').classList.remove('show');
+    return;
+  }
+  list.innerHTML = '<div class="log-entries">' + all.map((e, idx) => {
+    const posLabel = POSITIONS[e.primary].name +
+      (e.secondary ? ' → ' + POSITIONS[e.secondary].name : '');
+    const foods = [...(e.foods || []), e.foodOwn].filter(Boolean).join(' · ');
+    return `
+      <div class="log-entry" data-pos="${e.primary}">
+        <div class="when">
+          ${new Date(e.date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+          <span class="pos">${posLabel}</span>
+        </div>
+        <div class="body">
+          <p><span class="key">Drama</span>${escapeHtml(e.drama)}${e.context ? ' — ' + escapeHtml(e.context) : ''}</p>
+          ${foods ? `<p><span class="key">Gremlin food</span>${escapeHtml(foods)}</p>` : ''}
+          ${e.rg3 ? `<p><span class="key">Responsible Game move</span>${escapeHtml(e.rg3)}</p>` : ''}
+        </div>
+        <button class="delete-btn" onclick="deleteEntry(${idx})">Delete</button>
+      </div>
+    `;
+  }).join('') + '</div>';
+
+  renderPatternHint(all);
+}
+
+function renderPatternHint(all) {
+  if (all.length < 3) {
+    document.getElementById('patternHint').classList.remove('show');
+    return;
+  }
+  // count primary positions
+  const counts = { persecutor: 0, victim: 0, rescuer: 0 };
+  all.forEach(e => { if (counts.hasOwnProperty(e.primary)) counts[e.primary]++; });
+  // most common food
+  const foodCounts = {};
+  all.forEach(e => {
+    (e.foods || []).forEach(f => { foodCounts[f] = (foodCounts[f] || 0) + 1; });
+  });
+  const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  const topFood = Object.entries(foodCounts).sort((a, b) => b[1] - a[1])[0];
+
+  let msg = '';
+  const dominantPct = Math.round((dominant[1] / all.length) * 100);
+  if (dominantPct >= 60) {
+    msg = `Across ${all.length} detections, you logged <strong>${POSITIONS[dominant[0]].name}</strong> in ${dominant[1]} of them — ${dominantPct}%. That is your preferred entry point into the triangle. The other two are still there; you rotate through them. But that corner is where the door usually opens.`;
+  } else {
+    msg = `Across ${all.length} detections, you are rotating through positions with no strong preference — ${counts.persecutor} Persecutor, ${counts.victim} Victim, ${counts.rescuer} Rescuer. The rotation itself is the pattern. You are running the full triangle.`;
+  }
+  if (topFood && topFood[1] >= 2) {
+    msg += ` Your most-named food is <strong>${topFood[0].toLowerCase()}</strong> — appearing in ${topFood[1]} entries. That is what the drama is paying out for you. Knowing it is half the work.`;
+  }
+
+  const el = document.getElementById('patternHint');
+  el.innerHTML = `<span class="label">Pattern across your log</span>${msg}`;
+  el.classList.add('show');
+}
+
+function deleteEntry(idx) {
+  if (!confirm('Delete this detection?')) return;
+  const all = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+  all.splice(idx, 1);
+  localStorage.setItem(STORE_KEY, JSON.stringify(all));
+  renderLog();
+}
+
+/* ---- reset ---- */
+function resetAll() {
+  state = {
+    step: 1,
+    drama: '',
+    context: '',
+    primary: null,
+    secondary: null,
+    foods: new Set(),
+    foodOwn: '',
+    rg1: '',
+    rg2: '',
+    rg3: ''
+  };
+  document.getElementById('dramaText').value = '';
+  document.getElementById('dramaContext').value = '';
+  document.getElementById('foodOwn').value = '';
+  document.getElementById('rg1').value = '';
+  document.getElementById('rg2').value = '';
+  document.getElementById('rg3').value = '';
+  document.querySelectorAll('.corner-node').forEach(n => n.classList.remove('selected', 'secondary'));
+  document.querySelectorAll('.food-chip').forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-pressed', 'false'); });
+  document.getElementById('secondaryPrompt').classList.remove('show');
+  document.getElementById('step2Next').disabled = true;
+  clearPositionInfo();
+  showStep(1);
+}
+
+/* ---- util ---- */
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  buildFoodChips();
+  showStep(1);
+  renderLog();
+});
+</script>
+
+<script>
+/* =========================================================================
+   SAFETY LAYER — consent gate + grounding modal (added; nothing above changed)
+   ========================================================================= */
+
+/* consent gate — reveal the tool body, show the GROUND NOW button.
+   Re-armed every visit: consent is intentionally NOT persisted. */
+function onConsent() {
+  const checked = document.getElementById('consentBox').checked;
+  const body = document.getElementById('toolBody');
+  // GROUND NOW stays visible the whole visit, including on the gate screen
+  if (checked) {
+    body.classList.add('open');
+    // make the gate real for keyboard/AT users: lift inert so the tool body
+    // becomes focusable. Visual pointer-events/opacity gating alone let Tab
+    // reach the gated controls; inert closes that hole.
+    body.removeAttribute('inert');
+    // settle the view onto the first step now that it's live
+    setTimeout(() => {
+      const target = document.getElementById('step1');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const heading = document.querySelector('#toolBody .step.show h2');
+      if (heading) heading.focus({ preventScroll: true });
+    }, 200);
+  } else {
+    body.classList.remove('open');
+    body.setAttribute('inert', '');
+  }
+}
+
+/* grounding modal — always-available exit for a flooded learner */
+function openGround() {
+  document.getElementById('groundModal').classList.add('show');
+}
+function closeGround() {
+  document.getElementById('groundModal').classList.remove('show');
+}
+/* ESC closes the grounding modal */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('groundModal');
+    if (modal.classList.contains('show')) closeGround();
+  }
+});
+
+/* keep the consent gate in view on load: the existing boot calls showStep(1),
+   which scrolls to step 1. This listener runs after it and brings the gate back
+   to the top so a learner cannot skip past consent. */
+window.addEventListener('DOMContentLoaded', () => {
+  // default closed every load — never auto-open from storage
+  document.getElementById('consentBox').checked = false;
+  const body = document.getElementById('toolBody');
+  body.classList.remove('open');
+  body.setAttribute('inert', '');
+  // GROUND NOW remains visible on the gate screen — it must be reachable before consent
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'auto' }), 80);
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

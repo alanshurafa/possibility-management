@@ -1,28 +1,28 @@
-# Possibility Management — the open web home
+# Possibility Management — open web toolkit
 
-The open home for Possibility Management thoughtware on the web: maps, courses, and interactive teaching tools. Everything here is free to use, fork, and adapt under World Copyleft (CC BY-SA 4.0).
+Open tools and sites for Possibility Management thoughtware: maps, courses, and interactive teaching tools. This repository is the source — fork it, adapt it, and host your own version anywhere. Everything is released under World Copyleft (CC BY-SA 4.0).
 
-**Hub: https://thoughtmap-atlas.vercel.app** *(the Atlas; the hub front door deploys separately — see below)*
+**Live demo: https://alanshurafa.github.io/possibility-management/**
 
-Each property is a self-contained static site in its own folder and deploys as its own Vercel project, so any of them can grow or move without disturbing the others.
+Each property is a self-contained static site in its own folder, so you can take one on its own or run the whole set together.
 
 ## Properties
 
-| Property | What it is | Status |
-|----------|------------|--------|
-| [Thoughtmap Atlas](thoughtmaps/) | Every PM thoughtmap in one place, each with its own interactive one-page module. | **Live** — https://thoughtmap-atlas.vercel.app |
-| [Expand the Box](courses/expand-the-box/) | The full ten-day course site: daily modules, tools, and the in-course map atlas. | In progress |
-| [Teaching Tools](tools/) | Standalone interactive tools (feeling locator, drama spotters, map recall). | In progress |
+| Property | What it is | Live demo |
+|----------|------------|-----------|
+| [Thoughtmap Atlas](thoughtmaps/) | Every PM thoughtmap in one place, each with its own interactive one-page module. | [open](https://alanshurafa.github.io/possibility-management/thoughtmaps/) |
+| [Expand the Box](courses/expand-the-box/) | The full course: modules, daily interactive tools, practice spines, and learner resources. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/) |
+| [Interactive Tools](courses/expand-the-box/Interactive%20Tools/) | Feeling locator, drama detector, EHP walker, ego-state locator, and more. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/Interactive%20Tools/) |
 
 ## Layout
 
 ```
-index.html              the PM web home (hub) that links to every property
+index.html              the hub that links to every property
 _shared/                the common design kit: fonts, tokens, base styles
-thoughtmaps/            the Thoughtmap Atlas (its own deployable site)
+thoughtmaps/            the Thoughtmap Atlas
 courses/
   expand-the-box/       the Expand the Box course site
-tools/                  standalone interactive teaching tools
+tools/                  room for standalone teaching tools
 README · LICENSE        repo docs and the full CC BY-SA 4.0 license
 ```
 
@@ -36,19 +36,22 @@ Plain static sites, no build step and no dependencies. Serve the repo root and b
 git clone https://github.com/alanshurafa/possibility-management.git
 cd possibility-management
 python -m http.server 8000
-# hub:   http://localhost:8000
-# atlas: http://localhost:8000/thoughtmaps/
+# hub:    http://localhost:8000
+# atlas:  http://localhost:8000/thoughtmaps/
+# course: http://localhost:8000/courses/expand-the-box/
 ```
 
 Or open any property's `index.html` directly in a browser.
 
-## Host your own copy
+## Make your own version
 
-Click **Use this template** at the top of this repo to get your own copy, then deploy it. Your copy stays yours, and this one stays untouched. (Forking works too.)
+Click **Use this template** at the top of this repo (or fork it) to get your own copy. Then publish it on whatever you like — no build step required:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Falanshurafa%2Fpossibility-management)
+- **GitHub Pages** — in your copy, go to Settings → Pages, set Source to "Deploy from a branch", branch `main`, folder `/ (root)`. A `.nojekyll` file is included so the `_shared` and `_assets` folders are served correctly.
+- **Netlify / Cloudflare Pages** — point it at the repo with no build command and the publish directory set to the repo root (or a single property's folder).
+- **Any static host** — copy the files to any web server or object store.
 
-There's no build step, so each property runs on any static host: Vercel, GitHub Pages, Netlify, Cloudflare Pages, or an object store. A `.nojekyll` file is included so GitHub Pages serves the `_shared` and `_assets` folders correctly.
+All links are relative, so the whole site works the same at a domain root or under a sub-path.
 
 ## License
 

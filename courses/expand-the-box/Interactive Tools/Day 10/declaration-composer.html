@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Declaration Composer · ETB Day 10</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+  --gold: #b08a32;
+
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.10) 0%, transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.05) 0%, transparent 55%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+  gap: 24px;
+}
+header.top .left { display: flex; gap: 24px; flex-wrap: wrap; }
+header.top .right { display: flex; gap: 20px; align-items: baseline; }
+header.top .num { color: var(--vermillion); font-weight: 600; }
+header.top a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+
+/* return banner */
+.return-banner {
+  margin: 28px 0 0;
+  padding: 18px 24px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-left: 4px solid var(--mustard);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.return-banner.show { display: flex; }
+.return-banner .label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-right: 8px;
+}
+.return-banner .ds {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ivory);
+  flex: 1;
+  min-width: 200px;
+}
+.return-banner button {
+  background: transparent;
+  color: var(--ivory);
+  border: 1px solid var(--ivory);
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.return-banner button:hover { background: var(--ivory); color: var(--ink); }
+
+/* hero */
+.hero {
+  margin: 56px 0 24px;
+  max-width: 880px;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+}
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(46px, 6.8vw, 88px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body);
+  font-size: 21px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-style: italic;
+  max-width: 720px;
+  border-left: 3px solid var(--vermillion);
+  padding-left: 22px;
+}
+
+/* sequence rail (Three Powers indicator) */
+.rail {
+  margin: 32px 0 16px;
+  display: flex;
+  gap: 6px;
+  padding: 14px 18px;
+  background: var(--ivory-shade);
+  border: 1px solid var(--rule);
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.rail-step {
+  flex: 1;
+  min-width: 150px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  transition: all 0.3s;
+}
+.rail-step .rk {
+  display: block;
+  color: var(--ink-mute);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  margin-bottom: 4px;
+}
+.rail-step .rt {
+  font-family: var(--display);
+  font-size: 16px;
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 80;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: var(--ink-soft);
+}
+.rail-step.active { border-left-color: var(--vermillion); }
+.rail-step.active .rk { color: var(--vermillion); }
+.rail-step.active .rt { color: var(--ink); }
+.rail-step.done { border-left-color: var(--mustard); }
+.rail-step.done .rk { color: var(--mustard); }
+
+/* section label */
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 56px 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.section-label .pow {
+  color: var(--vermillion);
+  font-weight: 600;
+}
+
+/* step container */
+.step {
+  margin: 24px 0 48px;
+  padding: 36px 40px;
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--rule);
+  position: relative;
+  scroll-margin-top: 20px;
+}
+.step.locked {
+  opacity: 0.42;
+  pointer-events: none;
+}
+.step.complete {
+  border-color: var(--mustard);
+  background: var(--ivory);
+}
+.step.complete::before {
+  content: '';
+  position: absolute;
+  top: -1.5px;
+  left: -1.5px;
+  bottom: -1.5px;
+  width: 4px;
+  background: var(--mustard);
+}
+.step .step-num {
+  position: absolute;
+  top: -14px;
+  left: 30px;
+  background: var(--ivory);
+  padding: 0 14px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 24px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  color: var(--vermillion);
+  line-height: 1;
+  font-style: italic;
+}
+.step h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.5vw, 38px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05;
+  letter-spacing: -0.018em;
+  margin-bottom: 14px;
+  color: var(--ink);
+}
+.step h2 em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.step .step-lede {
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-bottom: 24px;
+  max-width: 720px;
+}
+.step .step-lede strong {
+  font-style: normal;
+  color: var(--ink);
+}
+
+/* step 1 — own the choice */
+.own-text {
+  width: 100%;
+  min-height: 96px;
+  padding: 22px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  line-height: 1.4;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+}
+.own-text:focus {
+  outline: none;
+  border-color: var(--vermillion);
+}
+.checkrow {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  cursor: pointer;
+  user-select: none;
+}
+.checkrow input { display: none; }
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--ink);
+  background: var(--ivory);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--vermillion);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.checkrow input:checked + .checkbox {
+  background: var(--vermillion);
+  color: var(--ivory);
+  border-color: var(--vermillion);
+}
+.checkrow input:checked ~ .check-text {
+  color: var(--ink);
+}
+
+/* step 2 — dangerous question */
+.q-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 0 0 20px;
+}
+@media (max-width: 720px) { .q-grid { grid-template-columns: 1fr; } }
+.q-card {
+  padding: 18px 20px;
+  background: var(--ivory);
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  position: relative;
+}
+.q-card:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+.q-card.selected {
+  border-color: var(--vermillion);
+  background: var(--vermillion-soft);
+  color: var(--ink);
+  border-width: 1.5px;
+  box-shadow: inset 4px 0 0 var(--vermillion);
+  padding-left: 24px;
+}
+.q-own {
+  padding: 16px 18px;
+  background: var(--ivory);
+  border: 1.5px dashed var(--rule);
+  margin: 0 0 18px;
+}
+.q-own .lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+  display: block;
+}
+.q-own input {
+  width: 100%;
+  padding: 8px 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: transparent;
+  color: var(--ink);
+  border: none;
+  border-bottom: 1px solid var(--rule);
+}
+.q-own input:focus {
+  outline: none;
+  border-bottom-color: var(--vermillion);
+}
+.q-sit {
+  margin-top: 18px;
+}
+.q-sit-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+  display: block;
+}
+.q-sit textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 18px;
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.5;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+}
+.q-sit textarea:focus {
+  outline: none;
+  border-color: var(--vermillion);
+}
+
+/* step 3 — bright principles */
+.principle-wrap {
+  background: var(--ivory);
+  padding: 22px 22px 18px;
+  border: 1px solid var(--rule);
+  margin: 6px 0 14px;
+}
+.principle-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.principle-chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--rule);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.principle-chip:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.principle-chip.selected {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.principle-help {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 12px;
+}
+.principle-help .count {
+  color: var(--vermillion);
+  font-weight: 600;
+}
+
+/* step 4 — compose */
+.template-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 6px 0 22px;
+}
+@media (max-width: 720px) { .template-row { grid-template-columns: 1fr; } }
+.template-card {
+  padding: 18px 18px 16px;
+  background: var(--ivory);
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.template-card:hover {
+  border-color: var(--ink);
+}
+.template-card.selected {
+  border-color: var(--vermillion);
+  background: var(--vermillion-soft);
+}
+.template-card .tk {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 8px;
+}
+.template-card .tt {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+.template-card.selected .tt { color: var(--ink); }
+
+.compose-area {
+  position: relative;
+}
+.compose-area textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 26px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 26px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.32;
+  background: var(--ivory);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  letter-spacing: -0.005em;
+}
+.compose-area textarea:focus {
+  outline: none;
+  border-color: var(--vermillion);
+}
+.compose-area .hint-row {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.compose-area .hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.compose-area .src-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.compose-area .src-tag .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--vermillion);
+  border-radius: 50%;
+}
+
+/* shadow warning */
+.shadow-warn {
+  margin-top: 18px;
+  padding: 18px 22px;
+  background: var(--ivory);
+  border: 1.5px solid var(--gold);
+  border-left-width: 4px;
+  display: none;
+}
+.shadow-warn.show { display: block; animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.shadow-warn .sw-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.shadow-warn .sw-body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.shadow-warn .sw-body strong {
+  font-style: normal;
+  color: var(--ink);
+}
+.shadow-warn .sw-body .hit {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--mustard-soft);
+  color: var(--ink);
+  padding: 2px 6px;
+  font-style: normal;
+  letter-spacing: 0.05em;
+}
+
+/* buttons */
+.actions {
+  margin-top: 26px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 26px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.btn:hover {
+  background: var(--ink);
+  color: var(--ivory);
+}
+.btn.primary {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.btn.primary:hover {
+  background: var(--vermillion-deep);
+  border-color: var(--vermillion-deep);
+}
+.btn.ghost {
+  border-color: var(--ink-mute);
+  color: var(--ink-mute);
+}
+.btn.ghost:hover {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: transparent;
+  color: var(--ink-mute);
+  border-color: var(--rule);
+}
+.btn:disabled:hover {
+  background: transparent;
+  color: var(--ink-mute);
+  border-color: var(--rule);
+}
+
+/* ----- ceremonial overlay (step 5) ----- */
+.ceremony {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--ink);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  color: var(--ivory);
+}
+.ceremony.show { display: flex; animation: fadeIn 1.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.ceremony::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='nd'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.92 0 0 0 0 0.86 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23nd)'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
+}
+.ceremony .c-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  text-align: center;
+}
+.ceremony .c-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-bottom: 32px;
+}
+.ceremony .declaration {
+  font-family: var(--display);
+  font-weight: 350;
+  font-style: italic;
+  font-size: clamp(34px, 5.5vw, 64px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+  color: var(--ivory);
+  margin: 36px 0;
+  padding: 40px 32px;
+  border-top: 1px solid rgba(244,236,220,0.25);
+  border-bottom: 1px solid rgba(244,236,220,0.25);
+  position: relative;
+}
+.ceremony .declaration::before, .ceremony .declaration::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--mustard);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.ceremony .declaration::before { top: 0; }
+.ceremony .declaration::after { bottom: -4px; }
+
+.c-instructions {
+  margin: 36px 0 28px;
+}
+.c-line {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ivory);
+  opacity: 0.5;
+  margin: 14px 0;
+  padding: 4px 12px;
+  transition: all 0.6s ease;
+}
+.c-line.active {
+  opacity: 1;
+  color: var(--mustard);
+  font-style: italic;
+}
+.c-line.done {
+  opacity: 0.35;
+  text-decoration: line-through;
+  text-decoration-color: rgba(244,236,220,0.3);
+}
+.c-line .marker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--mustard);
+  margin-right: 14px;
+}
+.c-actions {
+  margin-top: 36px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.c-btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 16px 30px;
+  background: transparent;
+  color: var(--ivory);
+  border: 1.5px solid var(--ivory);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.c-btn:hover {
+  background: var(--mustard);
+  color: var(--ink);
+  border-color: var(--mustard);
+}
+.c-btn.ghost {
+  border-color: rgba(244,236,220,0.4);
+  color: rgba(244,236,220,0.7);
+}
+.c-btn.ghost:hover {
+  background: transparent;
+  color: var(--ivory);
+  border-color: var(--ivory);
+}
+.c-quiet {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244,236,220,0.5);
+  margin-top: 26px;
+  font-style: normal;
+}
+
+/* ----- step 6: declaration card ----- */
+.declaration-card {
+  margin: 28px 0 18px;
+  padding: 48px 44px 40px;
+  background: var(--ivory);
+  border: 2px solid var(--vermillion);
+  position: relative;
+}
+.declaration-card::before {
+  content: 'DECLARATION';
+  position: absolute;
+  top: -11px;
+  left: 32px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 4px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  font-weight: 700;
+}
+.declaration-card .meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.declaration-card .meta-row .right { color: var(--ink-mute); }
+.declaration-card .source-line {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+}
+.declaration-card .source-line strong {
+  color: var(--vermillion);
+  font-weight: 600;
+}
+.declaration-card .dq {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--ink-mute);
+  margin-bottom: 22px;
+  padding-left: 14px;
+  border-left: 2px solid var(--rule);
+}
+.declaration-card .dq-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 6px;
+  font-style: normal;
+}
+.declaration-card .declaration-text {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(26px, 3.4vw, 36px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  margin: 8px 0 30px;
+}
+.declaration-card .horizon {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.declaration-card .horizon strong {
+  color: var(--vermillion);
+  font-weight: 600;
+}
+
+/* PM voice block */
+.pm-voice {
+  margin: 36px 0 0;
+  padding: 28px 32px;
+  background: var(--ivory-shade);
+  border-left: 3px solid var(--mustard);
+}
+.pm-voice-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #b8902c;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.pm-voice ul {
+  list-style: none;
+  padding: 0;
+}
+.pm-voice li {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 17px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  padding: 8px 0 8px 16px;
+  position: relative;
+  border-bottom: 1px solid rgba(184,169,138,0.5);
+}
+.pm-voice li:last-child { border-bottom: none; }
+.pm-voice li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--vermillion);
+  font-weight: 700;
+}
+
+footer.bottom {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+
+/* ----- PRINT ----- */
+@media print {
+  @page { margin: 0.6in; }
+  body { background: white; color: var(--ink); }
+  body::before, .return-banner, .rail, header.top, footer.bottom,
+  .step, .pm-voice, .section-label, .hero, .ceremony { display: none !important; }
+  .print-card-wrap { display: block !important; }
+  .declaration-card {
+    border: 2.5px solid var(--ink);
+    padding: 60px 50px 50px;
+    background: white;
+    page-break-inside: avoid;
+    margin: 0;
+  }
+  .declaration-card::before {
+    background: var(--ink);
+    color: white;
+  }
+  .declaration-card .meta-row { color: var(--ink); }
+  .declaration-card .horizon strong { color: var(--ink); }
+  .declaration-card .source-line strong { color: var(--ink); }
+  .declaration-card .declaration-text { color: var(--ink); }
+  .print-only { display: block !important; }
+}
+.print-card-wrap { display: none; }
+.print-only { display: none; }
+
+@media (max-width: 640px) {
+  .wrap { padding: 24px 20px 60px; }
+  .step { padding: 28px 22px; }
+  .declaration-card { padding: 36px 24px 28px; }
+  header.top { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .rail-step { min-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="left">
+      <span><span class="num">DAY 10</span> / EXPAND THE BOX</span>
+      <span>The Declaration Composer</span>
+    </div>
+    <div class="right">
+      <a href="index.html" class="nav-back">← All Day 10 tools</a>
+    </div>
+  </header>
+
+  <!-- Return banner (shown if prior declaration exists) -->
+  <div class="return-banner" id="returnBanner">
+    <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px; flex:1; min-width:200px;">
+      <span class="label">Your declaration of <span id="bDate"></span></span>
+      <span class="ds" id="bSentence"></span>
+    </div>
+    <button onclick="rospeak()">Speak it now</button>
+    <button onclick="dismissBanner()" style="border-color:rgba(244,236,220,0.4); color:rgba(244,236,220,0.7);">Compose a new one</button>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="eyebrow">Day 10 · Integration · The closing tool of the course</div>
+    <h1 class="display">
+      One <em>declaration.</em><br>
+      Sourced from a bright principle.<br>
+      For the 90 days after the course.
+    </h1>
+    <p class="lede">
+      A declaration is a speech-act that brings a new context into being. Not a promise. Not an opinion. Not a wish.
+      This tool walks you through the Three Powers in sequence — choose, ask, declare — so the declaration you make at the end is the one your body can hold.
+    </p>
+  </section>
+
+  <!-- Sequence rail -->
+  <div class="rail" id="powerRail">
+    <div class="rail-step active" data-rail="1">
+      <span class="rk">Power I · Choosing</span>
+      <span class="rt">Own the choice.</span>
+    </div>
+    <div class="rail-step" data-rail="2">
+      <span class="rk">Power II · Asking</span>
+      <span class="rt">Ask a dangerous question.</span>
+    </div>
+    <div class="rail-step" data-rail="3">
+      <span class="rk">Source · Bright Principle</span>
+      <span class="rt">Find the source.</span>
+    </div>
+    <div class="rail-step" data-rail="4">
+      <span class="rk">Power III · Declaring</span>
+      <span class="rt">Compose the declaration.</span>
+    </div>
+  </div>
+
+  <!-- STEP 1: Own the choice -->
+  <div class="section-label"><span class="pow">Power I</span> · The Power of Choosing</div>
+
+  <section class="step" id="step1" data-step="1">
+    <div class="step-num">I.</div>
+    <h2>Own <em>the choice.</em></h2>
+    <p class="step-lede">
+      Before you can declare, own that you chose. <strong>Most attempts at growth reach for declaration without first owning the choice.</strong>
+      The declarations do not hold. Type this sentence — edit it until it lands. Read it out loud. Then check the box.
+    </p>
+    <textarea class="own-text" id="ownText" aria-label="Own the choice — edit this sentence until it lands">I am the one who chose to do this course. What I take from it is what I create from it.</textarea>
+    <label class="checkrow">
+      <input type="checkbox" id="ownCheck" onchange="checkOwn()">
+      <span class="checkbox">×</span>
+      <span class="check-text">I own this choice.</span>
+    </label>
+  </section>
+
+  <!-- STEP 2: Dangerous question -->
+  <div class="section-label"><span class="pow">Power II</span> · The Power of Asking Dangerous Questions</div>
+
+  <section class="step locked" id="step2" data-step="2">
+    <div class="step-num">II.</div>
+    <h2>Ask a <em>dangerous</em> question.</h2>
+    <p class="step-lede">
+      A dangerous question is one whose answer leads somewhere you cannot un-know. Pick one — or write your own.
+      Then sit with it for a minute before you write what came up.
+    </p>
+
+    <div class="q-grid" id="qGrid">
+      <div class="q-card" role="button" tabindex="0" data-q="What am I pretending not to know about my life?">What am I pretending not to know about my life?</div>
+      <div class="q-card" role="button" tabindex="0" data-q="Who would I be if I dropped this story about myself?">Who would I be if I dropped this story about myself?</div>
+      <div class="q-card" role="button" tabindex="0" data-q="What would I have to be willing to feel to leave [thing] behind?">What would I have to be willing to feel to leave [thing] behind?</div>
+      <div class="q-card" role="button" tabindex="0" data-q="What is the bright principle I am here to source from?">What is the bright principle I am here to source from?</div>
+      <div class="q-card" role="button" tabindex="0" data-q="What is the declaration that — if I made it — would change the shape of my next year?">What is the declaration that — if I made it — would change the shape of my next year?</div>
+      <div class="q-card" role="button" tabindex="0" data-q="What is one small move I have been refusing to make?">What is one small move I have been refusing to make?</div>
+      <div class="q-card" role="button" tabindex="0" data-q="Where am I asking for permission I don't need?">Where am I asking for permission I don't need?</div>
+      <div class="q-card" role="button" tabindex="0" data-q="What is mine to create that nobody else can create?">What is mine to create that nobody else can create?</div>
+    </div>
+
+    <div class="q-own">
+      <label class="lbl" for="qOwn">Or your own dangerous question</label>
+      <input type="text" id="qOwn" aria-label="Or your own dangerous question" placeholder="Write a question whose answer you cannot un-know." oninput="qOwnInput()">
+    </div>
+
+    <div class="q-sit">
+      <label class="q-sit-label" for="qSit">Sit with it for a minute. Then write what came up. Short. Honest.</label>
+      <textarea id="qSit" aria-label="Sit with it for a minute, then write what came up" placeholder="What rose when you sat with the question."></textarea>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="step2Btn" disabled onclick="completeStep2()">I sat with it</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: Bright principle -->
+  <div class="section-label"><span class="pow">M21 distinction</span> · Bright vs Shadow Principles</div>
+
+  <section class="step locked" id="step3" data-step="3">
+    <div class="step-num">III.</div>
+    <h2>Source from a <em>bright</em> principle.</h2>
+    <p class="step-lede">
+      Every declaration is sourced from a principle. <strong>Bright principles create. Shadow principles collapse.</strong>
+      Pick one or two of the bright principles this declaration will be sourced from.
+    </p>
+    <div class="principle-wrap">
+      <div class="principle-grid" id="principleGrid">
+        <div class="principle-chip" role="button" tabindex="0" data-p="LOVE">LOVE</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="INTEGRITY">INTEGRITY</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="POSSIBILITY">POSSIBILITY</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="COURAGE">COURAGE</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="PRESENCE">PRESENCE</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="CLARITY">CLARITY</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="CREATION">CREATION</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="DEVOTION">DEVOTION</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="BEAUTY">BEAUTY</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="TRUTH-TELLING">TRUTH-TELLING</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="WITNESSING">WITNESSING</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="HOSPITALITY">HOSPITALITY</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="DANCE">DANCE</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="GRATITUDE">GRATITUDE</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="COMPASSION">COMPASSION</div>
+        <div class="principle-chip" role="button" tabindex="0" data-p="DIRECTNESS">DIRECTNESS</div>
+      </div>
+      <div class="principle-help">Selected: <span class="count" id="pCount">0</span> · Pick one or two.</div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="step3Btn" disabled onclick="completeStep3()">Sourced — continue</button>
+    </div>
+  </section>
+
+  <!-- STEP 4: Compose the declaration -->
+  <div class="section-label"><span class="pow">Power III</span> · The Power of Declaring</div>
+
+  <section class="step locked" id="step4" data-step="4">
+    <div class="step-num">IV.</div>
+    <h2>Compose the <em>declaration.</em></h2>
+    <p class="step-lede">
+      A declaration is a speech-act. <strong>Not a promise. Not an opinion. Not a wish.</strong>
+      It brings a new context into being and walks you into it.
+      Pick a template, or write from scratch. One sentence. Sized to your actual life.
+    </p>
+
+    <div class="template-row" id="templateRow">
+      <div class="template-card" role="button" tabindex="0" aria-label="Identity declaration template: I am a person who does X" data-template="I am a person who " data-key="identity">
+        <div class="tk">I · Identity declaration</div>
+        <div class="tt">"I am a person who [does X]."</div>
+      </div>
+      <div class="template-card" role="button" tabindex="0" aria-label="Context declaration template: I declare the context that did not exist before is now in being" data-template="I declare " data-key="declare">
+        <div class="tk">II · Context declaration</div>
+        <div class="tt">"I declare [the context that did not exist before is now in being]."</div>
+      </div>
+      <div class="template-card" role="button" tabindex="0" aria-label="Creation declaration template: I am here to create what only I can" data-template="I am here to " data-key="here">
+        <div class="tk">III · Creation declaration</div>
+        <div class="tt">"I am here to [create what only I can]."</div>
+      </div>
+    </div>
+
+    <div class="compose-area">
+      <textarea id="declText" aria-label="Compose your declaration — one sentence" placeholder="Write your declaration. One sentence. Source-checked against the bright principle(s) you picked." oninput="declTyping()"></textarea>
+      <div class="hint-row">
+        <span class="hint">One sentence. Sized to your life, not to a crowd.</span>
+        <span class="src-tag"><span class="dot"></span>Sourced from <span id="srcInline">—</span></span>
+      </div>
+    </div>
+
+    <div class="shadow-warn" id="shadowWarn">
+      <div class="sw-label">Notice — possible shadow source</div>
+      <div class="sw-body" id="shadowWarnBody">
+        This declaration may be sourced from a shadow principle <span class="hit" id="shadowHit"></span> —
+        <strong>righteousness, revenge, or domination.</strong>
+        A declaration from there will collapse. Drop, breathe, and rewrite from the bright principle you picked.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="step4Btn" disabled onclick="goSpeak()">Speak it aloud</button>
+    </div>
+  </section>
+
+  <!-- STEP 6: Card -->
+  <section class="step locked" id="step6" data-step="6" style="display:none;">
+    <div class="step-num">V.</div>
+    <h2>Witnessed. Dated. <em>Saved.</em></h2>
+    <p class="step-lede">
+      The work begins now. Print this card. Put it where you will see it for the next 90 days —
+      on a wall, on your laptop, on your bathroom mirror.
+    </p>
+
+    <div class="declaration-card" id="finalCard">
+      <div class="meta-row">
+        <span id="cardDate"></span>
+        <span class="right">Day 10 · ETB · Integration</span>
+      </div>
+      <div class="dq">
+        <div class="dq-label">Dangerous question</div>
+        <span id="cardQ"></span>
+      </div>
+      <div class="source-line">Sourced from <strong id="cardSource"></strong></div>
+      <div class="declaration-text" id="cardText"></div>
+      <div class="horizon">
+        <span>Horizon · <strong id="cardHorizon"></strong></span>
+        <span>The Three Powers · sequenced</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="window.print()">Print this card</button>
+      <button class="btn ghost" onclick="rospeak()">Speak it again</button>
+      <a href="index.html" class="btn ghost">Return to Day 10</a>
+    </div>
+  </section>
+
+  <!-- PM voice closing -->
+  <div class="pm-voice">
+    <div class="pm-voice-label">A few things to know about declarations</div>
+    <ul>
+      <li>Loud declarations are weaker than quiet ones. The body knows the difference.</li>
+      <li>You don't declare to other people. You declare to the universe. They are welcome to overhear.</li>
+      <li>A declaration that collapses isn't a failure. It's information — it was sourced from shadow, or the dangerous question wasn't dangerous enough, or it wasn't yours.</li>
+    </ul>
+  </div>
+
+  <footer class="bottom">
+    <div>Day 10 · The Declaration Composer · v2.0</div>
+    <div>The final tool of the course</div>
+  </footer>
+</div>
+
+<!-- Print-only card -->
+<div class="print-card-wrap">
+  <div class="declaration-card" id="printCard">
+    <div class="meta-row">
+      <span id="pDate"></span>
+      <span class="right">Day 10 · ETB · Integration</span>
+    </div>
+    <div class="dq">
+      <div class="dq-label">Dangerous question</div>
+      <span id="pQ"></span>
+    </div>
+    <div class="source-line">Sourced from <strong id="pSource"></strong></div>
+    <div class="declaration-text" id="pText"></div>
+    <div class="horizon">
+      <span>Horizon · <strong id="pHorizon"></strong></span>
+      <span>The Three Powers · sequenced</span>
+    </div>
+  </div>
+</div>
+
+<!-- CEREMONIAL OVERLAY -->
+<div class="ceremony" id="ceremony">
+  <div class="c-inner">
+    <div class="c-eyebrow">Step V · Speak it aloud</div>
+    <div class="declaration" id="cDeclaration"></div>
+
+    <div class="c-instructions">
+      <div class="c-line" id="cLine1">
+        <span class="marker">ONCE</span>
+        Stand. Read it aloud. Once. Notice what your body does.
+      </div>
+      <div class="c-line" id="cLine2">
+        <span class="marker">AGAIN</span>
+        Speak it again. Notice the difference.
+      </div>
+      <div class="c-line" id="cLine3">
+        <span class="marker">ONCE MORE</span>
+        One more time. Notice if anything in the declaration needs to shift.
+      </div>
+    </div>
+
+    <div class="c-quiet">Quiet declarations are often stronger than loud ones.</div>
+
+    <div class="c-actions">
+      <button class="c-btn" id="cBtnNext" onclick="ceremonyNext()">I spoke it</button>
+      <button class="c-btn ghost" onclick="ceremonyEdit()">Something needs to shift — let me edit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- state ---------- */
+const STORAGE_KEY = 'etb_day10_declaration';
+const STATE_KEY = 'etb_day10_state';
+
+let state = {
+  ownClaim: '',
+  ownChecked: false,
+  question: '',
+  questionResponse: '',
+  principles: [],
+  declaration: '',
+  template: '',
+  horizon: '90 days from today'
+};
+
+/* shadow markers — phrases that flag potentially shadow-sourced declarations */
+const SHADOW_MARKERS = [
+  { rx: /\bi('ll| will) never let (them|him|her|you)\b/i, hit: "I'll never let them" },
+  { rx: /\bi('ll| will) prove\b/i, hit: "I'll prove" },
+  { rx: /\bthey won('t| not) get away\b/i, hit: "they won't get away" },
+  { rx: /\bi('ll| will) (show|teach) (them|him|her|you)\b/i, hit: "I'll show them" },
+  { rx: /\bi('ll| will) make (them|him|her|you)\b/i, hit: "I'll make them" },
+  { rx: /\bi (refuse|will refuse) to (let|allow)\b/i, hit: "I refuse to let" },
+  { rx: /\bnobody (will|can) (stop|tell)\b/i, hit: "nobody will stop me" },
+  { rx: /\bi (am|will be) better than\b/i, hit: "I am better than" },
+  { rx: /\bi (deserve|am owed)\b/i, hit: "I deserve / am owed" },
+  { rx: /\bi('m| am) (sick of|done with) (them|him|her|you)\b/i, hit: "I'm done with them" },
+  { rx: /\b(get back at|get even|revenge)\b/i, hit: "revenge language" },
+  { rx: /\bi (hate|despise|resent)\b/i, hit: "I hate / resent" },
+  { rx: /\bi (must|have to) control\b/i, hit: "I must control" },
+  { rx: /\bcrush\b/i, hit: "crush" },
+  { rx: /\bdestroy\b/i, hit: "destroy" },
+  { rx: /\bdominate\b/i, hit: "dominate" },
+  { rx: /\bwin against\b/i, hit: "win against" },
+];
+
+/* ---------- step gating ---------- */
+function unlockStep(n) {
+  const el = document.getElementById('step' + n);
+  if (el) el.classList.remove('locked');
+  const rail = document.querySelector(`[data-rail="${n}"]`);
+  if (rail) rail.classList.add('active');
+}
+function completeStepUI(n) {
+  const el = document.getElementById('step' + n);
+  if (el) el.classList.add('complete');
+  const rail = document.querySelector(`[data-rail="${n}"]`);
+  if (rail) { rail.classList.remove('active'); rail.classList.add('done'); }
+}
+function scrollTo(id) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // move focus to the revealed step's heading for keyboard / AT users
+      const heading = el.querySelector('h2');
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus({ preventScroll: true });
+      }
+    }
+  }, 280);
+}
+
+/* keyboard support for custom (non-native) controls: Enter / Space fire the click */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+  const t = e.target.closest('.q-card, .principle-chip, .template-card');
+  if (!t) return;
+  e.preventDefault();
+  t.click();
+});
+
+/* ---------- step 1: own the choice ---------- */
+const ownText = document.getElementById('ownText');
+const ownCheck = document.getElementById('ownCheck');
+ownText.addEventListener('input', () => {
+  state.ownClaim = ownText.value;
+  saveState();
+});
+function checkOwn() {
+  state.ownChecked = ownCheck.checked;
+  if (ownCheck.checked) {
+    completeStepUI(1);
+    unlockStep(2);
+    scrollTo('step2');
+  }
+  saveState();
+}
+
+/* ---------- step 2: dangerous question ---------- */
+const qCards = document.querySelectorAll('#qGrid .q-card');
+const qOwn = document.getElementById('qOwn');
+const qSit = document.getElementById('qSit');
+const step2Btn = document.getElementById('step2Btn');
+
+qCards.forEach(card => {
+  card.addEventListener('click', () => {
+    qCards.forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.question = card.dataset.q;
+    qOwn.value = '';
+    refreshStep2();
+  });
+});
+function qOwnInput() {
+  if (qOwn.value.trim()) {
+    qCards.forEach(c => c.classList.remove('selected'));
+    state.question = qOwn.value.trim();
+  } else {
+    state.question = '';
+  }
+  refreshStep2();
+}
+qSit.addEventListener('input', () => {
+  state.questionResponse = qSit.value;
+  refreshStep2();
+});
+function refreshStep2() {
+  const hasQ = state.question && state.question.length > 4;
+  const hasResp = state.questionResponse && state.questionResponse.trim().length > 4;
+  step2Btn.disabled = !(hasQ && hasResp);
+  saveState();
+}
+function completeStep2() {
+  completeStepUI(2);
+  unlockStep(3);
+  scrollTo('step3');
+}
+
+/* ---------- step 3: bright principles ---------- */
+const principleChips = document.querySelectorAll('#principleGrid .principle-chip');
+const pCount = document.getElementById('pCount');
+const step3Btn = document.getElementById('step3Btn');
+
+principleChips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    const p = chip.dataset.p;
+    if (state.principles.includes(p)) {
+      state.principles = state.principles.filter(x => x !== p);
+      chip.classList.remove('selected');
+    } else {
+      if (state.principles.length >= 2) {
+        // remove the first
+        const first = state.principles.shift();
+        const firstChip = document.querySelector(`.principle-chip[data-p="${first}"]`);
+        if (firstChip) firstChip.classList.remove('selected');
+      }
+      state.principles.push(p);
+      chip.classList.add('selected');
+    }
+    pCount.textContent = state.principles.length;
+    step3Btn.disabled = state.principles.length === 0;
+    updateSrcInline();
+    saveState();
+  });
+});
+function completeStep3() {
+  completeStepUI(3);
+  unlockStep(4);
+  scrollTo('step4');
+}
+
+/* ---------- step 4: compose ---------- */
+const templateCards = document.querySelectorAll('#templateRow .template-card');
+const declText = document.getElementById('declText');
+const step4Btn = document.getElementById('step4Btn');
+const shadowWarn = document.getElementById('shadowWarn');
+const shadowHit = document.getElementById('shadowHit');
+
+templateCards.forEach(card => {
+  card.addEventListener('click', () => {
+    templateCards.forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.template = card.dataset.key;
+    // seed if empty or replace seed
+    const seed = card.dataset.template;
+    const cur = declText.value.trim();
+    const knownSeeds = ['I am a person who', 'I declare', 'I am here to'];
+    const isPriorSeed = knownSeeds.some(s => cur === s || cur === '');
+    if (!cur || isPriorSeed) {
+      declText.value = seed;
+      state.declaration = seed;
+      declText.focus();
+      const len = declText.value.length;
+      declText.setSelectionRange(len, len);
+    }
+    declTyping();
+  });
+});
+
+function declTyping() {
+  state.declaration = declText.value;
+  step4Btn.disabled = !(state.declaration.trim().length > 6);
+  checkShadowMarkers();
+  saveState();
+}
+
+function checkShadowMarkers() {
+  const txt = state.declaration;
+  for (const m of SHADOW_MARKERS) {
+    if (m.rx.test(txt)) {
+      shadowHit.textContent = '"' + m.hit + '"';
+      shadowWarn.classList.add('show');
+      return;
+    }
+  }
+  shadowWarn.classList.remove('show');
+}
+
+function updateSrcInline() {
+  const el = document.getElementById('srcInline');
+  if (state.principles.length === 0) {
+    el.textContent = '—';
+  } else {
+    el.textContent = state.principles.join(' + ');
+  }
+}
+
+/* ---------- step 5: ceremony overlay ---------- */
+let ceremonyStep = 0;
+function goSpeak() {
+  document.getElementById('cDeclaration').textContent = state.declaration.trim();
+  ceremonyStep = 0;
+  ['cLine1','cLine2','cLine3'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+    document.getElementById(id).classList.remove('done');
+  });
+  document.getElementById('cLine1').classList.add('active');
+  document.getElementById('cBtnNext').textContent = 'I spoke it';
+  document.getElementById('ceremony').classList.add('show');
+}
+function ceremonyNext() {
+  const lines = ['cLine1','cLine2','cLine3'];
+  if (ceremonyStep < 2) {
+    document.getElementById(lines[ceremonyStep]).classList.remove('active');
+    document.getElementById(lines[ceremonyStep]).classList.add('done');
+    ceremonyStep++;
+    document.getElementById(lines[ceremonyStep]).classList.add('active');
+    if (ceremonyStep === 2) {
+      document.getElementById('cBtnNext').textContent = 'I spoke it the third time — save';
+    } else {
+      document.getElementById('cBtnNext').textContent = 'I spoke it again';
+    }
+  } else {
+    document.getElementById(lines[2]).classList.add('done');
+    saveDeclaration();
+    document.getElementById('ceremony').classList.remove('show');
+    document.getElementById('step6').style.display = 'block';
+    completeStepUI(4);
+    scrollTo('step6');
+  }
+}
+function ceremonyEdit() {
+  document.getElementById('ceremony').classList.remove('show');
+  declText.focus();
+}
+
+/* ---------- save + render card ---------- */
+function saveDeclaration() {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  // compute horizon date (90 days)
+  const horizon = new Date(now);
+  horizon.setDate(horizon.getDate() + 90);
+  const horizonStr = horizon.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  const payload = {
+    text: state.declaration.trim(),
+    question: state.question,
+    questionResponse: state.questionResponse,
+    principles: state.principles,
+    date: dateStr,
+    horizon: horizonStr,
+    iso: now.toISOString(),
+    own: state.ownClaim
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+
+  // render screen card
+  document.getElementById('cardDate').textContent = dateStr;
+  document.getElementById('cardQ').textContent = state.question;
+  document.getElementById('cardSource').textContent = state.principles.join(' · ');
+  document.getElementById('cardText').textContent = state.declaration.trim();
+  document.getElementById('cardHorizon').textContent = horizonStr;
+
+  // render print card
+  document.getElementById('pDate').textContent = dateStr;
+  document.getElementById('pQ').textContent = state.question;
+  document.getElementById('pSource').textContent = state.principles.join(' · ');
+  document.getElementById('pText').textContent = state.declaration.trim();
+  document.getElementById('pHorizon').textContent = horizonStr;
+
+  // also clear in-progress state (declaration is now committed)
+  localStorage.removeItem(STATE_KEY);
+}
+
+/* ---------- state persistence (in-progress) ---------- */
+function saveState() {
+  localStorage.setItem(STATE_KEY, JSON.stringify(state));
+}
+function loadState() {
+  const s = localStorage.getItem(STATE_KEY);
+  if (!s) return;
+  try {
+    state = Object.assign(state, JSON.parse(s));
+    if (state.ownClaim) ownText.value = state.ownClaim;
+    if (state.ownChecked) {
+      ownCheck.checked = true;
+      completeStepUI(1);
+      unlockStep(2);
+    }
+    if (state.question) {
+      const match = document.querySelector(`.q-card[data-q="${CSS.escape(state.question)}"]`);
+      if (match) match.classList.add('selected');
+      else qOwn.value = state.question;
+    }
+    if (state.questionResponse) qSit.value = state.questionResponse;
+    if (state.ownChecked && state.question && state.questionResponse) {
+      step2Btn.disabled = false;
+    }
+    if (state.principles && state.principles.length) {
+      state.principles.forEach(p => {
+        const chip = document.querySelector(`.principle-chip[data-p="${p}"]`);
+        if (chip) chip.classList.add('selected');
+      });
+      pCount.textContent = state.principles.length;
+      step3Btn.disabled = false;
+      updateSrcInline();
+      // if we have principles, unlock through step 3 too (allow resume)
+      if (state.questionResponse) {
+        completeStepUI(2);
+        unlockStep(3);
+      }
+    }
+    if (state.declaration) {
+      declText.value = state.declaration;
+      step4Btn.disabled = !(state.declaration.trim().length > 6);
+      if (state.principles.length) {
+        completeStepUI(3);
+        unlockStep(4);
+      }
+    }
+  } catch(e) {}
+}
+
+/* ---------- return banner ---------- */
+function loadPriorDeclaration() {
+  const s = localStorage.getItem(STORAGE_KEY);
+  if (!s) return;
+  try {
+    const d = JSON.parse(s);
+    document.getElementById('bDate').textContent = d.date;
+    document.getElementById('bSentence').textContent = '"' + d.text + '"';
+    document.getElementById('returnBanner').classList.add('show');
+
+    // populate state for re-speak
+    window._priorDeclaration = d;
+  } catch(e) {}
+}
+function dismissBanner() {
+  document.getElementById('returnBanner').classList.remove('show');
+}
+function rospeak() {
+  const d = window._priorDeclaration;
+  if (!d) return;
+  document.getElementById('cDeclaration').textContent = d.text;
+  ceremonyStep = 0;
+  ['cLine1','cLine2','cLine3'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+    document.getElementById(id).classList.remove('done');
+  });
+  document.getElementById('cLine1').classList.add('active');
+  document.getElementById('cBtnNext').textContent = 'I spoke it';
+  // adjust button so it just closes instead of re-saving when re-speaking
+  document.getElementById('cBtnNext').onclick = function() {
+    const lines = ['cLine1','cLine2','cLine3'];
+    if (ceremonyStep < 2) {
+      document.getElementById(lines[ceremonyStep]).classList.remove('active');
+      document.getElementById(lines[ceremonyStep]).classList.add('done');
+      ceremonyStep++;
+      document.getElementById(lines[ceremonyStep]).classList.add('active');
+      if (ceremonyStep === 2) {
+        document.getElementById('cBtnNext').textContent = 'I spoke it the third time — close';
+      } else {
+        document.getElementById('cBtnNext').textContent = 'I spoke it again';
+      }
+    } else {
+      document.getElementById('ceremony').classList.remove('show');
+      // restore original ceremonyNext binding
+      document.getElementById('cBtnNext').onclick = ceremonyNext;
+    }
+  };
+  document.getElementById('ceremony').classList.add('show');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadPriorDeclaration();
+  loadState();
+  updateSrcInline();
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

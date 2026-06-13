@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expand the Box · Group Version · Start Here</title>
+<meta name="description" content="Expand the Box — a twelve-module, self-paced course in Possibility Management thoughtware. The front door: what this is, how it runs, and every module, map, and tool linked from one page.">
+<link href="_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root{
+  --ivory:#f4ecdc; --ivory-shade:#ece2c8; --ivory-deep:#e3d7b9;
+  --ink:#0e0a05; --ink-soft:#2a221a; --ink-mute:#4a3f30; --rule:#b8a98a;
+  --vermillion:#c43b1c; --vermillion-deep:#962a13; --mustard:#d8b04a;
+  --mustard-text:#b8902c; --sky:#4a6b7c; --green:#1d4d3a;
+  --display:'Fraunces','EB Garamond',Georgia,serif;
+  --body:'EB Garamond',Georgia,serif;
+  --mono:'JetBrains Mono','Courier New',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--body); background:var(--ivory); color:var(--ink);
+  font-size:18px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  min-height:100vh; position:relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216,176,74,0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(196,59,28,0.05) 0%, transparent 55%);
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.55;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a.skip-link{position:absolute;left:-9999px;top:8px;z-index:200;background:var(--ink);
+  color:var(--ivory);font-family:var(--mono);font-size:12px;letter-spacing:0.12em;
+  text-transform:uppercase;padding:12px 18px;text-decoration:none;}
+a.skip-link:focus{left:8px;}
+.wrap{max-width:1180px;margin:0 auto;padding:44px 56px 90px;position:relative;z-index:2;}
+
+header.top{
+  display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-mute);padding-bottom:32px;border-bottom:1px solid var(--rule);flex-wrap:wrap;}
+header.top .num{color:var(--vermillion);font-weight:600;}
+header.top a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px;transition:all 0.2s;}
+header.top a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+header.top a:focus-visible{outline:2px solid var(--vermillion);outline-offset:3px;}
+header.top .right{display:flex;gap:22px;flex-wrap:wrap;}
+
+/* hero */
+.hero{margin:80px 0 56px;display:grid;grid-template-columns:1.65fr 1fr;gap:64px;align-items:end;}
+@media (max-width:900px){.hero{grid-template-columns:1fr;gap:28px;}}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--vermillion);margin-bottom:18px;}
+h1.display{font-family:var(--display);font-weight:300;
+  font-size:clamp(56px,8.5vw,124px);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;
+  line-height:0.92;letter-spacing:-0.03em;color:var(--ink);}
+h1.display em{font-style:italic;font-variation-settings:'opsz' 144,'SOFT' 100,'WONK' 1;
+  color:var(--vermillion);}
+.hero .right{font-family:var(--body);font-size:19px;line-height:1.55;color:var(--ink-soft);
+  font-style:italic;border-left:3px solid var(--vermillion);padding-left:24px;margin-bottom:6px;}
+
+/* generic section */
+.block{margin:64px 0;}
+.block .label{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--vermillion);margin-bottom:16px;}
+.block h2{font-family:var(--display);font-weight:400;
+  font-size:clamp(28px,3.6vw,42px);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;
+  line-height:1.05;letter-spacing:-0.015em;margin-bottom:20px;color:var(--ink);}
+.block h2 em{font-style:italic;font-variation-settings:'opsz' 144,'SOFT' 100,'WONK' 1;color:var(--vermillion);}
+.block .prose{max-width:760px;}
+.block .prose p{margin-bottom:16px;color:var(--ink-soft);}
+.block .prose strong{color:var(--ink);font-weight:600;}
+.block .prose em{color:var(--ink);font-style:italic;}
+.block .prose a{color:var(--vermillion-deep);text-decoration:none;
+  border-bottom:1px solid rgba(150,42,19,0.35);transition:all 0.2s;}
+.block .prose a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+
+/* lineage callout */
+.lineage{margin:0;padding:32px 36px;background:var(--ivory-shade);border-left:4px solid var(--vermillion);
+  max-width:860px;}
+.lineage p{font-size:17px;line-height:1.6;color:var(--ink-soft);}
+.lineage p strong{color:var(--ink);}
+.lineage a{color:var(--vermillion-deep);text-decoration:underline;}
+
+/* how it runs list */
+ul.runs{list-style:none;margin-top:8px;}
+ul.runs li{position:relative;padding:16px 0 16px 34px;border-top:1px dashed var(--rule);
+  color:var(--ink-soft);max-width:820px;}
+ul.runs li:first-child{border-top:none;}
+ul.runs li::before{content:'';position:absolute;left:0;top:24px;width:11px;height:11px;
+  border:2px solid var(--vermillion);border-radius:50%;}
+ul.runs li strong{color:var(--ink);}
+ul.runs li a{color:var(--vermillion-deep);text-decoration:none;border-bottom:1px solid rgba(150,42,19,0.35);}
+ul.runs li a:hover{color:var(--vermillion);}
+
+/* first steps */
+ol.steps{list-style:none;counter-reset:step;margin-top:8px;}
+ol.steps li{counter-increment:step;position:relative;padding:20px 0 20px 64px;
+  border-top:1px dashed var(--rule);color:var(--ink-soft);max-width:820px;}
+ol.steps li:first-child{border-top:none;}
+ol.steps li::before{content:counter(step);position:absolute;left:0;top:18px;width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;
+  font-weight:700;color:var(--vermillion);border:1.5px solid var(--vermillion);border-radius:50%;}
+ol.steps li strong{color:var(--ink);}
+ol.steps li a{color:var(--vermillion-deep);text-decoration:none;border-bottom:1px solid rgba(150,42,19,0.35);}
+ol.steps li a:hover{color:var(--vermillion);}
+
+/* module list */
+.dots-note{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--ink-mute);margin:6px 0 22px;}
+.module-row{display:grid;grid-template-columns:96px 1fr 150px;gap:28px;padding:22px 0;
+  border-bottom:1px dashed var(--rule);text-decoration:none;color:inherit;align-items:baseline;
+  transition:all 0.3s cubic-bezier(0.2,0.7,0.2,1);position:relative;}
+.module-row:first-of-type{border-top:1px dashed var(--rule);}
+.module-row:hover{padding-left:14px;background:linear-gradient(to right,var(--ivory-shade),transparent);}
+.module-row .mod-num{font-family:var(--display);font-weight:350;font-size:72px;
+  font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;color:var(--ink);line-height:0.85;
+  letter-spacing:-0.04em;}
+.module-row:hover .mod-num{color:var(--vermillion);}
+.module-row .mod-title{font-family:var(--display);font-weight:400;font-size:23px;
+  font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1;line-height:1.15;color:var(--ink);}
+.module-row .mod-title em{font-style:italic;color:var(--vermillion);}
+.module-row .mod-meta{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.module-row .intensity{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  padding:3px 9px;font-weight:600;}
+.intensity.low{background:var(--ivory-shade);color:var(--ink-mute);border:1px solid var(--rule);}
+.intensity.medium{background:var(--mustard);color:var(--ink);}
+.intensity.high{background:var(--vermillion);color:var(--ivory);}
+/* quiet completion dot — presence indicator only */
+.mod-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--rule);display:inline-block;}
+.mod-dot.present{background:var(--mustard);border-color:var(--mustard-text);}
+.dot-label{font-family:var(--mono);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-mute);display:flex;align-items:center;gap:7px;}
+
+/* link tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:10px;}
+.tile{display:block;padding:24px 26px;background:var(--ivory-shade);border:1px solid var(--rule);
+  border-top:3px solid var(--vermillion);text-decoration:none;color:inherit;transition:all 0.25s;}
+.tile:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(14,10,5,0.14);}
+.tile .tl-kicker{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--vermillion);margin-bottom:8px;}
+.tile .tl-name{font-family:var(--display);font-weight:400;font-size:22px;
+  font-variation-settings:'opsz' 144,'SOFT' 50;color:var(--ink);margin-bottom:6px;}
+.tile .tl-name em{font-style:italic;color:var(--vermillion);}
+.tile .tl-desc{font-size:15px;color:var(--ink-soft);line-height:1.5;}
+
+/* footer */
+footer.bottom{margin-top:80px;padding-top:32px;border-top:1px solid var(--rule);}
+footer.bottom .nav-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-mute);}
+footer.bottom .nav-row a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px;transition:all 0.2s;}
+footer.bottom .nav-row a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+footer.bottom .license{margin-top:26px;font-family:var(--mono);font-size:10px;line-height:1.7;
+  letter-spacing:0.04em;color:var(--ink-mute);max-width:880px;}
+footer.bottom .license a{color:var(--ink-mute);text-decoration:underline;}
+footer.bottom .license a:hover{color:var(--vermillion);}
+footer.bottom .license .cc{color:var(--ink-soft);font-weight:600;letter-spacing:0.06em;}
+
+@media (max-width:760px){
+  .wrap{padding:24px 20px 60px;}
+  .module-row{grid-template-columns:64px 1fr;gap:18px;}
+  .module-row .mod-num{font-size:52px;}
+  .module-row .mod-meta{grid-column:1 / -1;align-items:flex-start;flex-direction:row;gap:14px;padding-top:10px;}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important;}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to the front door</a>
+
+<div class="wrap">
+  <header class="top">
+    <div><span class="num">EXPAND THE BOX</span> · the digital course · v2</div>
+    <div class="right">
+      <a href="Course/module-00.html">Module 00 →</a>
+      <a href="Map%20Atlas/index.html">Map Atlas</a>
+      <a href="Interactive%20Tools/index.html">Tools</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="main">
+    <div class="left">
+      <div class="eyebrow">Possibility Management · self-paced · async</div>
+      <h1 class="display">Expand the <em>Box.</em></h1>
+      <p style="font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); margin: 6px 0 0;">Group Version · do it together, at your own pace</p>
+    </div>
+    <div class="right">
+      The front door. Five minutes to read. Everything else is linked from here. You read, you practice in your body, you exchange voice messages with one partner, and you run small experiments in your actual life. The work is in the reps, not the reading.
+    </div>
+  </section>
+
+  <!-- WHAT THIS IS -->
+  <section class="block">
+    <div class="label">What this is</div>
+    <h2>A twelve-module course in <em>thoughtware.</em></h2>
+    <div class="prose">
+      <p>
+        Expand the Box is a twelve-module, self-paced course in <strong>Possibility Management</strong> thoughtware: the Box, the four feelings, low drama and the Gremlin, listening and speaking as acts of possibility, and the three powers of choosing, asking dangerous questions, and declaring. You read, you practice, you exchange voice messages with one partner, and you run small experiments in your life.
+        <strong>This edition adds the group layer:</strong> a community commons, pods of 2–12 who witness each other’s work, and the public Staking practice — see <a href="Practice/Practicing%20in%20a%20Group.md">Practicing in a Group</a>.
+      </p>
+      <p>
+        It is <em>not</em> therapy, coaching, or treatment. It is an education in distinctions and maps, taken at your own pace inside a real safety container.
+      </p>
+    </div>
+  </section>
+
+  <!-- LINEAGE -->
+  <section class="block">
+    <div class="label">Where this work comes from</div>
+    <div class="lineage">
+      <p>
+        Everything taught here originates in <strong>Possibility Management</strong>, the body of thoughtware developed by <strong>Clinton Callahan</strong> and the Possibility Management community since the late 1980s, and given to the world under <strong>World Copyleft</strong>. This digital course is an independent re-presentation of that work for self-paced online learning. It is <strong>not an official Possibility Management training</strong>, and completing it certifies nothing. The course is licensed <a href="LICENSE.md">CC BY-SA 4.0</a>, consistent with the spirit of World Copyleft: share it, adapt it, keep the lineage attached. Full terms: <a href="LICENSE.md">LICENSE.md</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- HOW IT RUNS -->
+  <section class="block">
+    <div class="label">How the course runs</div>
+    <h2>Twelve modules. <em>One climb.</em> A way back.</h2>
+    <ul class="runs">
+      <li><strong>Twelve modules, 00 through 11</strong>, one every ~3 days, ~30 days total. Module 00 builds your container; Module 11 builds what comes after.</li>
+      <li><strong>Each module runs in 2–3 sittings.</strong> The file marks where each sitting ends. Stop at the marks; the breaks are part of the design.</li>
+      <li><strong>One daily practice, 5–10 minutes.</strong> A short morning sit that starts as a Beep! Book capture and, from Module 5, grows a Feelings Form bar reading inside the same sit. It never becomes a stack. Full spec: <a href="Practice/Daily%20Practice%20Spine.md">Daily Practice Spine</a>.</li>
+      <li><strong>One partner for the whole course.</strong> Voice messages, a few minutes each way, once per module. Your partner witnesses; they do not advise or fix.</li>
+      <li><strong>Modules 5–9 are the climb.</strong> Four High-intensity modules and a heavy Medium, back to back. They are gated: a consent check and a reachable partner before each one, a built-in pause after Module 6, and a rest day between Modules 8 and 9.</li>
+      <li><strong>Every module has two buttons.</strong> <em>Study the map</em> opens the interactive <a href="Map%20Atlas/index.html">Map Atlas</a>; <em>Run the practice</em> opens that module's tool in <a href="Interactive%20Tools/index.html">Interactive Tools</a>. Everything those tools record stays in your browser. <a href="Interactive%20Tools/journal.html">The journal</a> shows your records and exports them; <a href="Interactive%20Tools/ground.html">ground.html</a> holds the 60-second grounding script, one tap away, always.</li>
+    </ul>
+  </section>
+
+  <!-- FIRST THREE STEPS -->
+  <section class="block">
+    <div class="label">Your first three steps</div>
+    <h2>Start <em>here.</em></h2>
+    <ol class="steps">
+      <li><strong>Open <a href="Course/module-00.html">Module 00 — Start Here and Getting Your Container</a>.</strong> It walks you through getting your container: a cohort with a community manager, a recruited witness, or the honest solo path. Nothing else opens until your container exists.</li>
+      <li><strong>Install the Beep! Book.</strong> A literal notebook with "Beep! Book" on the cover. It is the daily practice from day one. Instrument spec: <a href="Practice/Beep%20Book%20Guide.md">Beep! Book Guide</a>.</li>
+      <li><strong>Put the schedule on your calendar.</strong> Twelve modules, the climb at 5–9, the pause after 6, the rest day before 9. Calendar it before you start, not after you slip.</li>
+    </ol>
+  </section>
+
+  <!-- MODULE LIST -->
+  <section class="block">
+    <div class="label">The twelve modules</div>
+    <h2>Read in <em>order.</em></h2>
+    <p class="dots-note">A filled dot just means this device has a saved record for that module. It is a quiet presence indicator — not a score, not a grade.</p>
+
+    <a class="module-row" href="Course/module-00.html">
+      <div class="mod-num">00</div>
+      <div class="mod-content"><div class="mod-title">Start Here &amp; Getting Your <em>Container</em></div></div>
+      <div class="mod-meta"><span class="intensity low">Low</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="00"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-01.html">
+      <div class="mod-num">01</div>
+      <div class="mod-content"><div class="mod-title">Orientation · New Context · Radical <em>Responsibility</em></div></div>
+      <div class="mod-meta"><span class="intensity low">Low</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="01"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-02.html">
+      <div class="mod-num">02</div>
+      <div class="mod-content"><div class="mod-title">Thoughtware · Thoughtmaps · <em>Box</em> Technology</div></div>
+      <div class="mod-meta"><span class="intensity low">Low</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="02"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-03.html">
+      <div class="mod-num">03</div>
+      <div class="mod-content"><div class="mod-title">Liquid State · Center-Ground-Bubble · Five <em>Bodies</em></div></div>
+      <div class="mod-meta"><span class="intensity low">Low</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="03"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-04.html">
+      <div class="mod-num">04</div>
+      <div class="mod-content"><div class="mod-title">Feedback · Coaching · Rapid Learning · <em>Experiments</em></div></div>
+      <div class="mod-meta"><span class="intensity low">Low</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="04"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-05.html">
+      <div class="mod-num">05</div>
+      <div class="mod-content"><div class="mod-title">Feelings vs Emotions · Old Map · <em>Numbness Bar</em></div></div>
+      <div class="mod-meta"><span class="intensity high">High</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="05"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-06.html">
+      <div class="mod-num">06</div>
+      <div class="mod-content"><div class="mod-title">Mixed Emotions · Emotional <em>Healing Process</em></div></div>
+      <div class="mod-meta"><span class="intensity high">High</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="06"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-07.html">
+      <div class="mod-num">07</div>
+      <div class="mod-content"><div class="mod-title">Low Drama · Gremlin Food · Shifting to <em>Responsible Game</em></div></div>
+      <div class="mod-meta"><span class="intensity high">High</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="07"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-08.html">
+      <div class="mod-num">08</div>
+      <div class="mod-content"><div class="mod-title">Listening · Speaking · Communication · <em>Completion Loops</em></div></div>
+      <div class="mod-meta"><span class="intensity medium">Medium</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="08"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-09.html">
+      <div class="mod-num">09</div>
+      <div class="mod-content"><div class="mod-title">Ego States · Problem Ownership · <em>Learning Spiral</em></div></div>
+      <div class="mod-meta"><span class="intensity high">High</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="09"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-10.html">
+      <div class="mod-num">10</div>
+      <div class="mod-content"><div class="mod-title">Map of Possibility · Bright Principles · Three Powers · <em>Integration</em></div></div>
+      <div class="mod-meta"><span class="intensity low">Low</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="10"></span><span>Record</span></span></div>
+    </a>
+    <a class="module-row" href="Course/module-11.html">
+      <div class="mod-num">11</div>
+      <div class="mod-content"><div class="mod-title">Continuation · 90-Day Container and <em>Possibility Team</em></div></div>
+      <div class="mod-meta"><span class="intensity low">Low</span>
+        <span class="dot-label"><span class="mod-dot" data-mod="11"></span><span>Record</span></span></div>
+    </a>
+  </section>
+
+  <!-- TOOLS + PRACTICE TILES -->
+  <section class="block">
+    <div class="label">Maps, tools, and the daily practice</div>
+    <h2>Study, practice, <em>ground.</em></h2>
+    <div class="tiles">
+      <a class="tile" href="Map%20Atlas/index.html">
+        <div class="tl-kicker">Study the map</div>
+        <div class="tl-name">Map <em>Atlas</em></div>
+        <div class="tl-desc">Every map taught on its own page — distinctions, recall decks, a reflection that stays in your browser.</div>
+      </a>
+      <a class="tile" href="Interactive%20Tools/index.html">
+        <div class="tl-kicker">Run the practice</div>
+        <div class="tl-name">Interactive <em>Tools</em></div>
+        <div class="tl-desc">One embodied tool per module. Records stay local. Open after you read the module.</div>
+      </a>
+      <a class="tile" href="Interactive%20Tools/journal.html">
+        <div class="tl-kicker">Your records</div>
+        <div class="tl-name">The <em>Journal</em></div>
+        <div class="tl-desc">Everything the tools saved on this device, in one place, with an export.</div>
+      </a>
+      <a class="tile" href="Interactive%20Tools/ground.html">
+        <div class="tl-kicker">If it gets heavy</div>
+        <div class="tl-name">Ground · <em>60 sec</em></div>
+        <div class="tl-desc">The grounding script, one tap away, always. If anything feels too far, too fast — ground first, then decide.</div>
+      </a>
+      <a class="tile" href="Practice/Daily%20Practice%20Spine.md">
+        <div class="tl-kicker">The daily sit</div>
+        <div class="tl-name">Daily Practice <em>Spine</em></div>
+        <div class="tl-desc">The one 5–10 minute morning practice that runs the whole course. Beep! Book, then the bar reading from Module 5.</div>
+      </a>
+      <a class="tile" href="Practice/Coming%20Back.md">
+        <div class="tl-kicker">If you pause</div>
+        <div class="tl-name">Coming <em>Back</em></div>
+        <div class="tl-desc">Stepping away is normal, and the course holds a path back. Shorter than re-reading where you stopped.</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- PRACTICE FILES -->
+  <section class="block">
+    <div class="label">The practice instruments</div>
+    <h2>The things you <em>install.</em></h2>
+    <div class="prose">
+      <p>
+        <a href="Practice/Beep%20Book%20Guide.md">Beep! Book Guide</a> · <a href="Practice/Daily%20Practice%20Spine.md">Daily Practice Spine</a> · <a href="Practice/Feelings%20Form.md">Feelings Form</a> · <a href="Practice/My%20Map%20Book.md">My Map Book</a> · <a href="Practice/Coming%20Back.md">Coming Back</a>.
+      </p>
+      <p>
+        Reading this without a cohort? You can — the license guarantees it, and the course holds a sanctioned solo path. Low and Medium modules are fully open. The High modules (5, 6, 7, 9) keep their witness gate: recruit a witness or defer the witnessed practices and do the locator-level work until a witness exists. Module 00 gives you the decision tree.
+      </p>
+    </div>
+  </section>
+
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="Course/module-00.html">Begin · Module 00 →</a>
+      <a href="Map%20Atlas/index.html">Map Atlas</a>
+      <a href="Interactive%20Tools/index.html">Interactive Tools</a>
+      <a href="LICENSE.md">License</a>
+    </div>
+    <p class="license">
+      <span class="cc">&#x1F12F; World Copyleft 2026 · Expand the Box (Digital).</span>
+      Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>, consistent with the spirit of World Copyleft.
+      Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community.
+      This course is an independent re-presentation, <strong>not an official Possibility Management training</strong>. Please share, share-alike.
+      Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>.
+      Full terms: <a href="LICENSE.md">LICENSE.md</a> in the course root.
+    </p>
+  </footer>
+</div>
+
+<script>
+/* Quiet per-module completion dots. A dot fills if this device holds ANY
+   etb_* localStorage key associated with that module — the module's
+   reflection/tool key, or an Atlas key for a map taught in that module.
+   Presence only: no scores, streaks, percentages, or badges. Consent keys
+   are never written, so they can never light a dot. */
+(function(){
+  /* Maps taught in each module (for Atlas-key presence). Sourced from the
+     Day files' "Study the map" links. */
+  var MODULE_MAPS = {
+    '00': [],
+    '01': ['M01','M24','M32','M28'],
+    '02': ['M02','M03','M04'],
+    '03': ['M05','M06','M07'],
+    '04': ['M25','M26'],
+    '05': ['M08','M09','M10','M33','M35','M37'],
+    '06': ['M11','M12','M38','M39','M40'],
+    '07': ['M13','M27','M28','M29','M47'],
+    '08': ['M14','M15','M16','M43'],
+    '09': ['M17','M18','M19'],
+    '10': ['M20','M21','M22','M23','M44','M46'],
+    '11': []
+  };
+  var keys = [];
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf('etb_') === 0) keys.push(k);
+    }
+  } catch (e) { return; }  /* storage blocked — leave all dots empty */
+
+  function modulePresent(mod){
+    /* direct module key, e.g. etb_module_05, etb_day_05, etb_mod05 */
+    var pad = mod;
+    for (var i = 0; i < keys.length; i++){
+      var k = keys[i];
+      if (k.indexOf('etb_module_' + pad) === 0) return true;
+      if (k.indexOf('etb_day_' + pad) === 0) return true;
+      if (k.indexOf('etb_mod' + pad) === 0) return true;
+    }
+    /* any Atlas key for a map taught in this module */
+    var maps = MODULE_MAPS[mod] || [];
+    for (var j = 0; j < maps.length; j++){
+      if (keys.indexOf('etb_atlas_' + maps[j]) !== -1) return true;
+    }
+    return false;
+  }
+
+  document.querySelectorAll('.mod-dot').forEach(function(dot){
+    var mod = dot.getAttribute('data-mod');
+    if (modulePresent(mod)){
+      dot.classList.add('present');
+      dot.setAttribute('title', 'This device has a saved record linked to this module.');
+    }
+  });
+})();
+</script>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. This course is an independent re-presentation, not an official Possibility Management training. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

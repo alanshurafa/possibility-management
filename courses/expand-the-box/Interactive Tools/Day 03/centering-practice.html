@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centering Practice · ETB Day 3</title>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --mustard: #d8b04a;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+
+/* paper grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.frame {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 28px 48px 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  gap: 24px;
+}
+.header .left { display: flex; gap: 28px; flex-wrap: wrap; }
+.header .right { display: flex; gap: 24px; align-items: baseline; flex-shrink: 0; }
+.header .num { color: var(--vermillion); font-weight: 500; }
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 60px 80px;
+  position: relative;
+}
+
+.step {
+  display: none;
+  max-width: 920px;
+  width: 100%;
+  text-align: center;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.step.active { display: block; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 22px;
+}
+
+h1.display {
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(34px, 5vw, 64px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 22px;
+  color: var(--ink);
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+
+.spoken {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(22px, 3vw, 32px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 22px auto;
+  padding: 26px 28px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  max-width: 700px;
+}
+.spoken::before, .spoken::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--vermillion);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.spoken::before { top: 0; }
+.spoken::after { bottom: -4px; }
+
+.spoken .declare {
+  color: var(--vermillion);
+  font-weight: 500;
+}
+
+.instruction {
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 580px;
+  margin: 0 auto 16px;
+}
+
+.cue {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 12px;
+}
+
+/* body silhouette block — center column with the SVG, breath ring next to it on wide screens */
+.figure-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 64px;
+  margin: 28px 0 24px;
+  flex-wrap: wrap;
+}
+
+.figure-wrap {
+  position: relative;
+  width: 200px;
+  height: 360px;
+  flex-shrink: 0;
+}
+
+.body-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* base silhouette: gentle, hand-drawn feel */
+.body-svg .body-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* the glowing center dot */
+.body-svg .center-dot {
+  fill: var(--vermillion);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.body-svg .center-glow {
+  fill: var(--vermillion);
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 0.8s ease;
+}
+.show-center .center-dot { opacity: 1; animation: dotPulse 4s ease-in-out infinite; }
+.show-center .center-glow { opacity: 0.45; animation: glowPulse 4s ease-in-out infinite; }
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); transform-origin: 100px 215px; }
+  50% { transform: scale(1.15); transform-origin: 100px 215px; }
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); transform-origin: 100px 215px; }
+  50% { opacity: 0.7; transform: scale(1.4); transform-origin: 100px 215px; }
+}
+
+/* grounding cord — animated draw down */
+.body-svg .cord {
+  stroke: var(--vermillion);
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0;
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  transition: opacity 0.5s ease;
+}
+.show-cord .cord {
+  opacity: 0.85;
+  animation: cordDrop 2.4s ease-out forwards, cordFlow 4s ease-in-out 2.4s infinite;
+}
+@keyframes cordDrop {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes cordFlow {
+  0%, 100% { stroke-opacity: 0.85; }
+  50% { stroke-opacity: 0.55; }
+}
+
+.body-svg .earth-line {
+  stroke: var(--ink-mute);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.show-cord .earth-line { opacity: 0.6; }
+
+.body-svg .earth-dot {
+  fill: var(--ink-mute);
+  opacity: 0;
+  transition: opacity 1.5s ease 2s;
+}
+.show-cord .earth-dot { opacity: 0.7; }
+
+/* bubble — soft circle around the figure, pulses */
+.body-svg .bubble {
+  fill: none;
+  stroke: var(--vermillion);
+  stroke-width: 1.3;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.body-svg .bubble-fill {
+  fill: var(--vermillion);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.show-bubble .bubble {
+  opacity: 0.7;
+  animation: bubblePulse 6s ease-in-out infinite;
+  transform-origin: 100px 180px;
+}
+.show-bubble .bubble-fill {
+  opacity: 0.05;
+  animation: bubbleFill 6s ease-in-out infinite;
+  transform-origin: 100px 180px;
+}
+@keyframes bubblePulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.04); opacity: 0.5; }
+}
+@keyframes bubbleFill {
+  0%, 100% { transform: scale(1); opacity: 0.05; }
+  50% { transform: scale(1.04); opacity: 0.09; }
+}
+
+/* golden cube — isometric, mustard, appears next to figure */
+.body-svg .cube-line {
+  fill: none;
+  stroke: var(--mustard);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  transition: opacity 0.5s ease;
+}
+.body-svg .cube-fill {
+  fill: var(--mustard);
+  opacity: 0;
+  transition: opacity 1s ease 1.5s;
+}
+.show-cube .cube-line {
+  opacity: 0.9;
+  animation: cubeDraw 1.8s ease-out forwards;
+}
+.show-cube .cube-fill { opacity: 0.12; }
+@keyframes cubeDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* breath circle */
+.breath {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+}
+.breath-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 1.5px solid var(--vermillion);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, var(--vermillion-soft) 0%, transparent 70%);
+}
+.breath-circle .pulse {
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: var(--vermillion);
+  opacity: 0.18;
+  animation: breathe 20s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%   { transform: scale(0.5); opacity: 0.10; }
+  50%  { transform: scale(1.0); opacity: 0.40; }
+  100% { transform: scale(0.5); opacity: 0.10; }
+}
+.breath-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  font-weight: 500;
+}
+.breath-count {
+  font-family: var(--display);
+  font-size: 32px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 0;
+  color: var(--ink);
+  line-height: 1;
+}
+.breath-elapsed {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+}
+
+/* setup-step posture diagram */
+.posture {
+  width: 90px;
+  height: 180px;
+  margin: 28px auto;
+  display: block;
+}
+
+/* buttons */
+.actions {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 16px 30px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn:hover {
+  background: var(--ink);
+  color: var(--ivory);
+}
+.btn.primary {
+  background: var(--vermillion);
+  border-color: var(--vermillion);
+  color: var(--ivory);
+}
+.btn.primary:hover {
+  background: var(--vermillion-deep);
+  border-color: var(--vermillion-deep);
+}
+.btn.ghost {
+  border-color: var(--ink-mute);
+  color: var(--ink-mute);
+}
+.btn.ghost:hover {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn.large {
+  font-size: 13px;
+  padding: 22px 42px;
+}
+
+/* journal capture */
+.capture {
+  margin: 24px auto;
+  max-width: 640px;
+}
+.capture textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: 24px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 20px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory-shade);
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  resize: vertical;
+  line-height: 1.5;
+}
+.capture textarea:focus {
+  outline: none;
+  border-color: var(--vermillion);
+  background: var(--ivory);
+}
+.capture .hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 10px;
+  display: block;
+  text-align: left;
+}
+
+/* journal card (closing step) */
+.journal-card {
+  border: 2px solid var(--vermillion);
+  padding: 36px 32px;
+  background: var(--ivory-shade);
+  position: relative;
+  margin: 28px auto;
+  max-width: 640px;
+  text-align: left;
+}
+.journal-card::before {
+  content: 'PRACTICE NOTE';
+  position: absolute;
+  top: -10px;
+  left: 28px;
+  background: var(--vermillion);
+  color: var(--ivory);
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+.journal-card .date {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+.journal-card .sentence {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.4;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+/* closing benediction list */
+.benediction {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 28px auto;
+  max-width: 580px;
+  text-align: left;
+}
+.benediction .line {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.3;
+  color: var(--ink);
+  padding-left: 22px;
+  border-left: 2px solid var(--vermillion);
+  opacity: 0;
+  animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.benediction .line:nth-child(1) { animation-delay: 0.2s; }
+.benediction .line:nth-child(2) { animation-delay: 1.0s; }
+.benediction .line:nth-child(3) { animation-delay: 1.8s; }
+.benediction .line:nth-child(4) { animation-delay: 2.6s; }
+.benediction .line:nth-child(5) {
+  animation-delay: 3.4s;
+  border-left-color: var(--mustard);
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+/* return-visit banner */
+.return-banner {
+  position: fixed;
+  top: 60px;
+  left: 48px;
+  right: 48px;
+  z-index: 3;
+  display: none;
+  padding: 18px 24px;
+  background: var(--ink);
+  color: var(--ivory);
+  border-left: 4px solid var(--vermillion);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.return-banner.show { display: flex; }
+.return-banner .label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin-right: 12px;
+}
+.return-banner .sentence-mini {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ivory);
+  flex: 1;
+  line-height: 1.4;
+}
+.return-banner button {
+  background: transparent;
+  color: var(--ivory);
+  border: 1px solid var(--ivory);
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.return-banner button:hover {
+  background: var(--ivory);
+  color: var(--ink);
+}
+
+/* progress dots */
+.progress {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+.progress .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rule);
+  transition: all 0.3s;
+}
+.progress .dot.active {
+  background: var(--vermillion);
+  width: 24px;
+  border-radius: 3px;
+}
+.progress .dot.done {
+  background: var(--ink-mute);
+}
+
+.nav-back {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border 0.2s;
+}
+.nav-back:hover {
+  color: var(--vermillion);
+  border-bottom-color: var(--vermillion);
+}
+
+.print-only { display: none; }
+@media print {
+  body::before, .return-banner, .progress, .header, .actions, .nav-back { display: none !important; }
+  .print-only { display: block; }
+  body { background: white; overflow: visible; }
+  .step { display: block !important; }
+  .step:not(.print-step) { display: none !important; }
+}
+
+@media (max-width: 720px) {
+  .header { padding: 20px 24px 0; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .header .right { flex-wrap: wrap; }
+  .main { padding: 24px 20px 80px; }
+  .figure-block { gap: 32px; }
+  .figure-wrap { width: 160px; height: 290px; }
+  .breath-circle { width: 140px; height: 140px; }
+  .return-banner { left: 16px; right: 16px; top: 50px; padding: 14px 16px; flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+
+<div class="return-banner" id="returnBanner">
+  <div style="display:flex; align-items:center; flex:1; min-width:0;">
+    <span class="label">Last practice</span>
+    <span class="sentence-mini" id="bannerSentence"></span>
+  </div>
+  <button onclick="hideBanner()">Run it again</button>
+</div>
+
+<div class="frame">
+  <div class="header">
+    <div class="left">
+      <span><span class="num">DAY 03</span> / EXPAND THE BOX</span>
+      <span>Centering Practice</span>
+    </div>
+    <div class="right">
+      <span><span id="stepLabel">STEP I</span> · OF VI</span>
+      <a href="index.html" class="nav-back">← All Day 3 tools</a>
+    </div>
+  </div>
+
+  <main class="main">
+
+    <!-- STEP 1: Setup -->
+    <section class="step active" data-step="1">
+      <div class="eyebrow">Day 3 · Energetic-body practice · ~15 minutes</div>
+      <h1 class="display">Center · Ground · <em>Bubble</em> · Cube</h1>
+      <p class="instruction">
+        The four energetic-body practices PM rests on. The equipment that lets you stay present
+        while thoughtware is loosening. Installed once here; sharpened by use over the rest of the course.
+      </p>
+      <p class="instruction">
+        Find a chair, or stand. Have the next fifteen minutes uninterrupted.
+        Have water nearby. Phone away. Eyes can close, or stay soft-open.
+      </p>
+      <svg class="posture" viewBox="0 0 90 180" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true">
+        <circle cx="45" cy="22" r="13"/>
+        <line x1="45" y1="35" x2="45" y2="110"/>
+        <line x1="45" y1="48" x2="22" y2="78"/>
+        <line x1="45" y1="48" x2="68" y2="78"/>
+        <line x1="45" y1="110" x2="32" y2="172"/>
+        <line x1="45" y1="110" x2="58" y2="172"/>
+        <line x1="20" y1="172" x2="44" y2="172" stroke="#c43b1c" stroke-width="2"/>
+        <line x1="46" y1="172" x2="70" y2="172" stroke="#c43b1c" stroke-width="2"/>
+      </svg>
+      <p class="cue">Read the next step in your body, not in your head.</p>
+      <div class="actions">
+        <button class="btn primary large" onclick="next()">I'm here — begin</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: Centering -->
+    <section class="step" data-step="2">
+      <div class="eyebrow">Step II · Centering · ~3 minutes</div>
+      <h1 class="display">Find your <em>center.</em></h1>
+      <div class="figure-block">
+        <div class="figure-wrap" id="fig2">
+          <!-- body silhouette will render here -->
+        </div>
+        <div class="breath">
+          <div class="breath-circle">
+            <div class="pulse"></div>
+          </div>
+          <div class="breath-label" id="breathPhase2">Breathe in</div>
+          <div class="breath-count" id="breathCount2">10</div>
+          <div class="breath-elapsed" id="elapsed2">0:00</div>
+        </div>
+      </div>
+      <div class="spoken">
+        Move your attention to your lower belly — a hand's-width below the navel, behind the abdominal wall.
+        <br><span class="declare">"My center is here."</span>
+      </div>
+      <p class="instruction">
+        Not a metaphor. The energetic location your choices, will and authority come from.
+        If it lives elsewhere in your torso — locate where it <em>actually</em> is. Do not move it.
+      </p>
+      <p class="cue">The rep is noticing you have left, and returning.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="next()">I found it — continue</button>
+        <button class="btn ghost" onclick="next()">Skip</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: Grounding cord -->
+    <section class="step" data-step="3">
+      <div class="eyebrow">Step III · Grounding cord · ~3 minutes</div>
+      <h1 class="display">Drop the <em>cord.</em></h1>
+      <div class="figure-block">
+        <div class="figure-wrap" id="fig3"></div>
+        <div class="breath">
+          <div class="breath-circle">
+            <div class="pulse"></div>
+          </div>
+          <div class="breath-label" id="breathPhase3">Breathe in</div>
+          <div class="breath-count" id="breathCount3">10</div>
+          <div class="breath-elapsed" id="elapsed3">0:00</div>
+        </div>
+      </div>
+      <div class="spoken">
+        Declare — by intention, not picture — a thick energetic cord from your center, through your seat,
+        through the floor, to the centre of the earth.
+        <br><span class="declare">"My grounding cord is dropped."</span>
+      </div>
+      <p class="instruction">
+        It exists because you said so. Now let excess energy — shoulder tension, charge from your day —
+        drain down it. Don't push. Allow. If a colour comes, note it without meaning anything by it.
+      </p>
+      <p class="cue">Discharge. Stability. Not insulation, not protection.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="next()">It's dropped — continue</button>
+        <button class="btn ghost" onclick="next()">Skip</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: Bubble -->
+    <section class="step" data-step="4">
+      <div class="eyebrow">Step IV · Bubble · ~3 minutes</div>
+      <h1 class="display">Set the <em>bubble.</em></h1>
+      <div class="figure-block">
+        <div class="figure-wrap" id="fig4"></div>
+        <div class="breath">
+          <div class="breath-circle">
+            <div class="pulse"></div>
+          </div>
+          <div class="breath-label" id="breathPhase4">Breathe in</div>
+          <div class="breath-count" id="breathCount4">10</div>
+          <div class="breath-elapsed" id="elapsed4">0:00</div>
+        </div>
+      </div>
+      <div class="spoken">
+        Declare a sphere of personal space around you — arm's length in every direction, including under
+        your feet and above your head.
+        <br><span class="declare">"My bubble is set."</span>
+      </div>
+      <p class="instruction">
+        <strong>A distinction, not a protection.</strong> It does not block anything. It clarifies what is
+        yours and what is not. Inside: your body, breath, feelings. Outside: the room, street noise,
+        whoever you were just thinking about.
+      </p>
+      <p class="cue">Too big? Pull it in. Collapsed against your skin? Push it out. Roughly arm's length.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="next()">It's set — continue</button>
+        <button class="btn ghost" onclick="next()">Skip</button>
+      </div>
+    </section>
+
+    <!-- STEP 5: Golden cube -->
+    <section class="step" data-step="5">
+      <div class="eyebrow">Step V · Golden cube · ~2 minutes</div>
+      <h1 class="display">Open the <em>workspace.</em></h1>
+      <div class="figure-block">
+        <div class="figure-wrap" id="fig5"></div>
+        <div class="breath">
+          <div class="breath-circle">
+            <div class="pulse"></div>
+          </div>
+          <div class="breath-label" id="breathPhase5">Breathe in</div>
+          <div class="breath-count" id="breathCount5">10</div>
+          <div class="breath-elapsed" id="elapsed5">0:00</div>
+        </div>
+      </div>
+      <div class="spoken">
+        From centered, grounded, bubbled — open a cube of golden light in front of you,
+        roughly the size of a small room, two paces away.
+        <br><span class="declare">"The cube is open."</span>
+      </div>
+      <p class="instruction">
+        Place inside <em>one</em> small piece of thoughtware work — a distinction to look at, a piece of your
+        Box from Day 2, a situation this week. Stay centered, grounded, bubbled while you look.
+        Do not solve. <em>Look.</em>
+      </p>
+      <p class="cue">Workspace, not refuge. Architect's drafting table.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="next()">I'm looking — continue</button>
+        <button class="btn ghost" onclick="next()">Skip</button>
+      </div>
+    </section>
+
+    <!-- STEP 6: Closing + journal -->
+    <section class="step" data-step="6">
+      <div class="eyebrow">Step VI · Closing</div>
+      <h1 class="display"><em>"The cube is closed."</em></h1>
+
+      <div class="benediction">
+        <div class="line">Your center is yours.</div>
+        <div class="line">Your grounding cord is yours.</div>
+        <div class="line">Your bubble is yours.</div>
+        <div class="line">Your workspace is yours.</div>
+        <div class="line">They will be there when you reach for them next time.</div>
+      </div>
+
+      <p class="instruction" style="margin-top: 28px;">
+        Three breaths. Open your eyes if they were closed. Drink water.
+      </p>
+
+      <p class="instruction">
+        In your own words, fast, no editing — one or two sentences. What shifted?
+      </p>
+
+      <div class="capture">
+        <textarea id="journalText" aria-label="Practice note — what shifted in this pass" placeholder="Center — where I found it · Cord — colour or sensation · Bubble — size before / after · Cube — what I placed, what I noticed…"></textarea>
+        <span class="hint">Saved on this device only. Re-readable on your next visit.</span>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary large" onclick="saveNote()">Save the rep</button>
+        <button class="btn ghost" onclick="skipNote()">Skip — close the practice</button>
+      </div>
+    </section>
+
+    <!-- STEP 7: Saved -->
+    <section class="step" data-step="7">
+      <div class="eyebrow">Witnessed. Dated. Saved.</div>
+      <h1 class="display">The equipment is <em>installed.</em></h1>
+
+      <div class="journal-card" id="savedCard">
+        <div class="date">
+          <span id="noteDate"></span>
+          <span>Day 03 · ETB</span>
+        </div>
+        <div class="sentence" id="noteSentence"></div>
+      </div>
+
+      <p class="instruction">
+        By the third or fourth pass, the equipment is yours — available in seconds.
+        Run this again tomorrow. Then run it again the day after that.
+      </p>
+
+      <p class="instruction">
+        Days 5, 6, 7 and 9 assume center, cord, and bubble are live in your body.
+        Today is the install. The rest of the course is the use.
+      </p>
+
+      <div class="actions">
+        <button class="btn" onclick="window.print()">Print this page</button>
+        <a href="index.html" class="btn primary">Return to Day 3</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="progress" id="progressBar"></div>
+</div>
+
+<script>
+/* ─── body silhouette SVG factory ──────────────────────────────────────────
+   Reused across steps 2–5. Hand-drawn-feeling — gentle strokes, slight
+   asymmetry, no perfect circles. The flags decide what extra elements show. */
+function bodySvg(opts) {
+  // opts: { center: bool, cord: bool, bubble: bool, cube: bool }
+  const classes = [
+    opts.center ? 'show-center' : '',
+    opts.cord   ? 'show-cord'   : '',
+    opts.bubble ? 'show-bubble' : '',
+    opts.cube   ? 'show-cube'   : ''
+  ].filter(Boolean).join(' ');
+
+  // viewBox 200×360. Figure roughly centered at x=100. Center dot at (100, 215).
+  // Hand-drawn-feeling: paths with slight bezier wiggle rather than perfect arcs.
+  return `
+  <svg class="body-svg ${classes}" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- bubble (drawn first so it sits behind the figure) -->
+    <ellipse class="bubble-fill" cx="100" cy="180" rx="92" ry="158"/>
+    <ellipse class="bubble" cx="100" cy="180" rx="92" ry="158"/>
+
+    <!-- earth reference line + dot for cord -->
+    <line class="earth-line" x1="20" y1="340" x2="180" y2="340"/>
+    <circle class="earth-dot" cx="100" cy="345" r="4"/>
+
+    <!-- grounding cord: from center (100,215) curving down past the seat to earth -->
+    <path class="cord" d="M 100 215 Q 102 260, 98 290 Q 96 315, 100 340"/>
+
+    <!-- body silhouette: head, neck, torso, arms, legs — gentle hand-drawn curves -->
+    <!-- head -->
+    <path class="body-line" d="M 100 55
+                               C 116 55, 124 67, 123 80
+                               C 122 92, 114 100, 100 100
+                               C 86 100, 78 92, 77 80
+                               C 76 67, 84 55, 100 55 Z"/>
+    <!-- neck -->
+    <path class="body-line" d="M 92 100 Q 93 108, 90 116"/>
+    <path class="body-line" d="M 108 100 Q 107 108, 110 116"/>
+
+    <!-- torso outline: shoulders, sides, hips -->
+    <path class="body-line" d="M 90 116
+                               C 76 118, 64 128, 62 145
+                               C 61 165, 65 195, 70 225
+                               C 72 245, 76 262, 82 275"/>
+    <path class="body-line" d="M 110 116
+                               C 124 118, 136 128, 138 145
+                               C 139 165, 135 195, 130 225
+                               C 128 245, 124 262, 118 275"/>
+
+    <!-- shoulder line (subtle) -->
+    <path class="body-line" d="M 90 116 Q 100 113, 110 116"/>
+
+    <!-- arms: down at sides, soft -->
+    <path class="body-line" d="M 64 145
+                               C 56 165, 50 190, 48 215
+                               C 47 232, 50 245, 54 256"/>
+    <path class="body-line" d="M 136 145
+                               C 144 165, 150 190, 152 215
+                               C 153 232, 150 245, 146 256"/>
+    <!-- hands -->
+    <path class="body-line" d="M 50 256 Q 48 264, 53 270"/>
+    <path class="body-line" d="M 150 256 Q 152 264, 147 270"/>
+
+    <!-- legs -->
+    <path class="body-line" d="M 82 275
+                               C 80 295, 78 318, 78 340"/>
+    <path class="body-line" d="M 118 275
+                               C 120 295, 122 318, 122 340"/>
+    <path class="body-line" d="M 96 280
+                               C 96 300, 96 320, 96 340"/>
+    <path class="body-line" d="M 104 280
+                               C 104 300, 104 320, 104 340"/>
+
+    <!-- feet on ground -->
+    <path class="body-line" d="M 72 340 Q 88 343, 96 340"/>
+    <path class="body-line" d="M 104 340 Q 112 343, 128 340"/>
+
+    <!-- center: glowing dot in lower belly (hara) -->
+    <circle class="center-glow" cx="100" cy="215" r="12"/>
+    <circle class="center-dot" cx="100" cy="215" r="5"/>
+
+    <!-- golden cube — isometric, to the right of figure, two paces away -->
+    <g style="transform: translate(0px, 0px);">
+      <!-- top face -->
+      <path class="cube-fill" d="M 165 200 L 188 192 L 188 222 L 165 230 Z"/>
+      <path class="cube-fill" d="M 142 208 L 165 200 L 165 230 L 142 238 Z"/>
+      <path class="cube-fill" d="M 142 208 L 165 200 L 188 192 L 165 184 Z"/>
+      <!-- cube edges (hand-drawn) -->
+      <path class="cube-line" d="M 142 208 L 165 200 L 188 192"/>
+      <path class="cube-line" d="M 165 200 L 165 230"/>
+      <path class="cube-line" d="M 188 192 L 188 222"/>
+      <path class="cube-line" d="M 165 184 L 188 192"/>
+      <path class="cube-line" d="M 142 208 L 165 184"/>
+      <path class="cube-line" d="M 142 208 L 142 238 L 165 230 L 188 222"/>
+    </g>
+  </svg>`;
+}
+
+/* ─── state ──────────────────────────────────────────────────────────────── */
+const TOTAL_STEPS = 6;
+let current = 1;
+const breathTimers = {}; // keyed by stepNum
+const elapsedTimers = {};
+
+/* ─── render figures for each interactive step ──────────────────────────── */
+function renderFigures() {
+  document.getElementById('fig2').innerHTML = bodySvg({ center: true, cord: false, bubble: false, cube: false });
+  document.getElementById('fig3').innerHTML = bodySvg({ center: true, cord: true,  bubble: false, cube: false });
+  document.getElementById('fig4').innerHTML = bodySvg({ center: true, cord: true,  bubble: true,  cube: false });
+  document.getElementById('fig5').innerHTML = bodySvg({ center: true, cord: true,  bubble: true,  cube: true  });
+}
+
+/* ─── step navigation ───────────────────────────────────────────────────── */
+function show(stepId) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const target = document.querySelector(`[data-step="${stepId}"]`);
+  if (target) target.classList.add('active');
+  updateProgress(stepId);
+  const label = (typeof stepId === 'number' && stepId <= TOTAL_STEPS) ? toRoman(stepId) : '';
+  document.getElementById('stepLabel').textContent = label ? `STEP ${label}` : `COMPLETE`;
+
+  // Stop all running timers, then start the one for this step
+  Object.keys(breathTimers).forEach(k => { clearInterval(breathTimers[k]); delete breathTimers[k]; });
+  Object.keys(elapsedTimers).forEach(k => { clearInterval(elapsedTimers[k]); delete elapsedTimers[k]; });
+
+  if (stepId >= 2 && stepId <= 5) startBreath(stepId);
+
+  // Focus management: move focus to the new step's heading (step 6 prefers its textarea)
+  if (target) {
+    setTimeout(() => {
+      if (stepId === 6) {
+        const ta = document.getElementById('journalText');
+        if (ta) { ta.focus(); return; }
+      }
+      const heading = target.querySelector('h1.display');
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus({ preventScroll: true });
+      }
+    }, stepId === 6 ? 500 : 80);
+  }
+
+  // Scroll to top of the step for long pages
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function next() {
+  current++;
+  if (current > 7) return;
+  show(current);
+}
+
+function toRoman(num) {
+  const map = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+  return map[num] || '';
+}
+
+function updateProgress(stepId) {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  const stepNum = (typeof stepId === 'number') ? stepId : TOTAL_STEPS + 1;
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    if (stepNum > TOTAL_STEPS) {
+      dot.classList.add('done');
+    } else if (i === stepNum) {
+      dot.classList.add('active');
+    } else if (i < stepNum) {
+      dot.classList.add('done');
+    }
+    bar.appendChild(dot);
+  }
+}
+
+/* ─── breath pacing: 10s in / 10s out, ambient (no fixed cycle count) ──── */
+function startBreath(stepNum) {
+  const phaseEl   = document.getElementById(`breathPhase${stepNum}`);
+  const countEl   = document.getElementById(`breathCount${stepNum}`);
+  const elapsedEl = document.getElementById(`elapsed${stepNum}`);
+  if (!phaseEl || !countEl || !elapsedEl) return;
+
+  let phase = 'in';
+  let phaseSeconds = 10;
+  let totalSeconds = 0;
+  phaseEl.textContent = 'Breathe in';
+  countEl.textContent = phaseSeconds;
+  elapsedEl.textContent = '0:00';
+
+  breathTimers[stepNum] = setInterval(() => {
+    phaseSeconds--;
+    totalSeconds++;
+
+    if (phaseSeconds <= 0) {
+      phase = (phase === 'in') ? 'out' : 'in';
+      phaseSeconds = 10;
+      phaseEl.textContent = (phase === 'in') ? 'Breathe in' : 'Breathe out';
+    }
+    countEl.textContent = phaseSeconds;
+
+    const m = Math.floor(totalSeconds / 60);
+    const s = String(totalSeconds % 60).padStart(2, '0');
+    elapsedEl.textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+/* ─── journal capture ────────────────────────────────────────────────────── */
+function saveNote() {
+  const text = document.getElementById('journalText').value.trim();
+  if (!text) {
+    document.getElementById('journalText').focus();
+    return;
+  }
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  localStorage.setItem('etb_day03_practice', JSON.stringify({
+    text,
+    date: dateStr,
+    iso: now.toISOString()
+  }));
+  // Increment the rep counter
+  const repsRaw = localStorage.getItem('etb_day03_reps');
+  const reps = repsRaw ? parseInt(repsRaw, 10) + 1 : 1;
+  localStorage.setItem('etb_day03_reps', String(reps));
+
+  document.getElementById('noteDate').textContent = dateStr;
+  document.getElementById('noteSentence').textContent = text;
+  current = 7;
+  show(7);
+}
+
+function skipNote() {
+  // Still log a rep, but no journal text
+  const repsRaw = localStorage.getItem('etb_day03_reps');
+  const reps = repsRaw ? parseInt(repsRaw, 10) + 1 : 1;
+  localStorage.setItem('etb_day03_reps', String(reps));
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('noteDate').textContent = dateStr;
+  document.getElementById('noteSentence').textContent = '(no note this pass — rep counted)';
+  current = 7;
+  show(7);
+}
+
+function hideBanner() {
+  document.getElementById('returnBanner').classList.remove('show');
+}
+
+/* ─── on load: render figures + check for prior practice ─────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  renderFigures();
+  const stored = localStorage.getItem('etb_day03_practice');
+  if (stored) {
+    try {
+      const data = JSON.parse(stored);
+      const repsRaw = localStorage.getItem('etb_day03_reps');
+      const reps = repsRaw ? parseInt(repsRaw, 10) : 1;
+      const repLabel = reps === 1 ? '1 pass' : `${reps} passes`;
+      const noteText = data.text && !data.text.startsWith('(no note')
+        ? `"${data.text}"`
+        : '(rep counted, no note)';
+      document.getElementById('bannerSentence').textContent =
+        `${data.date} · ${repLabel} · ${noteText}`;
+      document.getElementById('returnBanner').classList.add('show');
+    } catch (e) {}
+  }
+  show(1);
+});
+</script>
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

@@ -1,6 +1,11 @@
-.playwright-mcp/
-*.jpeg
+# Vercel
 .vercel/
-thoughtmap-atlas/.vercel/
+
+# OS / Drive cruft
 desktop.ini
 **/desktop.ini
+.DS_Store
+
+# Local preview scratch
+.playwright-mcp/
+*.jpeg

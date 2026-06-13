@@ -11,6 +11,7 @@ Each property is a self-contained static site in its own folder, so you can take
 | Property | What it is | Live demo |
 |----------|------------|-----------|
 | [Thoughtmap Atlas](thoughtmaps/) | Every PM thoughtmap in one place, each with its own interactive one-page module. | [open](https://alanshurafa.github.io/possibility-management/thoughtmaps/) |
+| [Infographic Atlas](infographics/) | Every map as an infographic, each with a summary and a teaching page. | [open](https://alanshurafa.github.io/possibility-management/infographics/) |
 | [Expand the Box](courses/expand-the-box/) | The full course: modules, daily interactive tools, practice spines, and learner resources. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/) |
 | [Interactive Tools](courses/expand-the-box/Interactive%20Tools/) | Feeling locator, drama detector, EHP walker, ego-state locator, and more. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/Interactive%20Tools/) |
 
@@ -20,6 +21,7 @@ Each property is a self-contained static site in its own folder, so you can take
 index.html              the hub that links to every property
 _shared/                the common design kit: fonts, tokens, base styles
 thoughtmaps/            the Thoughtmap Atlas
+infographics/           the Infographic Atlas (gallery + per-map teaching pages)
 courses/
   expand-the-box/       the Expand the Box course site
 tools/                  room for standalone teaching tools

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EHP Learnings · Thoughtmap Atlas M40 · Expand the Box</title>
+<meta name="description" content="Interactive teaching tool for the Possibility Management EHP Learnings map — the Go!/Beep! field log harvested from many EHPs, describing the client&#x27;s discipline. Study level only; practice is gated in the Day 6 walker.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="../_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+/* ============================================================
+   THOUGHTMAP ATLAS — shared design system (template for all maps).
+   Tokens, paper-grain, GROUND-NOW, reduced-motion and the
+   license comment are inherited from the ETB course design system
+   (see Thoughtmap Atlas / M10 - New Map of Feelings.html). Keep in sync.
+   ============================================================ */
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --vermillion-glow: rgba(196, 59, 28, 0.32);
+  --mustard: #d8b04a;
+  --mustard-text: #b8902c;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a.skip-link {
+  position: absolute; left: -9999px; top: 8px; z-index: 200;
+  background: var(--ink); color: var(--ivory); font-family: var(--mono);
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 12px 18px; text-decoration: none;
+}
+a.skip-link:focus { left: 8px; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+/* HEADER BAR */
+header.top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-mute);
+  padding-bottom: 32px; border-bottom: 1px solid var(--rule); gap: 24px;
+}
+header.top .left { display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+header.top .right { display: flex; gap: 22px; flex-wrap: wrap; align-items: baseline; }
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top .brand { color: var(--ink-mute); }
+header.top a {
+  color: var(--ink-mute); text-decoration: none;
+  border-bottom: 1px solid transparent; padding-bottom: 2px; transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+header.top a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+
+/* HERO */
+.hero { margin: 48px 0 24px; max-width: 920px; }
+.eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--vermillion); margin-bottom: 16px;
+}
+h1.display {
+  font-family: var(--display); font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98; letter-spacing: -0.025em; margin-bottom: 22px;
+}
+h1.display em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion);
+}
+.lede {
+  font-family: var(--body); font-size: 21px; line-height: 1.5;
+  color: var(--ink-soft); max-width: 760px; font-style: italic;
+}
+
+/* MAP FIGURE */
+figure.map-figure {
+  margin: 56px 0 16px; padding: 28px; background: var(--ivory-shade);
+  border: 1px solid var(--rule); border-top: 3px solid var(--vermillion);
+  text-align: center;
+}
+figure.map-figure a.map-link { display: block; position: relative; text-decoration: none; cursor: zoom-in; }
+figure.map-figure a.map-link:focus-visible { outline: 3px solid var(--vermillion); outline-offset: 4px; }
+figure.map-figure img {
+  width: 100%; max-width: 720px; height: auto; margin: 0 auto; display: block;
+  border: 1px solid var(--rule); background: var(--ivory);
+  box-shadow: 0 14px 40px rgba(14, 10, 5, 0.16);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s;
+}
+figure.map-figure a.map-link:hover img { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(14, 10, 5, 0.22); }
+figure.map-figure figcaption {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-mute); margin-top: 20px;
+}
+figure.map-figure figcaption .zoom-hint { color: var(--vermillion); }
+
+/* SECTION FRAME */
+.section { margin-top: 56px; padding: 48px 52px; background: var(--ivory-shade); border-top: 3px solid var(--vermillion); }
+.section .section-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--vermillion); margin-bottom: 14px;
+}
+.section h2 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 40px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 1.05; letter-spacing: -0.015em; margin-bottom: 18px; color: var(--ink);
+}
+.section h2 em { font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; color: var(--vermillion); }
+.section .prose { font-family: var(--body); font-size: 19px; line-height: 1.6; color: var(--ink-soft); max-width: 760px; }
+.section .prose p { margin-bottom: 16px; }
+.section .prose p:last-child { margin-bottom: 0; }
+.section .prose em { color: var(--ink); font-style: italic; }
+.section .prose strong { color: var(--ink); font-weight: 600; }
+.section .prose .emph {
+  font-family: var(--display); font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  color: var(--vermillion); font-weight: 400;
+}
+
+/* STEPPER (distinctions) */
+.stepper-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin: 28px 0 6px; flex-wrap: wrap; }
+.stepper-count { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); }
+.stepper-count .now { color: var(--vermillion); font-weight: 700; }
+.progress { display: flex; gap: 4px; margin: 8px 0 22px; }
+.progress .seg { flex: 1; height: 3px; background: var(--rule); transition: background 0.2s; }
+.progress .seg.done { background: var(--mustard); }
+.progress .seg.current { background: var(--vermillion); }
+.step-card {
+  background: var(--ivory); border: 1.5px solid var(--ink-mute);
+  border-left: 4px solid var(--vermillion); padding: 34px 38px; min-height: 200px;
+  animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.step-card[hidden] { display: none; }
+.step-card .sc-kicker { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mustard-text); font-weight: 600; margin-bottom: 10px; }
+.step-card .sc-name {
+  font-family: var(--display); font-weight: 400; font-style: italic;
+  font-size: clamp(28px, 3.6vw, 42px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  line-height: 1.05; color: var(--vermillion); margin-bottom: 16px;
+}
+.step-card .sc-body { font-family: var(--body); font-size: 19px; line-height: 1.6; color: var(--ink-soft); }
+.step-card .sc-body em { color: var(--ink); font-style: italic; }
+.step-card .sc-body strong { color: var(--ink); font-weight: 600; }
+.step-card .sc-rows { margin-top: 6px; }
+.step-card .sc-row {
+  display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 10px 0;
+  border-top: 1px dashed var(--rule); font-size: 17px; line-height: 1.5;
+}
+.step-card .sc-row:first-child { border-top: none; }
+.step-card .sc-row .lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); font-weight: 600; padding-top: 4px; }
+.step-card .sc-row .val { color: var(--ink-soft); }
+.step-card .sc-row .val.shadow { font-family: var(--display); font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; color: var(--ink-mute); }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* RECALL DECK + FLIP CARDS */
+.flip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 26px; }
+@media (max-width: 760px) { .flip-grid { grid-template-columns: 1fr; } }
+.flip { background: transparent; perspective: 1400px; min-height: 230px; cursor: pointer; border: none; padding: 0; text-align: left; font: inherit; display: block; width: 100%; }
+.flip:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 4px; }
+.flip-inner { position: relative; width: 100%; min-height: 230px; height: 100%; transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1); transform-style: preserve-3d; }
+.flip[aria-pressed="true"] .flip-inner { transform: rotateY(180deg); }
+.flip-face { position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; padding: 26px 28px; display: flex; flex-direction: column; justify-content: flex-start; }
+.flip-face .fc-tag { font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+.flip-face .fc-text { font-family: var(--display); font-weight: 400; font-size: 21px; font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1; line-height: 1.3; }
+.flip-face .fc-hint { margin-top: auto; padding-top: 16px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; }
+.flip-front { background: var(--ivory); border: 1.5px solid var(--ink-mute); }
+.flip-front .fc-tag { color: var(--ink-mute); }
+.flip-front .fc-tag::before { content: '?  '; color: var(--mustard-text); }
+.flip-front .fc-text { color: var(--ink); font-style: italic; }
+.flip-front .fc-hint { color: var(--ink-mute); }
+.flip-back { background: var(--ink); border: 1.5px solid var(--ink); transform: rotateY(180deg); }
+.flip-back .fc-tag { color: var(--mustard); }
+.flip-back .fc-tag::before { content: '\2192  '; color: var(--mustard); }
+.flip-back .fc-text { color: var(--ivory); }
+.flip-back .fc-text em { color: var(--mustard); font-style: italic; }
+.flip-back .fc-hint { color: rgba(244, 236, 220, 0.5); }
+
+/* MISUNDERSTANDINGS — wrong/right flip cards (✗ / ✓) */
+.flip-mis .flip-front .fc-tag::before { content: '\2717  '; color: var(--ink-mute); }
+.flip-mis .flip-back .fc-tag::before { content: '\2713  '; color: var(--mustard); }
+
+/* SAFETY ROUTING (EHP study-level maps) */
+.practice-meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); margin: 22px 0 8px; }
+.practice-closer {
+  margin-top: 24px; padding: 22px 26px; background: var(--ivory);
+  border-left: 3px solid var(--vermillion); font-family: var(--display);
+  font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-size: 18px; line-height: 1.5; color: var(--ink);
+}
+.practice-capture { margin-top: 24px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.capture-state { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mustard-text); }
+
+/* REFLECTION */
+.reflect-label { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); margin: 22px 0 12px; }
+textarea.reflect {
+  width: 100%; padding: 22px 26px; font-family: var(--display); font-style: italic;
+  font-size: 21px; font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  background: var(--ivory); color: var(--ink); border: 1.5px solid var(--rule);
+  resize: vertical; min-height: 120px; line-height: 1.45; display: block;
+}
+textarea.reflect:focus { outline: none; border-color: var(--vermillion); }
+.reflect-row { display: flex; gap: 14px; margin-top: 16px; align-items: center; flex-wrap: wrap; }
+.reflect-saved { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mustard-text); }
+.privacy-note { margin-top: 18px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); }
+.prior-entry {
+  margin-top: 18px; padding: 18px 22px; background: var(--ivory);
+  border-left: 3px solid var(--mustard); font-family: var(--display); font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100; font-size: 17px; line-height: 1.5; color: var(--ink-soft);
+}
+.prior-entry[hidden] { display: none; }
+.prior-entry .pe-label { font-family: var(--mono); font-style: normal; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); display: block; margin-bottom: 8px; }
+
+/* BUTTONS */
+.btn {
+  font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; padding: 13px 24px; background: transparent; color: var(--ink);
+  border: 1.5px solid var(--ink); cursor: pointer; transition: all 0.2s; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn:hover { background: var(--ink); color: var(--ivory); }
+.btn:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+.btn.primary { background: var(--vermillion); border-color: var(--vermillion); color: var(--ivory); }
+.btn.primary:hover { background: var(--vermillion-deep); border-color: var(--vermillion-deep); }
+.btn.ghost { border-color: var(--ink-mute); color: var(--ink-mute); }
+.btn.ghost:hover { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+.btn[disabled]:hover { background: transparent; color: var(--ink); }
+
+/* FOOTER */
+footer.bottom { margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--rule); }
+footer.bottom .nav-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
+footer.bottom .nav-row a { color: var(--ink-mute); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 2px; transition: all 0.2s; }
+footer.bottom .nav-row a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+footer.bottom .nav-row a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+footer.bottom .license { margin-top: 26px; font-family: var(--mono); font-size: 10px; line-height: 1.7; letter-spacing: 0.04em; color: var(--ink-mute); max-width: 860px; }
+footer.bottom .license a { color: var(--ink-mute); text-decoration: underline; }
+footer.bottom .license a:hover { color: var(--vermillion); }
+footer.bottom .license .cc { color: var(--ink-soft); font-weight: 600; letter-spacing: 0.06em; }
+
+/* GROUND NOW */
+.ground-now {
+  position: fixed; top: 24px; right: 24px; z-index: 50; background: var(--vermillion);
+  color: var(--ivory); border: 2px solid var(--vermillion-deep); font-family: var(--mono);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 16px 22px; cursor: pointer; box-shadow: 0 8px 24px rgba(196, 59, 28, 0.28);
+  transition: all 0.25s ease; line-height: 1.1;
+}
+.ground-now:hover { background: var(--vermillion-deep); transform: translateY(-1px); box-shadow: 0 10px 28px rgba(196, 59, 28, 0.36); }
+.ground-now:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.ground-now .small { display: block; font-size: 9px; letter-spacing: 0.18em; font-weight: 500; opacity: 0.85; margin-top: 3px; }
+
+/* GROUNDING MODAL */
+.modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(14, 10, 5, 0.86); align-items: center; justify-content: center; padding: 32px; }
+.modal.show { display: flex; }
+.modal-inner { max-width: 620px; width: 100%; background: var(--ivory); border: 2px solid var(--vermillion); padding: 44px 40px 36px; position: relative; max-height: 90vh; overflow-y: auto; }
+.modal-inner::before { content: 'GROUNDING · 60 SECONDS'; position: absolute; top: -12px; left: 28px; background: var(--vermillion); color: var(--ivory); padding: 5px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; font-weight: 600; }
+.modal-inner h2 { font-family: var(--display); font-style: italic; font-weight: 400; font-size: 32px; font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; margin-bottom: 18px; color: var(--ink); }
+.modal-inner h2 em { font-style: italic; color: var(--vermillion); }
+.modal-inner ol { margin: 0 0 22px 22px; font-size: 18px; line-height: 1.55; color: var(--ink-soft); }
+.modal-inner ol li { margin-bottom: 12px; }
+.modal-inner ol li strong { color: var(--ink); }
+.modal-inner .session-paused { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); margin-top: 10px; }
+.modal-inner .modal-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 26px; }
+
+@media (max-width: 760px) {
+  .wrap { padding: 24px 20px 60px; }
+  .section { padding: 32px 26px; }
+  .step-card { padding: 28px 24px; }
+  .ground-now { top: 16px; right: 16px; padding: 12px 16px; font-size: 11px; }
+  .modal-inner { padding: 36px 24px 28px; }
+  .step-card .sc-row { grid-template-columns: 1fr; gap: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important; animation-iteration-count:1!important;
+    transition-duration:.001ms!important; scroll-behavior:auto!important;
+  }
+  .flip[aria-pressed="true"] .flip-inner { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to map</a>
+
+<!-- floating safety button — always available; map study can engage the emotional body -->
+<button class="ground-now" id="groundNowBtn" type="button" onclick="openGround()" aria-haspopup="dialog">
+  GROUND NOW
+  <span class="small">60-second pause</span>
+</button>
+
+<div class="wrap">
+
+  <!-- 1 · HEADER BAR -->
+  <header class="top">
+    <div class="left">
+      <span><span class="num">THOUGHTMAP ATLAS · M40</span></span>
+      <span class="brand">Possibility Management</span>
+    </div>
+    <div class="right">
+      <a href="../index.html">← All maps</a>
+      <a href="../Days/Day%2006%20-%20Mixed%20Emotions%20and%20Emotional%20Healing%20Process.md">Taught in Day 06 →</a>
+    </div>
+  </header>
+
+  <!-- 2 · HERO -->
+  <section class="hero" id="main">
+    <div class="eyebrow">Study the map · Emotional Healing Process · Day 6</div>
+    <h1 class="display">What EHPs <em>teach.</em></h1>
+    <p class="lede">A second Go!/Beep! card, harvested from many EHPs — and it describes the client's discipline as much as the spaceholder's. If you keep one line for your own practice, keep: thinking over feeling is the Beep!</p>
+  </section>
+
+  <!-- 3 · THE MAP -->
+  <figure class="map-figure">
+    <a class="map-link" href="../Maps/M40.png" target="_blank" rel="noopener" aria-label="Open the full-size EHP Learnings in a new tab">
+      <img src="../Maps/M40.png" alt="The EHP Learnings map: a second Go!/Beep! card harvested from many Emotional Healing Processes. The Go! column — the feeling is found in the body, the body leads and words follow, the client experiences rather than narrates, one team. The Beep! column — performing instead of feeling, distractions, telling the client what they feel, thinking over feeling, managing toward a goal.">
+    </a>
+    <figcaption>EHP Learnings · <span class="zoom-hint">click the map to open full-size →</span></figcaption>
+  </figure>
+
+  <!-- 4 · WHAT THIS MAP SHOWS -->
+  <section class="section" aria-labelledby="shows-h">
+    <div class="section-label">What this map shows</div>
+    <h2 id="shows-h">Keep one line: <em>thinking over feeling</em> is the Beep!</h2>
+    <div class="prose"><p>A second Go!/Beep! card, harvested from many EHPs, and it describes the <em>client's</em> discipline as much as the spaceholder's.</p><p>The <strong>Go!</strong> column: the feeling is found <em>in the body</em>; the body leads and the words follow; the client gets space to <em>experience</em> rather than narrate; the voice stays even and strong; both people are on one team; the emotion is sensed where it actually sits, right at the surface.</p><p>The <strong>Beep!</strong> column is a catalogue of the ways the process gets stolen: performing instead of feeling; distractions; telling the client what they feel; firing too many questions too fast; the verdict <em>"you are doing this"</em>; coaching when the moment asked for witnessing; thinking over feeling; and managing the client toward a goal — the subtle one, because a goal-shaped EHP is no longer a discovery.</p><p>If you keep one line from this map for your own practice, keep <span class="emph">thinking over feeling.</span> Every learner hits the moment where the mind offers a tidy explanation in exchange for not feeling the next wave. The explanation is the Beep!</p></div>
+  </section>
+
+  <!-- 5 · WALK THE DISTINCTIONS (stepper) -->
+  <section class="section" aria-labelledby="walk-h">
+    <div class="section-label">Key distinctions</div>
+    <h2 id="walk-h">Take them <em>one at a time.</em></h2>
+    <p class="prose">Step through the load-bearing distinctions this map draws. Move at the pace of your body, not your reading speed.</p>
+
+    <div class="stepper-head">
+      <div class="stepper-count">Distinction <span class="now" id="stepNow">1</span> of <span id="stepTotal">5</span></div>
+    </div>
+    <div class="progress" id="stepProgress" aria-hidden="true"></div>
+
+    <div id="stepRegion" aria-live="polite"></div>
+
+    <div class="quote-tools" style="margin-top: 22px; display:flex; gap:14px; flex-wrap:wrap;">
+      <button class="btn ghost" id="stepPrev" type="button" onclick="stepBy(-1)" disabled>← Prev</button>
+      <button class="btn primary" id="stepNext" type="button" onclick="stepBy(1)">Next →</button>
+    </div>
+  </section>
+
+  <!-- 6 · RECALL DECK (generate-then-flip) -->
+  <section class="section" aria-labelledby="recall-h">
+    <div class="section-label">Recall deck · generate, then flip</div>
+    <h2 id="recall-h">Answer it <em>first.</em> Then turn the card.</h2>
+    <p class="prose">Each card asks one question this map answers. Say your answer out loud before you flip — generating the answer yourself is what files it. Click a card, or focus it and press Enter or Space, to turn it over. No score is kept.</p>
+    <div class="flip-grid" id="recallGrid"></div>
+  </section>
+
+  <!-- 7 · COMMON MISUNDERSTANDINGS -->
+  <section class="section" aria-labelledby="mis-h">
+    <div class="section-label">Common misunderstandings</div>
+    <h2 id="mis-h">Each card shows the <em>wrong</em> belief. Flip it for the correction.</h2>
+    <p class="prose">Click a card — or focus it and press Enter or Space — to turn it over.</p>
+    <div class="flip-grid" id="misGrid"></div>
+  </section>
+
+    <!-- 8 · STUDY-LEVEL ONLY — route practice to the gated Day 6 walker -->
+  <section class="section" aria-labelledby="embody-h">
+    <div class="section-label">Study level only · where the practice lives</div>
+    <h2 id="embody-h">This page is a <em>locator,</em> not a walk-through.</h2>
+    <p class="prose">These learnings are harvested from many EHPs and studied here as a field log. They come alive inside an actual process — and even a small solo EHP runs only through the gated Day 6 walker, where the consent gate and trauma carve-out are structural. Carry one line — thinking over feeling — into the walker.</p>
+    <div class="practice-meta">Study / locator level · the practice is gated in the Day 6 walker</div>
+
+    <div class="practice-closer" role="note">
+      <strong style="font-style:normal;color:var(--vermillion);">The carve-out travels with the practice.</strong>
+      The EHP is <strong style="font-style:normal;">not</strong> trauma processing. Trauma needs a professionally held container — a qualified clinician with a trauma-built protocol. If the material is trauma-coded, the walker will tell you to stop, and so does this page. Even a small solo EHP runs <strong style="font-style:normal;">only</strong> through the gated walker, whose consent gate and trauma carve-out are structural, not optional.
+    </div>
+
+    <div class="practice-capture">
+      <a class="btn primary" href="../Interactive%20Tools/Day%2006/ehp-walker.html">Open the gated EHP walker →</a>
+      <span class="capture-state">Day 6 · consent gate + Position 0 required</span>
+    </div>
+  </section>
+
+
+  <!-- 9 · REFLECTION CAPTURE -->
+  <section class="section" aria-labelledby="reflect-h">
+    <div class="section-label">Reflection</div>
+    <h2 id="reflect-h">What <em>landed?</em></h2>
+    <p class="prose">One or two lines. Recall a moment you reached for an explanation to avoid feeling the next thing. What did the explanation let you skip? That move is the Beep! this map names.</p>
+
+    <div class="prior-entry" id="priorEntry" hidden>
+      <span class="pe-label">Your last reflection · this device</span>
+      <span id="priorEntryText"></span>
+    </div>
+
+    <label class="reflect-label" for="reflectInput">Your reflection on EHP Learnings</label>
+    <textarea class="reflect" id="reflectInput" aria-label="Your reflection on EHP Learnings — what landed for you" placeholder="What landed…"></textarea>
+    <div class="reflect-row">
+      <button class="btn primary" type="button" onclick="saveReflection()">Save reflection</button>
+      <button class="btn ghost" type="button" onclick="clearReflection()">Clear</button>
+      <span class="reflect-saved" id="reflectSaved" role="status"></span>
+    </div>
+    <p class="privacy-note">Saved on this device only, in your browser (localStorage). Nothing is uploaded. No accounts, no telemetry, no external calls except the web-font request.</p>
+  </section>
+
+  <!-- 10 · FOOTER -->
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="../index.html">← All maps · Thoughtmap Atlas</a>
+      <a href="../Days/Day%2006%20-%20Mixed%20Emotions%20and%20Emotional%20Healing%20Process.md">Taught in Day 06 →</a>
+    </div>
+    <p class="license">
+      <span class="cc">🄯 World Copyleft 2026 · Expand the Box (Digital).</span>
+      Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+      Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. Please share, share-alike.
+      Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>.
+      Full terms: <code>LICENSE.md</code> in the course root. This Atlas page is consistent with the spirit of World Copyleft; it is not an official Possibility Management product.
+    </p>
+  </footer>
+</div>
+
+<!-- modal: grounding (60-second sequence) -->
+<div class="modal" id="groundModal" role="dialog" aria-modal="true" aria-labelledby="groundModalTitle">
+  <div class="modal-inner">
+    <h2 id="groundModalTitle">Ground. <em>Now.</em></h2>
+    <ol>
+      <li><strong>Stop.</strong> Stand up — both feet flat on the floor. Feel the contact.</li>
+      <li><strong>Breathe out, longer than in</strong> — three slow exhales.</li>
+      <li><strong>Name three things you can see</strong> in this room. Out loud is best.</li>
+      <li><strong>Name one thing you can hear.</strong> The fridge. Traffic. Your own breath.</li>
+      <li><strong>One hand on your sternum, one on your belly.</strong> Notice your body is here.</li>
+      <li><strong>Then decide:</strong> continue, pause 10 minutes, or stop for today. Any of the three is fine.</li>
+    </ol>
+    <p class="session-paused">Take as long as you need.</p>
+    <div class="modal-actions">
+      <button class="btn primary" type="button" onclick="closeGround()">I'm grounded — continue</button>
+      <a href="../index.html" class="btn ghost">Stop — return to the Atlas</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   M40 — EHP Learnings. Teaching content sourced from the v2 module
+   (Day 06) and the canonical-phrasing ledger (Voice and Style
+   Guide §6). Local-only: the single localStorage key etb_atlas_M40.
+   ============================================================ */
+
+const DISTINCTIONS = [{"kicker": "Go! — what works", "name": "The body leads; words follow.", "body": "The feeling is found <em>in the body</em> and sensed where it actually sits, right at the surface. The client experiences rather than narrates. Sounds before sentences."}, {"kicker": "Go! — what works", "name": "One team.", "body": "Both people are on one team — witness and client navigating the same terrain together. The voice stays even and strong; the container is steady, not anxious."}, {"kicker": "Beep! — design data", "name": "Thinking over feeling.", "body": "The one to keep. The mind offers a tidy explanation in exchange for not feeling the next wave. <strong>The explanation is the Beep!</strong> Every learner hits this moment."}, {"kicker": "Beep! — design data", "name": "Performing instead of feeling.", "body": "Acting out the shape of an emotion for the witness, rather than letting the actual feeling move. Distractions and side-stories belong here too — all ways the process gets stolen."}, {"kicker": "Beep! — design data", "name": "Managing toward a goal.", "body": "The subtle one. A goal-shaped EHP is no longer a <em>discovery</em> — it has become a project with a target. Telling the client what they feel, or steering them toward a tidy ending, collapses the process into management."}];
+const RECALL = [{"q": "What is the one Beep! line to keep for your own practice?", "a": "<em>Thinking over feeling.</em> The mind trades a tidy explanation for not feeling the next wave — and the explanation is the Beep!"}, {"q": "Where is the feeling found, on the Go! side?", "a": "In the body, sensed where it actually sits, right at the surface. The body leads and the words follow; the client experiences rather than narrates."}, {"q": "Why is \"managing toward a goal\" a Beep!?", "a": "A goal-shaped EHP is no longer a discovery — it becomes a project with a target. The EHP is a moment-to-moment discovery, not a managed outcome."}, {"q": "Whose discipline does this card describe?", "a": "The <em>client's</em> as much as the spaceholder's. It is harvested from many EHPs and reads as a field log for both roles."}, {"q": "Name two more Beep!-column errors.", "a": "Performing instead of feeling; distractions; telling the client what they feel; too many questions too fast; coaching when the moment asked for witnessing."}, {"q": "On the Go! side, what is the relationship between the two people?", "a": "<em>One team.</em> Witness and client navigate the same terrain together; the voice stays even and strong, the container steady rather than anxious."}];
+const MISUNDERSTANDINGS = [{"wrong": "\"A good explanation of what I feel means the EHP is working.\"", "right": "<em>Thinking over feeling</em> is the Beep!. The tidy explanation is the mind's trade for not feeling the next wave. Insight is not the same as the feeling moving."}, {"wrong": "\"The witness should tell the client what they're feeling.\"", "right": "Telling the client what they feel is a Beep!. The feeling is found in the client's body, by the client. The witness holds; they do not diagnose."}, {"wrong": "\"An EHP should aim at a clear outcome.\"", "right": "Managing toward a goal collapses the EHP into a project. It is a moment-to-moment <em>discovery</em> — a goal-shaped process is no longer one."}, {"wrong": "\"These learnings are only for the spaceholder.\"", "right": "The card describes the <em>client's</em> discipline as much as the witness's. Both people read it; both can run the Beep! column."}];
+const STORE_KEY = 'etb_atlas_M40';
+
+function kb(e, fn) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); fn(); }
+}
+
+/* ---- STEPPER ---- */
+let stepIndex = 0;
+function buildProgress() {
+  const p = document.getElementById('stepProgress');
+  p.innerHTML = DISTINCTIONS.map(() => '<div class="seg"></div>').join('');
+  document.getElementById('stepTotal').textContent = DISTINCTIONS.length;
+}
+function renderStep(focusCard) {
+  const d = DISTINCTIONS[stepIndex];
+  const region = document.getElementById('stepRegion');
+  let inner = '<div class="sc-kicker">' + d.kicker + '</div><div class="sc-name">' + d.name + '</div>';
+  if (d.rows) {
+    inner += '<div class="sc-rows">';
+    for (const row of d.rows) {
+      const shadow = (row[0] === 'Shadow') ? ' shadow' : '';
+      inner += '<div class="sc-row"><div class="lbl">' + row[0] + '</div><div class="val' + shadow + '">' + row[1] + '</div></div>';
+    }
+    inner += '</div>';
+  } else {
+    inner += '<div class="sc-body">' + d.body + '</div>';
+  }
+  region.innerHTML = '<article class="step-card" id="stepCard" tabindex="-1" aria-label="' + d.name.replace(/<[^>]*>/g, '') + '">' + inner + '</article>';
+  document.getElementById('stepNow').textContent = stepIndex + 1;
+  document.querySelectorAll('#stepProgress .seg').forEach((s, i) => {
+    s.classList.remove('done', 'current');
+    if (i < stepIndex) s.classList.add('done');
+    else if (i === stepIndex) s.classList.add('current');
+  });
+  document.getElementById('stepPrev').disabled = stepIndex === 0;
+  document.getElementById('stepNext').disabled = stepIndex === DISTINCTIONS.length - 1;
+  if (focusCard) { const card = document.getElementById('stepCard'); if (card) card.focus({ preventScroll: true }); }
+}
+function stepBy(delta) {
+  const next = stepIndex + delta;
+  if (next < 0 || next >= DISTINCTIONS.length) return;
+  stepIndex = next; renderStep(true);
+}
+
+/* ---- RECALL DECK ---- */
+function buildRecall() {
+  const grid = document.getElementById('recallGrid');
+  grid.innerHTML = RECALL.map((m, i) => `
+    <button class="flip" type="button" id="recall${i}" aria-pressed="false"
+            aria-label="Recall question ${i + 1}: ${m.q.replace(/<[^>]*>/g, '').replace(/"/g, '')} — activate to reveal the answer"
+            onclick="toggleFlip('recall', ${i})" onkeydown="kb(event,()=>toggleFlip('recall', ${i}))">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <div class="fc-tag">Answer it aloud first</div>
+          <div class="fc-text">${m.q}</div>
+          <div class="fc-hint">Flip for the map's answer →</div>
+        </div>
+        <div class="flip-face flip-back">
+          <div class="fc-tag">On this map</div>
+          <div class="fc-text">${m.a}</div>
+          <div class="fc-hint">← Flip back</div>
+        </div>
+      </div>
+    </button>`).join('');
+}
+
+/* ---- MISUNDERSTANDINGS ---- */
+function buildMis() {
+  const grid = document.getElementById('misGrid');
+  grid.innerHTML = MISUNDERSTANDINGS.map((m, i) => `
+    <button class="flip flip-mis" type="button" id="mis${i}" aria-pressed="false"
+            aria-label="Misunderstanding ${i + 1}: ${m.wrong.replace(/<[^>]*>/g, '').replace(/"/g, '')} — activate to reveal the correction"
+            onclick="toggleFlip('mis', ${i})" onkeydown="kb(event,()=>toggleFlip('mis', ${i}))">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <div class="fc-tag">Common belief</div>
+          <div class="fc-text">${m.wrong}</div>
+          <div class="fc-hint">Flip for the correction →</div>
+        </div>
+        <div class="flip-face flip-back">
+          <div class="fc-tag">On this map</div>
+          <div class="fc-text">${m.right}</div>
+          <div class="fc-hint">← Flip back</div>
+        </div>
+      </div>
+    </button>`).join('');
+}
+
+function toggleFlip(prefix, i) {
+  const el = document.getElementById(prefix + i);
+  const flipped = el.getAttribute('aria-pressed') === 'true';
+  el.setAttribute('aria-pressed', flipped ? 'false' : 'true');
+}
+
+/* ---- REFLECTION + STATE ---- */
+function currentData() {
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { data = {}; }
+  return data;
+}
+function loadState() {
+  const data = currentData();
+  if (data.reflection) {
+    document.getElementById('reflectInput').value = data.reflection;
+    const prior = document.getElementById('priorEntry');
+    document.getElementById('priorEntryText').textContent = data.reflection;
+    prior.hidden = false;
+    if (data.savedAt) document.getElementById('reflectSaved').textContent = 'Last saved ' + new Date(data.savedAt).toLocaleString();
+  }
+}
+function saveReflection() {
+  const val = document.getElementById('reflectInput').value.trim();
+  const data = currentData();
+  data.reflection = val;
+  data.savedAt = new Date().toISOString();
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    document.getElementById('reflectSaved').textContent = val ? 'Saved ✓ · ' + new Date().toLocaleString() : 'Saved (empty) ✓';
+    const prior = document.getElementById('priorEntry');
+    if (val) { document.getElementById('priorEntryText').textContent = val; prior.hidden = false; }
+    else { prior.hidden = true; }
+  } catch (e) {
+    document.getElementById('reflectSaved').textContent = 'Could not save (storage blocked).';
+  }
+}
+function clearReflection() {
+  document.getElementById('reflectInput').value = '';
+  const data = currentData();
+  delete data.reflection; delete data.savedAt;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+  document.getElementById('priorEntry').hidden = true;
+  document.getElementById('reflectSaved').textContent = 'Cleared.';
+}
+
+/* ---- GROUNDING MODAL ---- */
+let _groundReturnFocus = null;
+function openGround() {
+  _groundReturnFocus = document.activeElement;
+  const modal = document.getElementById('groundModal');
+  modal.classList.add('show');
+  const firstBtn = modal.querySelector('.modal-actions .btn');
+  if (firstBtn) firstBtn.focus();
+}
+function closeGround() {
+  document.getElementById('groundModal').classList.remove('show');
+  if (_groundReturnFocus && typeof _groundReturnFocus.focus === 'function') _groundReturnFocus.focus();
+  _groundReturnFocus = null;
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('groundModal');
+    if (modal.classList.contains('show')) closeGround();
+  }
+});
+
+/* ---- INIT ---- */
+window.addEventListener('DOMContentLoaded', () => {
+  buildProgress();
+  renderStep(false);
+  buildRecall();
+  buildMis();
+  loadState();
+});
+</script>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Consistent with the spirit of World Copyleft; not an official Possibility Management product. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

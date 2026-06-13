@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thoughtmap Atlas · Expand the Box</title>
+<meta name="description" content="The Thoughtmap Atlas — the standalone, interactive companion to the 40 Possibility Management maps of the Expand the Box course. One list, in course order: the name of each map, a picture of it, and a click through to its one-page Atlas module.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="_assets/fonts/fonts.css" rel="stylesheet">
+<style>
+/* ============================================================
+   THOUGHTMAP ATLAS — index. Shares the hand-built design system of the
+   per-map pages (see "M10 - New Map of Feelings.html") and the
+   course front door (../index.html): tokens, paper-grain, fonts
+   via ../_assets/fonts/fonts.css, eyebrow labels, reduced-motion,
+   v2 footer. Single-brace CSS only.
+   ============================================================ */
+:root {
+  --ivory: #f4ecdc;
+  --ivory-shade: #ece2c8;
+  --ivory-deep: #e3d7b9;
+  --ink: #0e0a05;
+  --ink-soft: #2a221a;
+  --ink-mute: #4a3f30;
+  --rule: #b8a98a;
+  --vermillion: #c43b1c;
+  --vermillion-deep: #962a13;
+  --vermillion-soft: rgba(196, 59, 28, 0.08);
+  --vermillion-glow: rgba(196, 59, 28, 0.32);
+  --mustard: #d8b04a;
+  --mustard-text: #b8902c;
+  --mustard-soft: rgba(216, 176, 74, 0.18);
+  --sky: #4a6b7c;
+  --display: 'Fraunces', 'EB Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--ivory);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(216, 176, 74, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(196, 59, 28, 0.04) 0%, transparent 50%);
+}
+/* paper-grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.055 0 0 0 0 0.04 0 0 0 0 0.02 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a.skip-link {
+  position: absolute; left: -9999px; top: 8px; z-index: 200;
+  background: var(--ink); color: var(--ivory); font-family: var(--mono);
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 12px 18px; text-decoration: none;
+}
+a.skip-link:focus { left: 8px; }
+
+.wrap { max-width: 1000px; margin: 0 auto; padding: 36px 48px 80px; position: relative; z-index: 2; }
+
+/* ====================== HEADER BAR ====================== */
+header.top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-mute);
+  padding-bottom: 32px; border-bottom: 1px solid var(--rule); gap: 24px;
+}
+header.top .left { display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+header.top .right { display: flex; gap: 22px; flex-wrap: wrap; align-items: baseline; }
+header.top .num { color: var(--vermillion); font-weight: 500; }
+header.top .brand { color: var(--ink-mute); }
+header.top a {
+  color: var(--ink-mute); text-decoration: none;
+  border-bottom: 1px solid transparent; padding-bottom: 2px; transition: all 0.2s;
+}
+header.top a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+header.top a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+
+/* ====================== HERO ====================== */
+.hero { margin: 48px 0 24px; max-width: 880px; }
+.eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--vermillion); margin-bottom: 16px;
+}
+h1.display {
+  font-family: var(--display); font-weight: 350;
+  font-size: clamp(44px, 6.5vw, 84px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+  line-height: 0.98; letter-spacing: -0.025em; margin-bottom: 22px;
+}
+h1.display em { font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; color: var(--vermillion); }
+.lede { font-family: var(--body); font-size: 21px; line-height: 1.5; color: var(--ink-soft); max-width: 760px; font-style: italic; }
+.hero .sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); margin-top: 22px; }
+.hero .sub .count { color: var(--vermillion); font-weight: 700; }
+.dot-key { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); margin-top: 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dot-key .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; border: 1.5px solid var(--mustard-text); }
+.dot-key .dot.on { background: var(--mustard); border-color: var(--mustard-text); }
+
+/* ====================== MODULE GROUP HEADER ====================== */
+.group-head {
+  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  margin: 52px 0 4px; padding-bottom: 12px; border-bottom: 1px solid var(--rule);
+}
+.group-head:first-of-type { margin-top: 40px; }
+.group-head .g-num {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--vermillion); font-weight: 600;
+}
+.group-head .g-title {
+  font-family: var(--display); font-style: italic; font-weight: 400;
+  font-size: clamp(17px, 2vw, 21px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 80, 'WONK' 1;
+  color: var(--ink-mute); line-height: 1.2;
+}
+.group-head .g-day { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); margin-left: auto; }
+
+/* ====================== THE LIST ====================== */
+.map-list { list-style: none; margin: 0; padding: 0; }
+
+a.map-row {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 32px;
+  align-items: center;
+  padding: 26px 28px;
+  margin-top: 18px;
+  background: var(--ivory-shade);
+  border: 1.5px solid var(--rule);
+  border-left: 4px solid var(--vermillion);
+  text-decoration: none;
+  color: var(--ink);
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.2s, background 0.2s, border-color 0.2s;
+}
+a.map-row:hover {
+  transform: translateY(-3px);
+  background: var(--ivory);
+  border-left-color: var(--vermillion-deep);
+  box-shadow: 0 16px 40px rgba(14, 10, 5, 0.16);
+}
+a.map-row:focus-visible { outline: 3px solid var(--vermillion); outline-offset: 4px; }
+
+a.map-row .mr-text { min-width: 0; }
+a.map-row .mr-eyebrow {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ink-mute); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+a.map-row .mr-eyebrow .mr-mnum { color: var(--vermillion); font-weight: 700; }
+a.map-row .mr-eyebrow .mr-dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--rule); flex: none; }
+a.map-row .mr-eyebrow .mr-dot.on { background: var(--mustard); border-color: var(--mustard-text); }
+a.map-row .mr-title {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(26px, 3.2vw, 36px);
+  font-variation-settings: 'opsz' 144, 'SOFT' 55, 'WONK' 1;
+  line-height: 1.08; letter-spacing: -0.015em; color: var(--ink);
+}
+a.map-row:hover .mr-title { color: var(--vermillion-deep); }
+a.map-row .mr-go {
+  margin-top: 16px; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); transition: color 0.2s;
+}
+a.map-row:hover .mr-go { color: var(--vermillion); }
+
+/* consistent matte/frame for mixed-aspect course map images */
+a.map-row .mr-figure {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--ivory);
+  border: 1px solid var(--rule);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 28px rgba(14, 10, 5, 0.14);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s;
+}
+a.map-row:hover .mr-figure { transform: translateY(-2px); box-shadow: 0 16px 38px rgba(14, 10, 5, 0.2); }
+a.map-row .mr-figure img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* the no-image plate (M21) — quiet, same frame footprint */
+a.map-row .mr-figure.no-image {
+  background:
+    repeating-linear-gradient(135deg, var(--ivory) 0, var(--ivory) 14px, var(--ivory-deep) 14px, var(--ivory-deep) 15px);
+  flex-direction: column;
+  text-align: center;
+  padding: 22px;
+}
+a.map-row .mr-figure.no-image .ni-tag {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--vermillion); margin-bottom: 10px;
+}
+a.map-row .mr-figure.no-image .ni-note {
+  font-family: var(--display); font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  font-size: 16px; line-height: 1.4; color: var(--ink-mute); max-width: 240px;
+}
+
+@media (max-width: 720px) {
+  a.map-row { grid-template-columns: 1fr; gap: 20px; }
+  a.map-row .mr-figure { aspect-ratio: 16 / 10; order: 2; }
+  a.map-row .mr-text { order: 1; }
+}
+
+/* ====================== FOOTER ====================== */
+footer.bottom { margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--rule); }
+footer.bottom .nav-row {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-mute);
+}
+footer.bottom .nav-row a { color: var(--ink-mute); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 2px; transition: all 0.2s; }
+footer.bottom .nav-row a:hover { color: var(--vermillion); border-bottom-color: var(--vermillion); }
+footer.bottom .nav-row a:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 3px; }
+footer.bottom .license { margin-top: 26px; font-family: var(--mono); font-size: 10px; line-height: 1.7; letter-spacing: 0.04em; color: var(--ink-mute); max-width: 860px; }
+footer.bottom .license a { color: var(--ink-mute); text-decoration: underline; }
+footer.bottom .license a:hover { color: var(--vermillion); }
+footer.bottom .license .cc { color: var(--ink-soft); font-weight: 600; letter-spacing: 0.06em; }
+
+@media (max-width: 760px) {
+  .wrap { padding: 24px 20px 60px; }
+  .group-head .g-day { margin-left: 0; width: 100%; }
+}
+
+/* ====================== REDUCED MOTION ====================== */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+    scroll-behavior:auto!important;
+  }
+  a.map-row:hover { transform: none; }
+  a.map-row:hover .mr-figure { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to the maps</a>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="left">
+      <span><span class="num">THOUGHTMAP ATLAS</span></span>
+      <span class="brand">Expand the Box · Possibility Management</span>
+    </div>
+    <div class="right">
+      <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">Possibility Management ↗</a>
+    </div>
+  </header>
+
+  <section class="hero" id="main">
+    <div class="eyebrow">The Standalone Map Companion</div>
+    <h1 class="display">Thoughtmap <em>Atlas.</em></h1>
+    <p class="lede">
+      Every map in the course, in one list. Find a map by its name, see its picture, and click through to its own one-page Atlas module — study the map, walk its distinctions, run its recall deck, keep a private reflection.
+    </p>
+    <p class="sub"><span class="count">40</span> maps · in course order · each one a self-contained teaching tool</p>
+    <p class="dot-key"><span class="dot on" aria-hidden="true"></span> A filled dot means you have a saved note or reflection for that map on this device. Quiet presence only — no score, no streak.</p>
+  </section>
+
+  <ul class="map-list" id="mapList">
+
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 01</span>
+        <span class="g-title">Orientation · New Context · Radical Responsibility</span>
+        <span class="g-day">Day 1</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M01" href="atlas/M01%20-%20New%20Context%20%28the%20chain%29.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 01 · M01</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The New Context (the Chain)</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M01.png" loading="lazy" alt="The New Context Chain: a clean redrawn vertical chain from context to results, with green arrows and a red narrowing cone."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 02</span>
+        <span class="g-title">Thoughtware · Thoughtmaps · Box Technology</span>
+        <span class="g-day">Day 2</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M02" href="atlas/M02%20-%20Map%20of%20Thoughtware.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 02 · M02</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Thoughtware</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M02.png" loading="lazy" alt="The Map of Thoughtware: the three kinds of thoughtware — the software of the mind that can be updated, upgraded, or invented."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M03" href="atlas/M03%20-%20Map%20of%20Thoughtmaps.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 02 · M03</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Thoughtmaps</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M03.png" loading="lazy" alt="The Map of Thoughtmaps: how a thoughtmap is a navigable model of a territory, and how holding the right map changes what is possible."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M04" href="atlas/M04%20-%20Anatomy%20of%20the%20Box.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 02 · M04</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Anatomy of the Box</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M04.png" loading="lazy" alt="The Anatomy of the Box: the structure of the constructed identity — its walls, its defenses, and how it filters experience."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 03</span>
+        <span class="g-title">Liquid State · Center-Ground-Bubble · Five Bodies</span>
+        <span class="g-day">Day 3</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M05" href="atlas/M05%20-%20Liquid%20State.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 03 · M05</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Liquid State</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M05.png" loading="lazy" alt="The Liquid State: the condition in which the Box becomes soft enough to change shape — the working state for transformation."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M06" href="atlas/M06%20-%20Five%20Bodies.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 03 · M06</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Five Bodies</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M06.png" loading="lazy" alt="The Five Bodies: physical, intellectual, emotional, energetic, and archetypal — the five distinct bodies a human operates through."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M07" href="atlas/M07%20-%20Center%2C%20Grounding%20Cord%2C%20Bubble%2C%20Golden%20Cube.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 03 · M07</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Center, Grounding Cord, Bubble, Golden Cube</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M07.png" loading="lazy" alt="Center, Grounding Cord, Bubble, and Golden Cube: the four space-holding tools for being present and sovereign in your own space."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 05</span>
+        <span class="g-title">Feelings vs Emotions · Old Map · Numbness Bar</span>
+        <span class="g-day">Day 5</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M08" href="atlas/M08%20-%20Old%20Map%20of%20Feelings.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 05 · M08</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Old Map of Feelings</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M08.png" loading="lazy" alt="The Old Map of Feelings: a clean redrawn four-quadrant chart of conditioned negative beliefs about anger, sadness, joy, and fear."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M09" href="atlas/M09%20-%20Numbness%20Bar.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 05 · M09</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Numbness Bar</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M09.png" loading="lazy" alt="The Numbness Bar: the adjustable threshold below which feelings are not felt — and how it rises and falls."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M10" href="atlas/M10%20-%20New%20Map%20of%20Feelings.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 05 · M10</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The New Map of Feelings</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M10.png" loading="lazy" alt="The New Map of Feelings: a clean redrawn four-quadrant chart naming anger, sadness, joy, and fear as natural sources of energy and information."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 06</span>
+        <span class="g-title">Mixed Emotions · Emotional Healing Process</span>
+        <span class="g-day">Day 6</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M11" href="atlas/M11%20-%20Mixed%20Emotions.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 06 · M11</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Mixed Emotions</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M11.png" loading="lazy" alt="The Map of Mixed Emotions: how feelings tangle with memory and story to store as mixed emotions, and how to separate the components."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M12" href="atlas/M12%20-%20Emotional%20Healing%20Process.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 06 · M12</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Emotional Healing Process</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M12.png" loading="lazy" alt="The Emotional Healing Process: the staged process for releasing stored emotion so its energy returns — held in a gated container."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 07</span>
+        <span class="g-title">Low Drama · Gremlin Food · The Responsible Game</span>
+        <span class="g-day">Day 7</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M13" href="atlas/M13%20-%20Low%20Drama%20Triangle.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 07 · M13</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Low Drama Triangle</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M13.png" loading="lazy" alt="The Low Drama Triangle: the rotating roles of persecutor, victim, and rescuer that feed low drama."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 08</span>
+        <span class="g-title">Listening · Speaking · Communication · Completion</span>
+        <span class="g-day">Day 8</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M14" href="atlas/M14%20-%204%20Listenings.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 08 · M14</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The 4 Listenings</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M14.png" loading="lazy" alt="The Map of the 4 Listenings: the four distinct kinds of listening and what each one makes possible."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M15" href="atlas/M15%20-%204%20Speakings.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 08 · M15</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The 4 Speakings</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M15.png" loading="lazy" alt="The Map of the 4 Speakings: the four distinct kinds of speaking and the act of possibility each one performs."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M16" href="atlas/M16%20-%20Map%20of%20Communication.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 08 · M16</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Communication</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M16.png" loading="lazy" alt="The Map of Communication: the full circuit of communication, including completion loops that close what was opened."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 09</span>
+        <span class="g-title">Ego States · Problem Ownership · Learning Spiral</span>
+        <span class="g-day">Day 9</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M17" href="atlas/M17%20-%20Ego%20States.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 09 · M17</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Ego States</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M17.png" loading="lazy" alt="The Map of Ego States: the parent, adult, and child states and how they drive interaction."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M18" href="atlas/M18%20-%20Problem%20Ownership.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 09 · M18</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Problem Ownership</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M18.png" loading="lazy" alt="The Map of Problem Ownership: who actually owns a problem, and why misplaced ownership keeps it stuck."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M19" href="atlas/M19%20-%20Learning%20Spiral.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 09 · M19</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Learning Spiral</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M19.png" loading="lazy" alt="The Learning Spiral: the recurring spiral from unconscious incompetence through to unconscious competence."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 10</span>
+        <span class="g-title">Map of Possibility · Bright Principles · Three Powers</span>
+        <span class="g-day">Day 10</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M20" href="atlas/M20%20-%20Map%20of%20Possibility.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 10 · M20</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Possibility</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M20.png" loading="lazy" alt="The Map of Possibility: the territory of what becomes available when you operate from possibility rather than the Box."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M21" href="atlas/M21%20-%20Bright%20Principles%20and%20Shadow%20Principles.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 10 · M21</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Bright Principles and Shadow Principles</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure no-image" role="img" aria-label="No dedicated map image. The Map of Matrix (M46) and the Map of 3 Games (M47) are the adjacent maps.">
+          <span class="ni-tag">No dedicated map</span>
+          <span class="ni-note">M46 and M47 are the adjacent maps</span>
+        </span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M22" href="atlas/M22%20-%20Is-Glue%20and%20Is-Glue%20Dissolver.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 10 · M22</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Is-Glue and Is-Glue Dissolver</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M22.png" loading="lazy" alt="The Map of Is-Glue and Is-Glue Dissolver: how is-glue freezes a story into fact, and how to dissolve it back into possibility."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M23" href="atlas/M23%20-%20Three%20Powers%20%28Choose%2C%20Ask%20Dangerous%20Questions%2C%20Declare%29.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 10 · M23</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Three Powers (Choose, Ask Dangerous Questions, Declare)</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M23.png" loading="lazy" alt="The Map of the Three Powers: choosing, asking dangerous questions, and declaring — the three powers that bend the future."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 01</span>
+        <span class="g-title">Orientation · New Context · Radical Responsibility</span>
+        <span class="g-day">Day 1</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M24" href="atlas/M24%20-%20Levels%20of%20Responsibility.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 01 · M24</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Levels of Responsibility</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M24.png" loading="lazy" alt="The Map of the Levels of Responsibility: child, adolescent, adult, and radical responsibility as distinct stances."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 04</span>
+        <span class="g-title">Feedback · Coaching · Rapid Learning · Experiments</span>
+        <span class="g-day">Day 4</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M25" href="atlas/M25%20-%20Feedback%20and%20Coaching.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 04 · M25</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Feedback and Coaching</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M25.png" loading="lazy" alt="The Map of Feedback and Coaching: the distinct moves of giving feedback and holding a coaching space without taking ownership."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M26" href="atlas/M26%20-%20Rapid%20Learning.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 04 · M26</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Rapid Learning</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M26.png" loading="lazy" alt="The Map of Rapid Learning: how experiments and feedback compound into fast, embodied learning."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 07</span>
+        <span class="g-title">Low Drama · Gremlin Food · The Responsible Game</span>
+        <span class="g-day">Day 7</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M27" href="atlas/M27%20-%20Your%20Gremlin.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 07 · M27</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Your Gremlin</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M27.png" loading="lazy" alt="Your Gremlin: a clean redrawn green line creature with notes about low-drama gremlin food, Type 1 and Type 2, and Gremlin Transformation."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M28" href="atlas/M28%20-%20Gameworld.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 07 · M28</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Gameworld</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M28.png" loading="lazy" alt="The Map of Gameworld: how a gameworld defines the rules, stakes, and roles of the game you are playing."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M29" href="atlas/M29%20-%20Map%20of%20Reactivities.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 07 · M29</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Reactivities</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M29.png" loading="lazy" alt="The Map of Reactivities: how triggered reactivities hijack the moment, and how to spot and unhook from them."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 01</span>
+        <span class="g-title">Orientation · New Context · Radical Responsibility</span>
+        <span class="g-day">Day 1</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M32" href="atlas/M32%20-%20Map%20of%20Responsibility%20and%20Culture.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 01 · M32</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Responsibility and Culture</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M32.png" loading="lazy" alt="The Map of Responsibility and Culture: a culture read as the population curve of where its people stand on the levels of responsibility."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 05</span>
+        <span class="g-title">Feelings vs Emotions · Old Map · Numbness Bar</span>
+        <span class="g-day">Day 5</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M33" href="atlas/M33%20-%20Feelings%20vs%20Emotions.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 05 · M33</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Feelings vs Emotions</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M33.png" loading="lazy" alt="The Map of Feelings versus Emotions: the load-bearing distinction between present-time feelings and stored, story-laden emotions."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M35" href="atlas/M35%20-%20Map%20of%20Feelings%20Sensations.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 05 · M35</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Feelings Sensations</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M35.png" loading="lazy" alt="The Map of Feelings Sensations: the specific body sensations that mark each of the four feelings, locating feeling as sensation rather than story."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M37" href="atlas/M37%20-%20Fear%20Capacity%20Feelings%20Form.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 05 · M37</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Fear Capacity Feelings Form</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M37.png" loading="lazy" alt="The Fear Capacity Feelings Form: the bar-reading form for building capacity with fear as a clean, present-time feeling."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 06</span>
+        <span class="g-title">Mixed Emotions · Emotional Healing Process</span>
+        <span class="g-day">Day 6</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M38" href="atlas/M38%20-%20EHP%20Spaceholding%20Twins.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 06 · M38</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The EHP Spaceholding Twins</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M38.png" loading="lazy" alt="The EHP Spaceholding Twins: the paired roles that hold space during an Emotional Healing Process."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M39" href="atlas/M39%20-%20Map%20of%20Optional%20Healing%20Process.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 06 · M39</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Optional Healing Process</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M39.png" loading="lazy" alt="The Map of Optional Healing Process: the optional paths and branch points within the broader healing-process work."></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M40" href="atlas/M40%20-%20EHP%20Learnings.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 06 · M40</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The EHP Learnings</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M40.png" loading="lazy" alt="The EHP Learnings: the distilled learnings carried out of an Emotional Healing Process."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 08</span>
+        <span class="g-title">Listening · Speaking · Communication · Completion</span>
+        <span class="g-day">Day 8</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M43" href="atlas/M43%20-%20Letting%20Your%20Heart%20Speak.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 08 · M43</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Letting Your Heart Speak</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M43.png" loading="lazy" alt="The Map of Letting Your Heart Speak: the practice of speaking from the heart rather than from the Box."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 10</span>
+        <span class="g-title">Map of Possibility · Bright Principles · Three Powers</span>
+        <span class="g-day">Day 10</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M44" href="atlas/M44%20-%20Linear%20and%20Nonlinear.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 10 · M44</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">Linear and Nonlinear</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M44.png" loading="lazy" alt="The Map of Linear and Nonlinear: the difference between linear, step-by-step change and nonlinear, discontinuous transformation."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 03</span>
+        <span class="g-title">Liquid State · Center-Ground-Bubble · Five Bodies</span>
+        <span class="g-day">Day 3</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M46" href="atlas/M46%20-%20Map%20of%20Matrix.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 03 · M46</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of Matrix</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M46.png" loading="lazy" alt="The Map of Matrix: the build of distinction-space — how matrix is grown to hold a new way of seeing and acting."></span>
+      </a>
+    </li>
+
+    <li>
+      <div class="group-head">
+        <span class="g-num">Module 07</span>
+        <span class="g-title">Low Drama · Gremlin Food · The Responsible Game</span>
+        <span class="g-day">Day 7</span>
+      </div>
+    </li>
+
+    <li>
+      <a class="map-row" data-mnum="M47" href="atlas/M47%20-%20Map%20of%203%20Games.html">
+        <span class="mr-text">
+          <span class="mr-eyebrow"><span class="mr-mnum">Module 07 · M47</span><span class="mr-dot" aria-hidden="true"></span></span>
+          <span class="mr-title">The Map of 3 Games</span>
+          <span class="mr-go">Study the map →</span>
+        </span>
+        <span class="mr-figure"><img src="Maps/M47.png" loading="lazy" alt="The Map of 3 Games: the three games a life can be lived inside, and the move from one to the next."></span>
+      </a>
+    </li>
+
+
+  </ul>
+
+  <footer class="bottom">
+    <div class="nav-row">
+      <a href="https://etb-group-version.vercel.app/" target="_blank" rel="noopener">Expand the Box · the full course ↗</a>
+      <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">Possibility Management ↗</a>
+    </div>
+    <p class="license">
+      <span class="cc">🄯 World Copyleft 2026 · Expand the Box (Digital).</span>
+      Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+      Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. Please share, share-alike.
+      Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>.
+      Full terms: <code>LICENSE.md</code> in the course root. This Atlas is consistent with the spirit of World Copyleft; it is not an official Possibility Management product.
+    </p>
+  </footer>
+</div>
+
+<script>
+/* Completion dots — quiet presence indicators only. A dot fills if the map's
+   single localStorage key (etb_atlas_MXX) exists with a saved reflection or
+   marked study state. No scores, no streaks, no percentages, no counts. */
+(function () {
+  document.querySelectorAll('a.map-row[data-mnum]').forEach(function (row) {
+    var mnum = row.getAttribute('data-mnum');
+    var dot = row.querySelector('.mr-dot');
+    if (!dot) return;
+    var present = false;
+    try {
+      var raw = localStorage.getItem('etb_atlas_' + mnum);
+      if (raw) {
+        var d = JSON.parse(raw);
+        present = !!(d && (d.reflection || d.said || d.embodied));
+      }
+    } catch (e) { present = false; }
+    if (present) {
+      dot.classList.add('on');
+      dot.setAttribute('title', 'You have a saved note for this map on this device');
+    }
+  });
+})();
+</script>
+
+<!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Consistent with the spirit of World Copyleft; not an official Possibility Management product. Full terms: LICENSE.md in the course root. -->
+</body>
+</html>

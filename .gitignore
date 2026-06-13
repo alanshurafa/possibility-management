@@ -1,1 +1,6 @@
+.playwright-mcp/
+*.jpeg
+.vercel/
+thoughtmap-atlas/.vercel/
 desktop.ini
+**/desktop.ini

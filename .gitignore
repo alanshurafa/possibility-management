@@ -22,3 +22,7 @@ infographics/_connections.json
 
 # bubble-map working/scratch state (resume files)
 bubble-map/data/_*.json
+
+# Python cache
+__pycache__/
+*.pyc

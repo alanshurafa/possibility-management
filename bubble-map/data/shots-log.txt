@@ -90,3 +90,23 @@ becomeabridge	live	1458KB
 becomeabundance	wayback	633KB
 becomeanelder	wayback	145KB
 becomeanexperimenter	wayback	2093KB
+becomeaseed	wayback	834KB
+becomeaspace	live	83KB
+becomeauthentic	FAIL	captcha
+becomebubbled	FAIL	captcha
+becomecentered	wayback	1730KB
+becomegaia	FAIL	captcha
+becomegrounded	wayback	523KB
+becomemagic	FAIL	captcha
+becomemeditation	wayback	114KB
+becomemoney	live	2146KB
+becomepossibility	wayback	156KB
+becomepresent	FAIL	captcha
+becomesubversive	FAIL	captcha
+becomeunhookable	wayback	2973KB
+beepbook	wayback	870KB
+beingatrainer	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+beingwith	wayback	132KB
+beingyourself	wayback	2743KB
+beliefs	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+boundaries	wayback	1158KB

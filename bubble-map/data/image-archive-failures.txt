@@ -1,0 +1,1 @@
+https://static.wixstatic.com/media/3df1a4_ad9025799d28471aac41f13de85a5d80~mv2.avif/v1/fill/w_538,h_379,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3df1a4_f0707dbf6ae4433fa1203aaa9831a742~mv2.avif	UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0x00000261B62EC400>

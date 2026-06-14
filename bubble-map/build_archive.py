@@ -53,6 +53,7 @@ HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
 ARCHIVE = HERE / "archive"
 IMG_DIR = ARCHIVE / "assets" / "images"
+SHOTS = ARCHIVE / "assets" / "shots"
 
 DRIVE = r"C:\Users\alan\My Drive\__shurafa@gmail.com\_PM Possability Manangement\PMWebsites"
 SRC = Path(os.environ.get("PM_SOURCE_JSON", str(Path(DRIVE) / "source.json")))
@@ -165,6 +166,9 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .arc-nav .uncaptured{color:var(--dim)}
 main{max-width:760px;margin:0 auto;padding:34px 22px 10px}
 main img{max-width:100%;height:auto;border-radius:8px;margin:10px 0}
+.orig-shot{margin:4px 0 26px;border:1px solid var(--brd);border-radius:10px;overflow:hidden;background:#0a1124}
+.orig-shot .orig-label{padding:8px 12px;font-size:12.5px;color:var(--dim);border-bottom:1px solid var(--brd);display:flex;justify-content:space-between}
+.orig-shot img{display:block;width:100%;height:auto;max-height:560px;object-fit:cover;object-position:top;border-radius:0;margin:0}
 h1,h2,h3,h4{line-height:1.25;margin:1.4em 0 .5em}h1{font-size:1.8em}
 hr{border:0;border-top:1px solid var(--brd);margin:2em 0}
 blockquote{border-left:3px solid var(--accent);margin:1em 0;padding:.2em 1em;color:var(--dim)}
@@ -250,6 +254,18 @@ def main() -> None:
     records = [r for r in records
                if (r.get("crawl") or {}).get("httpStatusCode") == 200
                and (r.get("markdown") or "").strip()]
+
+    # Merge in sites recovered by fetch_missing.py (the ~100 the 2025 crawl missed).
+    supp_path = DATA / "supplemental_records.json"
+    if supp_path.exists():
+        seen = {norm_url(r["url"]) for r in records}
+        added = 0
+        for sr in json.loads(supp_path.read_text(encoding="utf-8")):
+            if (sr.get("markdown") or "").strip() and norm_url(sr["url"]) not in seen:
+                records.append(sr)
+                added += 1
+        print(f"  merged {added} recovered sites from supplemental_records.json")
+
     if args.limit:
         records = records[:args.limit]
 
@@ -317,19 +333,29 @@ def main() -> None:
 
         title = title_for(r)
         loaded = (r.get("crawl") or {}).get("loadedTime", "")[:10]
+        s = slug_of(r["url"])
+        path = urlparse(r["url"]).path.strip("/")
+
+        shot_block = ""
+        if s and not path and (SHOTS / f"{s}.jpg").exists():
+            shot_rel = rel(page_local, f"assets/shots/{s}.jpg")
+            shot_block = (
+                f'<div class="orig-shot"><div class="orig-label"><span>Original site appearance</span>'
+                f'<a href="{shot_rel}" target="_blank" rel="noopener">open full size ↗</a></div>'
+                f'<a href="{shot_rel}" target="_blank" rel="noopener"><img src="{shot_rel}" '
+                f'alt="Screenshot of {htmllib.escape(title)}" loading="lazy"></a></div>')
+
         html_out = (PAGE
                     .replace("@@TITLE@@", htmllib.escape(title))
                     .replace("@@CSS@@", rel(page_local, "assets/style.css"))
                     .replace("@@MAP@@", rel(page_local, "../index.html"))
                     .replace("@@INDEX@@", rel(page_local, "index.html"))
-                    .replace("@@BODY@@", str(soup))
+                    .replace("@@BODY@@", shot_block + str(soup))
                     .replace("@@ORIG@@", htmllib.escape(r["url"]))
                     .replace("@@DATE@@", loaded))
         out.write_text(html_out, encoding="utf-8")
         pages += 1
 
-        s = slug_of(r["url"])
-        path = urlparse(r["url"]).path.strip("/")
         if s and not path:  # a site root page -> index + map manifest
             snippet = re.sub(r"\s+", " ", demojibake(r.get("text") or ""))[:240]
             index_entries.append((title, s, f"{s}/", snippet))

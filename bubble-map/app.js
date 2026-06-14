@@ -9,8 +9,8 @@
   const SigmaCtor = window.Sigma; // UMD: the renderer class itself
   const { createNodeImageProgram } = window.Sigma.rendering;
 
-  const CURATED = "rgba(110, 180, 220, 0.30)";
-  const ORGANIC = "rgba(157, 140, 208, 0.16)";
+  const CURATED = "rgba(110, 180, 220, 0.15)";
+  const ORGANIC = "rgba(157, 140, 208, 0.08)";
   const HILITE = "rgba(125, 211, 252, 0.95)";
   const FADE_N = "#1b2238";
 
@@ -85,6 +85,8 @@
     let hovered = null;
     let neighbors = new Set();
     let filter = null; // Set of slugs to keep visible, or null
+    let pinned = null; // clicked node: isolate to only its connections
+    let pinnedSet = new Set();
 
     const renderer = new SigmaCtor(graph, $("sigma-container"), {
       nodeProgramClasses: { image: createNodeImageProgram() },
@@ -104,7 +106,11 @@
     renderer.setSetting("nodeReducer", (node, data) => {
       const res = Object.assign({}, data);
       if (filter && !filter.has(node)) { res.hidden = true; return res; }
-      if (hovered) {
+      if (pinned && !pinnedSet.has(node)) { res.hidden = true; return res; }
+      if (pinned) {
+        if (node === pinned) { res.size = data.size * 1.55; res.zIndex = 3; }
+        else { res.zIndex = 2; }
+      } else if (hovered) {
         if (node === hovered) { res.size = data.size * 1.55; res.zIndex = 3; }
         else if (neighbors.has(node)) { res.zIndex = 2; }
         else { res.size = data.size * 0.72; res.color = FADE_N; res.label = ""; res.zIndex = 0; }
@@ -117,6 +123,12 @@
       if (data.etype === "organic" && !showOrganic) { res.hidden = true; return res; }
       const [s, t] = graph.extremities(edge);
       if (filter && (!filter.has(s) || !filter.has(t))) { res.hidden = true; return res; }
+      if (pinned) {
+        if (s === pinned || t === pinned) {
+          res.color = HILITE; res.size = (data.size || 1) + 0.6; res.zIndex = 2;
+        } else { res.hidden = true; }
+        return res;
+      }
       if (hovered) {
         if (s === hovered || t === hovered) {
           res.color = HILITE; res.size = (data.size || 1) + 0.6; res.zIndex = 2;
@@ -126,6 +138,17 @@
       }
       return res;
     });
+
+    // Neighbors reachable via currently-visible edges (respects the organic toggle),
+    // so isolating a hub doesn't pull in its hidden organic links.
+    function neighborsVisible(node) {
+      const set = new Set([node]);
+      graph.forEachEdge(node, (e, a, s, t) => {
+        if (a.etype === "organic" && !showOrganic) return;
+        set.add(s === node ? t : s);
+      });
+      return set;
+    }
 
     // ---- Hover card + neighborhood highlight ----
     const card = $("card");
@@ -142,8 +165,7 @@
     }
     renderer.on("enterNode", ({ node }) => {
       hovered = node;
-      neighbors = new Set(graph.neighbors(node));
-      neighbors.add(node);
+      neighbors = neighborsVisible(node);
       showCard(node);
       renderer.refresh();
       document.body.style.cursor = "pointer";
@@ -159,6 +181,16 @@
       const url = graph.getNodeAttribute(node, "url");
       if (url) window.open(url, "_blank", "noopener");
     });
+
+    // Single click isolates a node's connections; click empty space (or Reset) to clear.
+    function setPinned(node) {
+      pinned = node;
+      pinnedSet = node ? neighborsVisible(node) : new Set();
+      if (node) showCard(node); else card.classList.remove("show");
+      renderer.refresh();
+    }
+    renderer.on("clickNode", ({ node }) => setPinned(node));
+    renderer.on("clickStage", () => { if (pinned) setPinned(null); });
 
     // ---- Search ----
     function applySearch(q) {
@@ -221,10 +253,14 @@
     // ---- Controls ----
     $("toggle-organic").addEventListener("change", (e) => {
       showOrganic = e.target.checked;
+      if (pinned) pinnedSet = neighborsVisible(pinned);
+      if (hovered) neighbors = neighborsVisible(hovered);
       renderer.refresh();
     });
     $("reset").addEventListener("click", () => {
       filter = null;
+      pinned = null; pinnedSet = new Set();
+      card.classList.remove("show");
       $("search").value = "";
       clearRailActive();
       renderer.getCamera().animatedReset();

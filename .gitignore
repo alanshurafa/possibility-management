@@ -19,3 +19,6 @@ desktop.ini
 infographics/_content/
 
 infographics/_connections.json
+
+# bubble-map working/scratch state (resume files)
+bubble-map/data/_*.json

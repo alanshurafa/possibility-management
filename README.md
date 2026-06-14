@@ -11,7 +11,7 @@ Each property is a self-contained static site in its own folder, so you can take
 | Property | What it is | Live demo |
 |----------|------------|-----------|
 | [Thoughtmap Atlas](thoughtmaps/) | Every PM thoughtmap in one place, each with its own interactive one-page module. | [open](https://alanshurafa.github.io/possibility-management/thoughtmaps/) |
-| [Infographic Atlas](infographics/) | Every map as an infographic, each with a summary and a teaching page. | [open](https://alanshurafa.github.io/possibility-management/infographics/) |
+| [Infographic Atlas](infographics/) | Every map as an infographic, each linked by name to its interactive map and StartOver Spaceport site. | [open](https://alanshurafa.github.io/possibility-management/infographics/) |
 | [Expand the Box](courses/expand-the-box/) | The full course: modules, daily interactive tools, practice spines, and learner resources. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/) |
 | [Interactive Tools](courses/expand-the-box/Interactive%20Tools/) | Feeling locator, drama detector, EHP walker, ego-state locator, and more. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/Interactive%20Tools/) |
 

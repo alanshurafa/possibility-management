@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Infographic Atlas · Possibility Management</title>
-<meta name="description" content="Every Possibility Management map as an infographic — each with a brief summary and a link to its teaching page.">
+<meta name="description" content="Possibility Management maps as infographics, each connected to its map and StartOver Spaceport site.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link href="_assets/fonts/fonts.css" rel="stylesheet">
 <style>
@@ -25,26 +25,31 @@ h1.display em{font-style:italic;font-variation-settings:'opsz'144,'SOFT'100,'WON
 .lede{font-family:var(--body);font-size:21px;line-height:1.5;color:var(--ink-soft);max-width:760px;font-style:italic;}
 .hero .sub{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mute);margin-top:22px;}.hero .sub .count{color:var(--vermillion);font-weight:700;}
 .ig-list{list-style:none;margin:0;padding:0;}
-a.ig-row{display:grid;grid-template-columns:1fr 240px;gap:32px;align-items:center;padding:24px 28px;margin-top:18px;background:var(--ivory-shade);border:1.5px solid var(--rule);border-left:4px solid var(--vermillion);text-decoration:none;color:var(--ink);transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s,background .2s,border-color .2s;}
+.ig-row{display:grid;grid-template-columns:1fr 240px;gap:32px;align-items:center;padding:24px 28px;margin-top:18px;background:var(--ivory-shade);border:1.5px solid var(--rule);border-left:4px solid var(--vermillion);text-decoration:none;color:var(--ink);transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s,background .2s,border-color .2s;}
 a.ig-row:hover{transform:translateY(-3px);background:var(--ivory);border-left-color:var(--vermillion-deep);box-shadow:0 16px 40px rgba(14,10,5,.16);}
-a.ig-row .t-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-a.ig-row .tag{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--rule);border-radius:2px;}
-a.ig-row .tag.draft{color:var(--mustard-text);border-color:var(--mustard-text);}
-a.ig-row .t-title{font-family:var(--display);font-weight:400;font-size:clamp(23px,2.8vw,31px);font-variation-settings:'opsz'144,'SOFT'55,'WONK'1;line-height:1.1;letter-spacing:-0.015em;color:var(--ink);}
+.ig-row.muted{border-left-color:var(--rule);opacity:.72;}
+.ig-row .t-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.tag{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--rule);border-radius:2px;}
+.tag.map{color:var(--vermillion);border-color:var(--vermillion);}
+.tag.sp{color:var(--sky);border-color:var(--sky);}
+.ig-row .t-title{font-family:var(--display);font-weight:400;font-size:clamp(23px,2.8vw,31px);font-variation-settings:'opsz'144,'SOFT'55,'WONK'1;line-height:1.1;letter-spacing:-0.015em;color:var(--ink);}
 a.ig-row:hover .t-title{color:var(--vermillion-deep);}
-a.ig-row .t-sum{margin-top:9px;font-size:16px;line-height:1.45;color:var(--ink-soft);}
-a.ig-row .t-go{margin-top:14px;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);}a.ig-row:hover .t-go{color:var(--vermillion);}
-a.ig-row .t-fig{width:100%;aspect-ratio:3/4;background:var(--ivory);border:1px solid var(--rule);padding:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(14,10,5,.14);overflow:hidden;}
-a.ig-row .t-fig img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;}
-@media(max-width:720px){a.ig-row{grid-template-columns:1fr;gap:18px;}a.ig-row .t-fig{aspect-ratio:16/10;order:2;max-height:320px;}a.ig-row .t-text{order:1;}}
-.fig-full{margin:8px 0 8px;background:var(--ivory);border:1px solid var(--rule);padding:16px;box-shadow:0 12px 32px rgba(14,10,5,.16);text-align:center;}
+.ig-row .t-sum{margin-top:9px;font-size:16px;line-height:1.45;color:var(--ink-soft);}
+.ig-row .t-go{margin-top:14px;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);}a.ig-row:hover .t-go{color:var(--vermillion);}
+.ig-row .t-fig{width:100%;aspect-ratio:3/4;background:var(--ivory);border:1px solid var(--rule);padding:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(14,10,5,.14);overflow:hidden;}
+.ig-row .t-fig img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;}
+@media(max-width:720px){.ig-row{grid-template-columns:1fr;gap:18px;}.ig-row .t-fig{aspect-ratio:16/10;order:2;max-height:320px;}.ig-row .t-text{order:1;}}
+.fig-full{margin:8px 0;background:var(--ivory);border:1px solid var(--rule);padding:16px;box-shadow:0 12px 32px rgba(14,10,5,.16);text-align:center;}
 .fig-full img{max-width:100%;height:auto;display:block;margin:0 auto;}
+.conn{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0;}
+.conn a{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:12px 18px;border:1.5px solid var(--rule);color:var(--ink-soft);transition:all .2s;}
+.conn a:hover{border-color:var(--vermillion);color:var(--vermillion);transform:translateY(-2px);}
+.conn a.primary{border-color:var(--vermillion);color:var(--vermillion);}
 .teaching{max-width:760px;margin-top:8px;}
-.teaching h2{font-family:var(--display);font-style:normal;font-weight:500;font-size:clamp(22px,2.6vw,28px);font-variation-settings:'opsz'144,'SOFT'60,'WONK'1;margin:34px 0 12px;color:var(--ink);}
+.teaching h2{font-family:var(--display);font-weight:500;font-size:clamp(22px,2.6vw,28px);font-variation-settings:'opsz'144,'SOFT'60,'WONK'1;margin:34px 0 12px;color:var(--ink);}
 .teaching p{margin:0 0 16px;}.teaching ul{margin:0 0 16px 22px;}.teaching li{margin:0 0 7px;}
 .teaching strong{color:var(--ink);}.teaching em{color:var(--ink-soft);}
-.draft-note{margin:22px 0;padding:16px 20px;border:1px dashed var(--mustard-text);background:rgba(216,176,74,.10);font-family:var(--mono);font-size:12px;line-height:1.7;letter-spacing:.03em;color:var(--ink-mute);}
-.draft-note b{color:var(--mustard-text);letter-spacing:.1em;text-transform:uppercase;}
+.note-src{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--ink-mute);margin:6px 0 0;}
 footer.bottom{margin-top:64px;padding-top:32px;border-top:1px solid var(--rule);}
 footer.bottom .nav-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);}
 footer.bottom .nav-row a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px;transition:all .2s;}footer.bottom .nav-row a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
@@ -63,562 +68,318 @@ footer.bottom .license{margin-top:26px;font-family:var(--mono);font-size:10px;li
   <section class="hero" id="main">
     <div class="eyebrow">The Maps, as Infographics</div>
     <h1 class="display">Infographic <em>Atlas.</em></h1>
-    <p class="lede">Every Possibility Management map rendered as an infographic. Find one by its name, see the picture, and click through to its teaching page.</p>
-    <p class="sub"><span class="count">61</span> infographics · each links to a teaching page</p>
+    <p class="lede">Every Possibility Management map as an infographic. Each links by name to its interactive map and, where one exists, its StartOver Spaceport site.</p>
+    <p class="sub"><span class="count">61</span> infographics · 37 linked to a map · 25 to a Spaceport site</p>
   </section>
   <ul class="ig-list">
-    <li><a class="ig-row" href="teaching/3-people-falling.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">3 People Falling</span>
-        <span class="t-sum">Three ways to fall: the Resister clings, the Reactor flails, the Possibilitator stays centered. How you fall shapes your life.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/3-people-falling.jpg" alt="3 People Falling infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/3-people-falling.jpg" alt="3 People Falling infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/4-listenings.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">4 Listenings</span>
-        <span class="t-sum">Four distinct internal stances a listener can choose between — and the fact that the stance you take, not the words the speaker says, determines what you actually hear.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/4-listenings.jpg" alt="4 Listenings infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/6-types-of-speaking.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">4 Listenings</span><span class="t-sum">Four distinct internal stances a listener can choose between — and the fact that the stance you take, not the words the speaker says, determines what you actually hear.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/4-listenings.jpg" alt="4 Listenings infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">6 Types of Speaking</span>
-        <span class="t-sum">Six types of speaking: Neurotic/Normal, Discussion, Adult, Possibility, Discovery, and Dragon, each serving the Gremlin, both, or others.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/6-types-of-speaking.jpg" alt="6 Types of Speaking infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/6-types-of-speaking.jpg" alt="6 Types of Speaking infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/being-adaptive-and-being-centered.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag sp">Spaceport</span></span>
         <span class="t-title">Being Adaptive and Being Centered</span>
-        <span class="t-sum">Externalizing your center onto a concept gives borrowed safety; being internally centered keeps your power and enables authentic exchange.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/being-adaptive-and-being-centered.jpg" alt="Being Adaptive and Being Centered infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/being-adaptive-and-being-centered.jpg" alt="Being Adaptive and Being Centered infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/box-technology.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag sp">Spaceport</span></span>
         <span class="t-title">Box Technology</span>
-        <span class="t-sum">Box Technology: you have a Box (survival identity) but are not it. Maps its phases, ingredients, three layers, dynamics, and the shift to observing it.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/box-technology.jpg" alt="Box Technology infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/box-technology.jpg" alt="Box Technology infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/ehp-spaceholding-twins.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">EHP Spaceholding Twins</span>
-        <span class="t-sum">EHP spaceholding GO vs BEEP: focus on emotion and be assertive; avoid indecisive language, jumping emotions, mismatched anger, or doing it for them.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/ehp-spaceholding-twins.jpg" alt="EHP Spaceholding Twins infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/ehp-spaceholding-twins.jpg" alt="EHP Spaceholding Twins infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/emotional-healing-process-learnings.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">Emotional Healing Process Learnings</span>
-        <span class="t-sum">EHP facilitator GO vs BEEP: let the body lead, give space, even voice, one team; avoid performing, directing feelings, and thinking over feeling.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/emotional-healing-process-learnings.jpg" alt="Emotional Healing Process Learnings infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/emotional-healing-process-learnings.jpg" alt="Emotional Healing Process Learnings infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/fear-capacity-feelings-form.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">Fear Capacity Feelings Form</span>
-        <span class="t-sum">A Feelings Form sentence template for fear: &quot;I feel fear that I may not have enough capacity to initiate a project that fills me up with joy.&quot;</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/fear-capacity-feelings-form.jpg" alt="Fear Capacity Feelings Form infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/fear-capacity-feelings-form.jpg" alt="Fear Capacity Feelings Form infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/feedback-and-coaching.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Feedback and Coaching</span>
-        <span class="t-sum">Two distinct moves people constantly blur: feedback reports the past — what worked, what did not — and coaching opens the future — possibilities, experiments, options to try.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/feedback-and-coaching.jpg" alt="Feedback and Coaching infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">Feedback and Coaching</span><span class="t-sum">Two distinct moves people constantly blur: feedback reports the past — what worked, what did not — and coaching opens the future — possibilities, experiments, options to try.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/feedback-and-coaching.jpg" alt="Feedback and Coaching infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/feelings-vs-emotions.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">Feelings vs Emotions</span>
-        <span class="t-sum">Feelings vs emotions: feelings are present, 3-5 min, for creating; emotions are past-rooted, longer, for healing.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/feelings-vs-emotions.jpg" alt="Feelings vs Emotions infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/feelings-vs-emotions.jpg" alt="Feelings vs Emotions infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/gameworld.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Gameworld</span>
-        <span class="t-sum">A gameworld is a field of human commitment with a context, a purpose, and rules of engagement — and naming the one you are inside is what turns unconscious drift into chosen action.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/gameworld.jpg" alt="Gameworld infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/hidden-underworld-purpose-sentence.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Gameworld</span><span class="t-sum">A gameworld is a field of human commitment with a context, a purpose, and rules of engagement — and naming the one you are inside is what turns unconscious drift into chosen action.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/gameworld.jpg" alt="Gameworld infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Hidden Underworld Purpose Sentence</span>
-        <span class="t-sum">A 3-part purpose sentence: &quot;They are [handle/noun]... Who do [technology]... So That [benefit],&quot; leading to the Underworld Gateway.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/hidden-underworld-purpose-sentence.jpg" alt="Hidden Underworld Purpose Sentence infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/hidden-underworld-purpose-sentence.jpg" alt="Hidden Underworld Purpose Sentence infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/is-glue.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Is-Glue</span>
-        <span class="t-sum">The linguistic mechanism by which the Box defends itself — the verb &quot;to be&quot; fusing perception to identity and identity to permanence — and the simple swap that restores the perception&#x27;s provisional status without making it less true.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/is-glue.jpg" alt="Is-Glue infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Is-Glue</span><span class="t-sum">The linguistic mechanism by which the Box defends itself — the verb &quot;to be&quot; fusing perception to identity and identity to permanence — and the simple swap that restores the perception&#x27;s provisional status without making it less true.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/is-glue.jpg" alt="Is-Glue infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/letting-your-heart-speak.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">Letting Your Heart Speak</span>
-        <span class="t-sum">Phase 1 feelings work: say &quot;I feel [emotion] because ___&quot; across anger, sadness, fear, joy; feel consciously and inner navigate.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/letting-your-heart-speak.jpg" alt="Letting Your Heart Speak infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/letting-your-heart-speak.jpg" alt="Letting Your Heart Speak infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/levels-of-responsibility.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Levels of Responsibility</span>
-        <span class="t-sum">The same word — responsibility — means a different thing at each level, because each level is a different context; and the level you speak from decides whether you are a victim, a rebel, a collaborator, or the author of what happens next.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/levels-of-responsibility.jpg" alt="Levels of Responsibility infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Levels of Responsibility</span><span class="t-sum">The same word — responsibility — means a different thing at each level, because each level is a different context; and the level you speak from decides whether you are a victim, a rebel, a collaborator, or the author of what happens next.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/levels-of-responsibility.jpg" alt="Levels of Responsibility infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/linear-and-nonlinear.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">Linear and Nonlinear</span>
-        <span class="t-sum">Linear means one path from A to B (=1); nonlinear means infinitely many looping routes between them (=infinity).</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/linear-and-nonlinear.jpg" alt="Linear and Nonlinear infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/linear-and-nonlinear.jpg" alt="Linear and Nonlinear infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/liquid-state.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Liquid State</span>
-        <span class="t-sum">The temporary condition in which solid thoughtware loosens enough to change — symptomatic across all five bodies, transformative only when held by a context.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/liquid-state.jpg" alt="Liquid State infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Liquid State</span><span class="t-sum">The temporary condition in which solid thoughtware loosens enough to change — symptomatic across all five bodies, transformative only when held by a context.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/liquid-state.jpg" alt="Liquid State infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/low-drama.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Low Drama</span>
-        <span class="t-sum">Three drama positions — Persecutor, Victim, Rescuer — that look like three different people but are one Box-pattern rotating through three faces, producing gremlin food.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/low-drama.jpg" alt="Low Drama infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Low Drama</span><span class="t-sum">Three drama positions — Persecutor, Victim, Rescuer — that look like three different people but are one Box-pattern rotating through three faces, producing gremlin food.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/low-drama.jpg" alt="Low Drama infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-3-games.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
         <span class="t-title">Map of 3 Games</span>
-        <span class="t-sum">Three games of interaction: 1) I win-you lose, 2) secret competition/compromise, 3) generative &quot;winning happening&quot; with no losing.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-3-games.jpg" alt="Map of 3 Games infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-3-games.jpg" alt="Map of 3 Games infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-3-powers.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of 3 Powers</span>
-        <span class="t-sum">Three powers for conscious creation in sequence: Choose (foundation), Ask dangerous questions (engine), Declare (creation).</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-3-powers.jpg" alt="Map of 3 Powers infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of 3 Powers</span><span class="t-sum">The operational moves that make possibility actionable — owning the choice you already made, asking the question whose answer you cannot un-know, and speaking the new context into being from a clean source.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-3-powers.jpg" alt="Map of 3 Powers infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-5-bodies.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of 5 Bodies</span>
-        <span class="t-sum">Five bodies: physical, intellectual, emotional, energetic sit in the Status Quo; a pathway leads to the archetypal body and your mission.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-5-bodies.jpg" alt="Map of 5 Bodies infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/map-of-black-hole.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of 5 Bodies</span><span class="t-sum">The PM training map of a human as five channels of intelligence and responsibility — intellectual, emotional, physical, energetic, archetypal. Experientially real, not medical anatomy and not metaphor. Most learners arrive over-identified with one.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-5-bodies.jpg" alt="Map of 5 Bodies infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Map of Black Hole</span>
-        <span class="t-sum">Same energy and information either bounces off a closed, confused receiver or, after a CLICK, gets drawn fully into an open &quot;black hole&quot; receiver.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-black-hole.jpg" alt="Map of Black Hole infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-black-hole.jpg" alt="Map of Black Hole infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/map-of-communication.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Communication</span>
-        <span class="t-sum">The architecture of an exchange between two people, the discipline of finishing what was started, and Thomas Gordon&#x27;s catalog of the twelve things people reliably do instead of listening.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-communication.jpg" alt="Map of Communication infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/map-of-context-war.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Communication</span><span class="t-sum">The architecture of an exchange between two people, the discipline of finishing what was started, and Thomas Gordon&#x27;s catalog of the twelve things people reliably do instead of listening.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-communication.jpg" alt="Map of Communication infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Map of Context War</span>
-        <span class="t-sum">A &quot;context war&quot; sits at the hub of many contesting elements, above a ring of states ranging from high and adult down to several child states.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-context-war.jpg" alt="Map of Context War infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-context-war.jpg" alt="Map of Context War infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/map-of-ego-states.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Ego-States</span>
-        <span class="t-sum">Five distinct locations from which you speak, feel and choose — Parent, Child, Adult, Gremlin, Demon — and the lens that lets you see, in real time, which one is on the line.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-ego-states.jpg" alt="Map of Ego-States infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Ego-States</span><span class="t-sum">Five distinct locations from which you speak, feel and choose — Parent, Child, Adult, Gremlin, Demon — and the lens that lets you see, in real time, which one is on the line.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-ego-states.jpg" alt="Map of Ego-States infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-emotional-healing-process.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Emotional Healing Process</span>
-        <span class="t-sum">The structured PM practice for completing a stored emotion so its energy returns — five positions, non-linear, no script, requires a witness for anything beyond small material, NOT trauma processing.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-emotional-healing-process.jpg" alt="Map of Emotional Healing Process infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/map-of-feelings.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Emotional Healing Process</span><span class="t-sum">The structured PM practice for completing a stored emotion so its energy returns — five positions, non-linear, no script, requires a witness for anything beyond small material, NOT trauma processing.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-emotional-healing-process.jpg" alt="Map of Emotional Healing Process infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Map of Feelings</span>
-        <span class="t-sum">The old cultural map of 4 feelings: anger, joy, sadness, fear each buried under harsh judgments, all under the false premise &quot;it is not okay to feel.&quot;</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-feelings.jpg" alt="Map of Feelings infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-feelings.jpg" alt="Map of Feelings infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/map-of-feelings-sensations.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">Map of Feelings Sensations</span>
-        <span class="t-sum">The bodily sensations of each feeling: anger (rigid, hot, throbbing), sadness (melting, inward), joy (opening, expanding), fear (contraction, shaking).</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-feelings-sensations.jpg" alt="Map of Feelings Sensations infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-feelings-sensations.jpg" alt="Map of Feelings Sensations infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-learning-spiral.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Learning Spiral</span>
-        <span class="t-sum">The actual shape of how learning lands across time in PM — not linear, not arrival-based, but spiral — and the structural reason the course keeps revealing things on the second lap that were invisible on the first.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-learning-spiral.jpg" alt="Map of Learning Spiral infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Learning Spiral</span><span class="t-sum">The actual shape of how learning lands across time in PM — not linear, not arrival-based, but spiral — and the structural reason the course keeps revealing things on the second lap that were invisible on the first.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-learning-spiral.jpg" alt="Map of Learning Spiral infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-maps.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Maps</span>
-        <span class="t-sum">A thoughtmap is a specific cognitive map used to navigate a piece of territory — and PM gives the learner roughly twenty of them, each one a tool to use, none of them the truth to believe.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-maps.jpg" alt="Map of Maps infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Maps</span><span class="t-sum">A thoughtmap is a specific cognitive map used to navigate a piece of territory — and PM gives the learner roughly twenty of them, each one a tool to use, none of them the truth to believe.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-maps.jpg" alt="Map of Maps infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-matrix.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
         <span class="t-title">Map of Matrix</span>
-        <span class="t-sum">Building a matrix is filling a circle by making distinctions: each distinction divides a section into finer, clearly defined cells.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-matrix.jpg" alt="Map of Matrix infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-matrix.jpg" alt="Map of Matrix infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-mixed-emotions.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Mixed Emotions</span>
-        <span class="t-sum">What feelings become when they do not flow — stored, time-displaced, story-laden compounds of two or three feelings tangled with the original event that froze them.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-mixed-emotions.jpg" alt="Map of Mixed Emotions infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">Map of Mixed Emotions</span><span class="t-sum">What feelings become when they do not flow — stored, time-displaced, story-laden compounds of two or three feelings tangled with the original event that froze them.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-mixed-emotions.jpg" alt="Map of Mixed Emotions infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-numbness-bar.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Numbness Bar</span>
-        <span class="t-sum">The threshold in the emotional body below which feelings do not register — installed in childhood as protection, obsolete in adulthood, lowered through small repeated reps.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-numbness-bar.jpg" alt="Map of Numbness Bar infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Numbness Bar</span><span class="t-sum">The threshold in the emotional body below which feelings do not register — installed in childhood as protection, obsolete in adulthood, lowered through small repeated reps.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-numbness-bar.jpg" alt="Map of Numbness Bar infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-optional-healing-process.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">Map of Optional Healing Process</span>
-        <span class="t-sum">Six steps of the Optional Healing Process: make contact, inner navigation, liquid state, old/new decision, and closing the space.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-optional-healing-process.jpg" alt="Map of Optional Healing Process infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-optional-healing-process.jpg" alt="Map of Optional Healing Process infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-possibility.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Possibility</span>
-        <span class="t-sum">The meta-map that locates every other PM distinction — possibility named not as a list of options but as a space the learner enters on purpose, by holding context, becoming liquid, and asking what cannot be unasked.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-possibility.jpg" alt="Map of Possibility infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Possibility</span><span class="t-sum">The meta-map that locates every other PM distinction — possibility named not as a list of options but as a space the learner enters on purpose, by holding context, becoming liquid, and asking what cannot be unasked.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-possibility.jpg" alt="Map of Possibility infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-problem-ownership.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Problem Ownership</span>
-        <span class="t-sum">The first PM question when something is &quot;wrong&quot; between people — whose unmet need is actually in play — and the grammar test (I-statement vs you-statement) that makes the answer visible.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-problem-ownership.jpg" alt="Map of Problem Ownership infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">Map of Problem Ownership</span><span class="t-sum">The first PM question when something is &quot;wrong&quot; between people — whose unmet need is actually in play — and the grammar test (I-statement vs you-statement) that makes the answer visible.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-problem-ownership.jpg" alt="Map of Problem Ownership infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-rapid-learning.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Rapid Learning</span>
-        <span class="t-sum">The fast inner loop by which a person upgrades thoughtware in ordinary life — Go! → Beep! → Shift! → Go! — and the one swamp that kills it.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-rapid-learning.jpg" alt="Map of Rapid Learning infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">Map of Rapid Learning</span><span class="t-sum">The fast inner loop by which a person upgrades thoughtware in ordinary life — Go! → Beep! → Shift! → Go! — and the one swamp that kills it.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-rapid-learning.jpg" alt="Map of Rapid Learning infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-reactivities.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Reactivities</span>
-        <span class="t-sum">Six different kinds of automatic reaction — Buttons, Voices, Activated Traumas, Hooks, Triggers, Imbalances — that all feel the same from inside but each route to a different tool, so the first move is always to name which one fired.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-reactivities.jpg" alt="Map of Reactivities infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">Map of Reactivities</span><span class="t-sum">Six different kinds of automatic reaction — Buttons, Voices, Activated Traumas, Hooks, Triggers, Imbalances — that all feel the same from inside but each route to a different tool, so the first move is always to name which one fired.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-reactivities.jpg" alt="Map of Reactivities infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-responsibility-and-culture.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
         <span class="t-title">Map of Responsibility and Culture</span>
-        <span class="t-sum">Two maps of responsibility: the old one feels like a burden; the new one is the ability to respond and be at source.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-responsibility-and-culture.jpg" alt="Map of Responsibility and Culture infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-responsibility-and-culture.jpg" alt="Map of Responsibility and Culture infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-thoughtmaps.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Thoughtmaps</span>
-        <span class="t-sum">A thoughtmap is a specific cognitive map used to navigate a piece of territory — and PM gives the learner roughly twenty of them, each one a tool to use, none of them the truth to believe.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-thoughtmaps.jpg" alt="Map of Thoughtmaps infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Thoughtmaps</span><span class="t-sum">A thoughtmap is a specific cognitive map used to navigate a piece of territory — and PM gives the learner roughly twenty of them, each one a tool to use, none of them the truth to believe.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-thoughtmaps.jpg" alt="Map of Thoughtmaps infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/map-of-thoughtware.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Map of Thoughtware</span>
-        <span class="t-sum">Thoughtware is what you think with — the internal architecture upstream of every thought you have ever had — and the layer of mind PM targets for upgrade.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-thoughtware.jpg" alt="Map of Thoughtware infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/map-of-urgent-and-important.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Map of Thoughtware</span><span class="t-sum">Thoughtware is what you think with — the internal architecture upstream of every thought you have ever had — and the layer of mind PM targets for upgrade.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-thoughtware.jpg" alt="Map of Thoughtware infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Map of Urgent and Important</span>
-        <span class="t-sum">A grid of urgency vs importance: delegate, prioritize top-tier items, eliminate the trivial, and cherish what matters.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-urgent-and-important.jpg" alt="Map of Urgent and Important infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-urgent-and-important.jpg" alt="Map of Urgent and Important infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/map-of-values.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag sp">Spaceport</span></span>
         <span class="t-title">Map of Values</span>
-        <span class="t-sum">An inverted triangle of values: BE/ARE on top, DO in the middle, HAVE at the bottom; appreciate the qualities of being.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/map-of-values.jpg" alt="Map of Values infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/map-of-values.jpg" alt="Map of Values infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/new-context-chain.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">New Context Chain</span>
-        <span class="t-sum">The causal sequence by which a chosen context, not an attempted behavior, produces a new result — and the reason most personal change fails when it starts on the wrong end of the chain.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/new-context-chain.jpg" alt="New Context Chain infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">New Context Chain</span><span class="t-sum">The causal sequence by which a chosen context, not an attempted behavior, produces a new result — and the reason most personal change fails when it starts on the wrong end of the chain.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/new-context-chain.jpg" alt="New Context Chain infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/new-map-of-feelings.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">New Map of Feelings</span>
-        <span class="t-sum">Four pure archetypal feelings — anger, sadness, fear, joy — each functional, time-limited, body-located, present-time, asking for specific action; none good, none bad; each with a shadow form when stored as emotion.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/new-map-of-feelings.jpg" alt="New Map of Feelings infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/nonlinear-story-and-possibility-story.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">New Map of Feelings</span><span class="t-sum">Four pure archetypal feelings — anger, sadness, fear, joy — each functional, time-limited, body-located, present-time, asking for specific action; none good, none bad; each with a shadow form when stored as emotion.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/new-map-of-feelings.jpg" alt="New Map of Feelings infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Nonlinear Story and Possibility Story</span>
-        <span class="t-sum">A nonlinear story tangles plots, place, sequence and grammar; a possibility story heals, transforms and evolves. Choose your narrative.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/nonlinear-story-and-possibility-story.jpg" alt="Nonlinear Story and Possibility Story infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/nonlinear-story-and-possibility-story.jpg" alt="Nonlinear Story and Possibility Story infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/old-map-of-feelings.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Old Map of Feelings</span>
-        <span class="t-sum">The cultural map of feelings the learner arrived with — sorted into &quot;good&quot; and &quot;bad,&quot; three of the four forbidden, the fourth diluted, maintained through numbness.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/old-map-of-feelings.jpg" alt="Old Map of Feelings infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span></span>
+        <span class="t-title">Old Map of Feelings</span><span class="t-sum">The cultural map of feelings the learner arrived with — sorted into &quot;good&quot; and &quot;bad,&quot; three of the four forbidden, the fourth diluted, maintained through numbness.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/old-map-of-feelings.jpg" alt="Old Map of Feelings infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/possibility-speaking.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag sp">Spaceport</span></span>
         <span class="t-title">Possibility Speaking</span>
-        <span class="t-sum">Possibility speaking: ask for and offer possibility, not advice, and let possibility (not you) speak.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/possibility-speaking.jpg" alt="Possibility Speaking infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/possibility-speaking.jpg" alt="Possibility Speaking infographic" loading="lazy"></span></a></li>
     <li><a class="ig-row" href="teaching/possibility-team.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag sp">Spaceport</span></span>
         <span class="t-title">Possibility Team</span>
-        <span class="t-sum">A Possibility Team&#x27;s Map of Reactivities: embody present, applied practice (GO!) and avoid rigidity and past focus (BEEP!).</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/possibility-team.jpg" alt="Possibility Team infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/purpose-of-feelings.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/possibility-team.jpg" alt="Possibility Team infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Purpose of Feelings</span>
-        <span class="t-sum">Feelings serve two purposes: fuel carrying information about your values to consciousness, and energy to create what matters.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/purpose-of-feelings.jpg" alt="Purpose of Feelings infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/red-pill-blue-pill-choice.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/purpose-of-feelings.jpg" alt="Purpose of Feelings infographic" loading="lazy"></span></div></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Red Pill Blue Pill Choice</span>
-        <span class="t-sum">Blue Pill keeps you numb in culture&#x27;s box; Red Pill is radical responsibility, authoring your life via lifelong learning.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/red-pill-blue-pill-choice.jpg" alt="Red Pill Blue Pill Choice infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/responsibility-core-stories.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/red-pill-blue-pill-choice.jpg" alt="Red Pill Blue Pill Choice infographic" loading="lazy"></span></div></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Responsibility Core Stories</span>
-        <span class="t-sum">From any &quot;what happened&quot; you can build a Responsible Story or a Victim Story; ask which gives more power and which is true.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/responsibility-core-stories.jpg" alt="Responsibility Core Stories infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/responsibility-is-consciousness-in-action.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/responsibility-core-stories.jpg" alt="Responsibility Core Stories infographic" loading="lazy"></span></div></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Responsibility Is Consciousness in Action</span>
-        <span class="t-sum">Responsibility is consciousness applied through action; awareness or doing alone is incomplete, and results never lie.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/responsibility-is-consciousness-in-action.jpg" alt="Responsibility Is Consciousness in Action infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/responsible-story.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/responsibility-is-consciousness-in-action.jpg" alt="Responsibility Is Consciousness in Action infographic" loading="lazy"></span></div></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Responsible Story</span>
-        <span class="t-sum">The same event can become a Responsible Story (empowered) or a Victim Story; ask which gives more power and which is true.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/responsible-story.jpg" alt="Responsible Story infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/startover-xyz-resources.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/responsible-story.jpg" alt="Responsible Story infographic" loading="lazy"></span></div></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">StartOver XYZ Resources</span>
-        <span class="t-sum">A directory of Possibility Management websites and tools (Spaceport contains all), headed by lowdrama.mystrikingly.com.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/startover-xyz-resources.jpg" alt="StartOver XYZ Resources infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/startover-xyz-resources.jpg" alt="StartOver XYZ Resources infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/the-box-is-optional.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag sp">Spaceport</span></span>
         <span class="t-title">The Box Is Optional</span>
-        <span class="t-sum">A three-stage progression of interaction: Box to Box, Being to Box, and Being to Being, which reveals the box.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/the-box-is-optional.jpg" alt="The Box Is Optional infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/the-feelings-form.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/the-box-is-optional.jpg" alt="The Box Is Optional infographic" loading="lazy"></span></a></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">The Feelings Form</span>
-        <span class="t-sum">A four-step Feelings Form: I feel, because, so I want, therefore I — moving from learning to feel to creating from real values.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/the-feelings-form.jpg" alt="The Feelings Form infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/there-are-only-two-things-in-life.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/the-feelings-form.jpg" alt="The Feelings Form infographic" loading="lazy"></span></div></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">There Are Only Two Things in Life</span>
-        <span class="t-sum">A framework crediting Werner Erhard: all of life sorts into two categories, Bullshit and Nothing.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/there-are-only-two-things-in-life.jpg" alt="There Are Only Two Things in Life infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/treasure-map.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/there-are-only-two-things-in-life.jpg" alt="There Are Only Two Things in Life infographic" loading="lazy"></span></div></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Treasure Map</span>
-        <span class="t-sum">&quot;Feedback is gold&quot;: feedback gives you your X on the map, showing where you actually are relative to the treasures.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/treasure-map.jpg" alt="Treasure Map infographic" loading="lazy"></span>
-    </a></li>
-    <li><a class="ig-row" href="teaching/welcome-to-expand-the-box.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/treasure-map.jpg" alt="Treasure Map infographic" loading="lazy"></span></div></li>
+    <li><div class="ig-row muted">
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span></span>
         <span class="t-title">Welcome to Expand the Box</span>
-        <span class="t-sum">Welcome/title for Expand the Box, driven by Life &amp; Radical Responsibility, in the context of City &amp; Love &amp; Possibility Management.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/welcome-to-expand-the-box.jpg" alt="Welcome to Expand the Box infographic" loading="lazy"></span>
-    </a></li>
+        <span class="t-sum">No linked map or Spaceport site yet.</span></span>
+      <span class="t-fig"><img src="thumbs/welcome-to-expand-the-box.jpg" alt="Welcome to Expand the Box infographic" loading="lazy"></span></div></li>
     <li><a class="ig-row" href="teaching/your-gremlin.html">
-      <span class="t-text">
-        <span class="t-eyebrow"><span>Infographic</span></span>
-        <span class="t-title">Your Gremlin</span>
-        <span class="t-sum">The King or Queen of your Underworld — the part of you that wants drama, suffering and righteousness as food, and runs your life from below your awareness until you meet it on purpose.</span>
-        <span class="t-go">Read the teaching →</span>
-      </span>
-      <span class="t-fig"><img src="thumbs/your-gremlin.jpg" alt="Your Gremlin infographic" loading="lazy"></span>
-    </a></li>
+      <span class="t-text"><span class="t-eyebrow"><span>Infographic</span><span class="tag map">Map</span><span class="tag sp">Spaceport</span></span>
+        <span class="t-title">Your Gremlin</span><span class="t-sum">The King or Queen of your Underworld — the part of you that wants drama, suffering and righteousness as food, and runs your life from below your awareness until you meet it on purpose.</span>
+        <span class="t-go">Open →</span></span>
+      <span class="t-fig"><img src="thumbs/your-gremlin.jpg" alt="Your Gremlin infographic" loading="lazy"></span></a></li>
   </ul>
   <footer class="bottom">
-    <div class="nav-row"><a href="../index.html">← PM home</a><a href="https://possibilitymanagement.org" target="_blank" rel="noopener">Possibility Management ↗</a></div>
+    <div class="nav-row"><a href="../index.html">← PM home</a><a href="https://startover.xyz" target="_blank" rel="noopener">StartOver.xyz Spaceport ↗</a></div>
     <p class="license"><span class="cc">🄯 World Copyleft 2026 · Possibility Management infographics.</span> Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>. Re-presents Possibility Management thoughtware originated by Clinton Callahan &amp; the Possibility Management community. Please share, share-alike. Powered by Possibility Management — <a href="https://possibilitymanagement.org" target="_blank" rel="noopener">possibilitymanagement.org</a>. Consistent with the spirit of World Copyleft; not an official Possibility Management product.</p>
   </footer>
 </div>

@@ -17,3 +17,5 @@ desktop.ini
 
 # infographics teaching-content source (intermediate; pages are generated from it)
 infographics/_content/
+
+infographics/_connections.json

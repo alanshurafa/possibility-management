@@ -80,6 +80,13 @@
       registry.length + " sites · " + curatedCount + " curated + " +
       organicCount + " organic links";
 
+    // Live build progress (written by publish_loop.py on each deploy cycle).
+    fetch("data/build-status.json").then((r) => (r.ok ? r.json() : null)).then((s) => {
+      if (s && $("build-status"))
+        $("build-status").textContent =
+          "Archive: " + s.captured + "/" + s.total + " sites with original-appearance screenshots";
+    }).catch(() => {});
+
     // ---- Render ----
     let showOrganic = false;
     let hovered = null;

@@ -41,12 +41,20 @@ you can open any `*/index.html` on its own. If you'd rather not use Python, any
 static server works, for example `npx serve` with Node, or the Live Server
 extension in VS Code.
 
-## Read it online, no setup
+## Seeing it online
 
-The same files are served straight from this repo by jsDelivr, a free CDN, so
-there's nothing to install:
+GitHub's free CDNs serve files but deliberately don't render HTML as a webpage, so
+the full map can't be opened straight from a jsDelivr or raw link (the page would
+show as source text). Two ways to view it online instead:
 
-https://cdn.jsdelivr.net/gh/alanshurafa/possibility-management@full-map/index.html
+- The lighter, text-only map is already published and opens in any browser:
+  https://alanshurafa.github.io/possibility-management/
+- To put this full version online, point a static host that serves HTML (Netlify's
+  free tier, for example) at this repository. GitHub stays the source of truth; the
+  host just mirrors it.
+
+For the full, image-rich experience the simplest path is to run it locally (above),
+which needs no host at all.
 
 ## What's in the folder
 

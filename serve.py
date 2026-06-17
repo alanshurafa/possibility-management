@@ -49,9 +49,10 @@ def main():
 
     port = find_free_port(port)
 
-    handler = partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT))
     # Make sure .webp images are served with the right type on every platform.
-    handler.extensions_map.setdefault(".webp", "image/webp")
+    # extensions_map is a class attribute, so set it on the class (not the partial).
+    http.server.SimpleHTTPRequestHandler.extensions_map.setdefault(".webp", "image/webp")
+    handler = partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT))
 
     url = "http://localhost:%d/" % port
     with http.server.ThreadingHTTPServer(("127.0.0.1", port), handler) as httpd:

@@ -1,0 +1,10 @@
+# Static archive: no build step, serve the repo root exactly as it is.
+[build]
+  publish = "."
+  command = ""
+
+# The deduped assets have content-hashed names and never change, so cache hard.
+[[headers]]
+  for = "/_assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

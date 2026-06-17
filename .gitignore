@@ -1,0 +1,7 @@
+# OS / editor junk - not part of the archive
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.idea/
+.vscode/

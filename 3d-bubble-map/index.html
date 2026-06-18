@@ -115,6 +115,24 @@
       radial-gradient(circle at 34% 28%, #f5fdff 0 16%, var(--accent) 38%, #2d8cc7 70%, #0b3046 100%);
     box-shadow: 0 0 18px rgba(125, 211, 252, 0.92);
   }
+  #header h1 .title-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(125, 211, 252, 0.28);
+    text-underline-offset: 3px;
+    transition: color 0.14s ease, border-color 0.14s ease, text-shadow 0.14s ease;
+  }
+  #header h1 .title-link:hover,
+  #header h1 .title-link:focus-visible {
+    color: #ffffff;
+    border-bottom-color: var(--accent);
+    text-shadow: 0 0 10px rgba(125, 211, 252, 0.65);
+  }
+  #header h1 .title-link:focus-visible {
+    outline: 2px solid rgba(125, 211, 252, 0.7);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
   #header .sub {
     margin-top: 6px;
     color: var(--ink-dim);
@@ -388,7 +406,12 @@
   <div id="labels" aria-hidden="true"></div>
 
   <div id="header" class="panel">
-    <h1><span class="dot"></span> Startover.xyz 3D Bubble Map Spaceport</h1>
+    <h1>
+      <span class="dot"></span>
+      <a class="title-link" href="../startoverxyz/index.html">Startover.xyz</a>
+      <span>3D Bubble Map</span>
+      <a class="title-link" href="../spaceport/index.html">Spaceport</a>
+    </h1>
     <div class="sub" id="counts">Possibility Management sites loading...</div>
     <div class="sub" id="build-status"></div>
   </div>

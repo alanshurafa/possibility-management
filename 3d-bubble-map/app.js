@@ -49,6 +49,7 @@
   var tmpVec2 = new THREE.Vector3();
   var tmpDir = new THREE.Vector3();
   var radicalOrbitAxis = new THREE.Vector3(0.24, 0.91, 0.34).normalize();
+  var radicalOrbitTime = 0;
 
   var graph = {
     nodes: [],
@@ -76,6 +77,7 @@
     radicalOrbit: true,
     zoom: "175",
     tension: "0",
+    orbitSpeed: "100",
     bubbleSize: "100",
     bubbleSpacing: "100"
   };
@@ -92,6 +94,7 @@
     sizeByLinks: DEFAULT_SETTINGS.sizeByLinks,
     spreadScale: DEFAULT_SETTINGS.spreadScale,
     radicalOrbit: DEFAULT_SETTINGS.radicalOrbit,
+    orbitSpeedScale: Number(DEFAULT_SETTINGS.orbitSpeed) / 100,
     radicalFocus: null,
     drag: null,
     pointerDownEmpty: null
@@ -557,6 +560,11 @@
       updateSliderValue(event.target);
     });
 
+    $("orbit-speed").addEventListener("input", function (event) {
+      state.orbitSpeedScale = Number(event.target.value) / 100;
+      updateSliderValue(event.target);
+    });
+
     $("bubble-size").addEventListener("input", function (event) {
       state.bubbleScale = Number(event.target.value) / 100;
       updateSliderValue(event.target);
@@ -587,6 +595,7 @@
     $("radical-orbit").checked = DEFAULT_SETTINGS.radicalOrbit;
     if (state.radicalOrbit) centerRadicalOrbitHub(true);
     $("zoom").value = DEFAULT_SETTINGS.zoom;
+    $("orbit-speed").value = DEFAULT_SETTINGS.orbitSpeed;
     setZoomFromSlider(DEFAULT_SETTINGS.zoom);
     updateSliderValues();
   }
@@ -598,6 +607,7 @@
     $("size-by-links").checked = DEFAULT_SETTINGS.sizeByLinks;
     $("zoom").value = DEFAULT_SETTINGS.zoom;
     $("tension").value = DEFAULT_SETTINGS.tension;
+    $("orbit-speed").value = DEFAULT_SETTINGS.orbitSpeed;
     $("bubble-size").value = DEFAULT_SETTINGS.bubbleSize;
     $("bubble-spacing").value = DEFAULT_SETTINGS.bubbleSpacing;
     setZoomFromSlider(DEFAULT_SETTINGS.zoom);
@@ -608,6 +618,7 @@
     state.radicalOrbit = DEFAULT_SETTINGS.radicalOrbit;
     state.bubbleScale = DEFAULT_SETTINGS.bubbleScale;
     state.sizeByLinks = DEFAULT_SETTINGS.sizeByLinks;
+    state.orbitSpeedScale = Number(DEFAULT_SETTINGS.orbitSpeed) / 100;
     state.radicalFocus = null;
     setSpreadScale(DEFAULT_SETTINGS.spreadScale, true);
     updateNodeRadii();
@@ -727,7 +738,7 @@
   }
 
   function updateSliderValues() {
-    ["zoom", "tension", "bubble-size", "bubble-spacing"].forEach(function (id) {
+    ["zoom", "tension", "orbit-speed", "bubble-size", "bubble-spacing"].forEach(function (id) {
       updateSliderValue($(id));
     });
   }
@@ -1275,7 +1286,8 @@
   function applyRadicalOrbit(frame) {
     var hub = graph.nodeBySlug.get(RADICAL_RESPONSIBILITY_SLUG);
     if (!hub || !hub.mesh.visible) return;
-    var elapsed = clock ? clock.elapsedTime : 0;
+    radicalOrbitTime += (frame / 60) * Math.max(0, state.orbitSpeedScale);
+    var elapsed = radicalOrbitTime;
 
     if (!state.drag || state.drag.node !== hub) {
       tmpVec.set(0, 0, 0).sub(hub.pos);
@@ -1317,7 +1329,7 @@
       if (tmpVec2.lengthSq() < 0.0001) tmpVec2.set(-tmpVec.y, tmpVec.x, tmpVec.z);
       tmpVec2.normalize();
       var speedSeed = (hashString(node.slug) % 100) / 100;
-      node.velocity.addScaledVector(tmpVec2, (0.1 + speedSeed * 0.06) * frame);
+      node.velocity.addScaledVector(tmpVec2, (0.1 + speedSeed * 0.06) * frame * Math.max(0, state.orbitSpeedScale));
     });
   }
 

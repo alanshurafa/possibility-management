@@ -5,16 +5,19 @@
   from = "/"
   to = "/3d-bubble-map/"
   status = 302
+  force = true
 
 [[redirects]]
   from = "/bubble-map"
   to = "/3d-bubble-map/"
   status = 301
+  force = true
 
 [[redirects]]
   from = "/bubble-map/"
   to = "/3d-bubble-map/"
   status = 301
+  force = true
 
 [[redirects]]
   from = "/archive"

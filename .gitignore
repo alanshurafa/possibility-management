@@ -26,3 +26,6 @@ bubble-map/data/_*.json
 # Python cache
 __pycache__/
 *.pyc
+
+# Local Netlify folder
+.netlify

@@ -1,0 +1,42 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/3d-bubble-map/"
+  status = 302
+
+[[redirects]]
+  from = "/bubble-map"
+  to = "/3d-bubble-map/"
+  status = 301
+
+[[redirects]]
+  from = "/bubble-map/"
+  to = "/3d-bubble-map/"
+  status = 301
+
+[[redirects]]
+  from = "/archive"
+  to = "/bubble-map/archive/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/archive/"
+  to = "/bubble-map/archive/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/assets/*"
+  to = "/bubble-map/archive/assets/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/:slug/index.html"
+  to = "/bubble-map/archive/:slug/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/:slug/"
+  to = "/bubble-map/archive/:slug/index.html"
+  status = 200

@@ -213,8 +213,22 @@
     });
   }
 
+  function usesRootArchiveUrls() {
+    var host = window.location.hostname.toLowerCase();
+    if (!host || host === "localhost" || host === "127.0.0.1") return false;
+    if (host === "alanshurafa.github.io") return false;
+    return host === "possibilitymanagement.xyz" ||
+      host === "www.possibilitymanagement.xyz" ||
+      host.slice(-11) === ".netlify.app";
+  }
+
+  function archiveIndexUrl() {
+    return usesRootArchiveUrls() ? "/archive/" : DATA_ROOT + "archive/index.html";
+  }
+
   function siteUrl(site, archiveManifest) {
     if (archiveManifest && archiveManifest[site.slug]) {
+      if (usesRootArchiveUrls()) return "/" + encodeURIComponent(site.slug) + "/index.html";
       return DATA_ROOT + archiveManifest[site.slug];
     }
     return site.live_url || site.url || "";
@@ -225,6 +239,9 @@
       setLoadingError("Three.js failed to load.");
       return;
     }
+
+    var archiveLink = $("archive-link");
+    if (archiveLink) archiveLink.href = archiveIndexUrl();
 
     Promise.all([
       loadJson(DATA_URLS.registry),

@@ -12,8 +12,7 @@ Each property is a self-contained static site in its own folder, so you can take
 |----------|------------|-----------|
 | [Thoughtmap Atlas](thoughtmaps/) | Every PM thoughtmap in one place, each with its own interactive one-page module. | [open](https://alanshurafa.github.io/possibility-management/thoughtmaps/) |
 | [Infographic Atlas](infographics/) | Every map as an infographic, each linked by name to its interactive map and StartOver Spaceport site. | [open](https://alanshurafa.github.io/possibility-management/infographics/) |
-| [SpacePort Bubble Map](bubble-map/) | The existing 2D network map of Possibility Management sites and archived copies. | [open](https://alanshurafa.github.io/possibility-management/bubble-map/) |
-| [SpacePort 3D Bubble Map](3d-bubble-map/) | A Three.js sphere-map view of the same site network, with orbiting and draggable bubbles. | [open](https://alanshurafa.github.io/possibility-management/3d-bubble-map/) |
+| [SpacePort 3D Bubble Map](3d-bubble-map/) | The default Three.js sphere-map view of the SpacePort network, with orbiting and draggable bubbles. | [open](https://alanshurafa.github.io/possibility-management/3d-bubble-map/) |
 | [Expand the Box](courses/expand-the-box/) | The full course: modules, daily interactive tools, practice spines, and learner resources. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/) |
 | [Interactive Tools](courses/expand-the-box/Interactive%20Tools/) | Feeling locator, drama detector, EHP walker, ego-state locator, and more. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/Interactive%20Tools/) |
 
@@ -24,8 +23,8 @@ index.html              the hub that links to every property
 _shared/                the common design kit: fonts, tokens, base styles
 thoughtmaps/            the Thoughtmap Atlas
 infographics/           the Infographic Atlas (gallery + per-map teaching pages)
-bubble-map/             the existing 2D SpacePort site network map and archive
-3d-bubble-map/          the Three.js 3D sphere view of the SpacePort network
+bubble-map/             the SpacePort data, bubble images, A-Z archive, and redirect to the 3D map
+3d-bubble-map/          the default Three.js 3D sphere view of the SpacePort network
 courses/
   expand-the-box/       the Expand the Box course site
 tools/                  room for standalone teaching tools

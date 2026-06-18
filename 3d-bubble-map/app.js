@@ -1,5 +1,5 @@
 /* PM 3D Bubble Map - Three.js constellation renderer.
- * Reuses the existing 2D bubble-map data, thumbnails, and archive manifest.
+ * Reuses the SpacePort data package, thumbnails, and archive manifest.
  * Nodes are textured spheres that can be pulled in 3D space while their links
  * stay springy and the whole scene remains orbitable. */
 (function () {

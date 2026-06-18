@@ -76,12 +76,16 @@ Add a top-level folder with an `index.html`, then run:
 python scripts/update_map_data.py
 ```
 
-This updates the local map data, offline archive manifest, and Netlify subdomain
-rewrites. On GitHub, the `Sync map data` workflow also runs on pushes to
-`full-map`, commits the generated files when needed, and registers changed
-folders as Netlify subdomain aliases. Netlify runs the same script during deploy,
-so a newly added folder is published at `/folder/`, appears as a bubble on the
-map, and can resolve at `https://folder.possibilitymanagement.xyz/`.
+This updates the local map data, offline archive manifest, and Netlify-compatible
+redirects. On GitHub, the `Sync map data` workflow also runs on pushes to
+`full-map` and commits the generated files when needed. Netlify runs the same
+script during deploy, so a newly added folder is published at `/folder/` and
+appears as a bubble on the map.
+
+The live domain uses Cloudflare wildcard DNS plus one redirect rule for
+`*.possibilitymanagement.xyz`, so no per-folder Netlify alias is needed. A folder
+named `folder` resolves at `https://folder.possibilitymanagement.xyz/`, which
+redirects to `https://possibilitymanagement.xyz/folder/`.
 
 ## About the content
 

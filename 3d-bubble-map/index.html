@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Startover.xyz 3D Bubble Map Spaceport</title>
+<meta name="description" content="A three-dimensional Possibility Management bubble map with draggable sphere sites and orbit controls." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='%237dd3fc'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg0: #030405;
+    --bg1: #071010;
+    --bg2: #130c11;
+    --panel: rgba(9, 13, 18, 0.72);
+    --panel-strong: rgba(13, 18, 24, 0.88);
+    --panel-brd: rgba(168, 206, 214, 0.18);
+    --ink: #ecf7f3;
+    --ink-dim: #8ea7a6;
+    --accent: #7dd3fc;
+    --accent-2: #e0b84f;
+    --organic: #9aa4ad;
+    --danger: #ff8a70;
+    --mono: "JetBrains Mono", "Courier New", monospace;
+    --body: "EB Garamond", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    color: var(--ink);
+    background:
+      linear-gradient(145deg, var(--bg0) 0%, var(--bg1) 48%, var(--bg2) 100%);
+    font: 14px/1.45 var(--mono);
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.18;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  }
+  #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.88; }
+  #scene { position: absolute; inset: 0; z-index: 2; }
+  #scene canvas { display: block; width: 100%; height: 100%; }
+  #labels { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+  .label {
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    border: 0;
+    border-radius: 999px;
+    color: #f6fdff;
+    background: rgba(2, 6, 8, 0.36);
+    box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.09), 0 1px 8px rgba(0, 0, 0, 0.42);
+    font-size: 10px;
+    line-height: 0.98;
+    text-align: center;
+    text-shadow: 0 1px 2px #000, 0 0 7px #000, 0 0 10px rgba(125, 211, 252, 0.62), 0 0 3px rgba(255, 255, 255, 0.72);
+    -webkit-text-stroke: 0.35px rgba(255, 255, 255, 0.62);
+    paint-order: stroke fill;
+    font-weight: 900;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    text-wrap: balance;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.12s ease;
+  }
+  .label.focus {
+    background: rgba(4, 12, 16, 0.58);
+    box-shadow: inset 0 0 18px rgba(125, 211, 252, 0.22), 0 1px 10px rgba(0, 0, 0, 0.54);
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-brd);
+    border-radius: 8px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.42);
+  }
+  #header {
+    position: absolute;
+    z-index: 5;
+    top: 18px;
+    left: 18px;
+    width: min(430px, calc(100vw - 36px));
+    padding: 13px 16px 14px;
+  }
+  #header h1 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+  }
+  #header h1 .dot {
+    flex: 0 0 auto;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 34% 28%, #f5fdff 0 16%, var(--accent) 38%, #2d8cc7 70%, #0b3046 100%);
+    box-shadow: 0 0 18px rgba(125, 211, 252, 0.92);
+  }
+  #header .sub {
+    margin-top: 6px;
+    color: var(--ink-dim);
+    font-size: 11px;
+  }
+  #header .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 11px;
+    margin-top: 8px;
+  }
+  a.link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(125, 211, 252, 0.35);
+    padding-bottom: 1px;
+  }
+  a.link:hover { color: #ffffff; border-bottom-color: #ffffff; }
+  #search-wrap {
+    position: absolute;
+    z-index: 5;
+    top: 18px;
+    right: 18px;
+  }
+  #search {
+    width: min(260px, calc(100vw - 36px));
+    padding: 10px 13px;
+    border-radius: 8px;
+    background: var(--panel-strong);
+    color: var(--ink);
+    border: 1px solid var(--panel-brd);
+    outline: none;
+    font: 12px/1.2 var(--mono);
+  }
+  #search::placeholder { color: var(--ink-dim); }
+  #search:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.14);
+  }
+  #rail {
+    position: absolute;
+    z-index: 5;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 8px 6px;
+  }
+  #rail button {
+    all: unset;
+    cursor: pointer;
+    width: 20px;
+    height: 18px;
+    border-radius: 5px;
+    text-align: center;
+    color: var(--ink-dim);
+    font-size: 10px;
+    font-weight: 700;
+    transition: color 0.12s, background 0.12s;
+  }
+  #rail button[data-has="1"] { color: var(--ink); }
+  #rail button[data-has="1"]:hover { background: rgba(125, 211, 252, 0.15); }
+  #rail button[disabled] { opacity: 0.28; cursor: default; }
+  #rail button.active {
+    color: #081014;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  }
+  #controls {
+    position: absolute;
+    z-index: 5;
+    left: 18px;
+    bottom: 18px;
+    width: min(315px, calc(100vw - 36px));
+    padding: 12px 14px;
+    display: grid;
+    gap: 11px;
+    color: var(--ink);
+    font-size: 12px;
+  }
+  #controls .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  #controls .row.tight { justify-content: flex-start; gap: 9px; }
+  #controls .actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .switch { position: relative; width: 34px; height: 19px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    background: rgba(138, 167, 166, 0.32);
+    transition: 0.18s;
+  }
+  .slider::before {
+    content: "";
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    left: 3px;
+    top: 3px;
+    border-radius: 50%;
+    background: var(--ink);
+    transition: 0.18s;
+  }
+  .switch input:checked + .slider {
+    background: linear-gradient(90deg, var(--accent), var(--organic));
+  }
+  .switch input:checked + .slider::before { transform: translateX(15px); }
+  input[type="range"] {
+    width: 142px;
+    accent-color: var(--accent-2);
+  }
+  .range-wrap {
+    position: relative;
+    width: 142px;
+    display: flex;
+    align-items: center;
+  }
+  .range-wrap input[type="range"] { width: 100%; }
+  .range-value {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 5px);
+    min-width: 42px;
+    padding: 3px 6px;
+    border: 1px solid rgba(125, 211, 252, 0.32);
+    border-radius: 6px;
+    background: rgba(5, 12, 15, 0.92);
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.32);
+    opacity: 0;
+    transform: translateY(3px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    pointer-events: none;
+  }
+  .range-wrap:hover .range-value,
+  .range-wrap:focus-within .range-value {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .legend-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-dim);
+    font-size: 11px;
+  }
+  .legend-line .sw {
+    width: 24px;
+    height: 0;
+    border-top: 2px solid;
+  }
+  #selection {
+    color: var(--ink-dim);
+    font-size: 11px;
+    min-height: 16px;
+  }
+  button.ghost {
+    all: unset;
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 700;
+    width: max-content;
+  }
+  button.ghost:hover { color: #ffffff; }
+  #card {
+    position: absolute;
+    z-index: 5;
+    right: 18px;
+    bottom: 18px;
+    width: min(310px, calc(100vw - 36px));
+    padding: 14px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.15s, transform 0.15s;
+    pointer-events: none;
+  }
+  #card.show { opacity: 1; transform: translateY(0); }
+  #card .top { display: flex; gap: 12px; align-items: center; }
+  #card img {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    flex: none;
+    object-fit: cover;
+    border: 1px solid var(--panel-brd);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 18px rgba(125, 211, 252, 0.24);
+  }
+  #card .title {
+    font-family: var(--body);
+    font-size: 20px;
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+  #card .slug {
+    margin-top: 4px;
+    color: var(--accent);
+    font-size: 10px;
+  }
+  #card .tag {
+    margin-top: 10px;
+    color: var(--ink-dim);
+    font: 12px/1.35 var(--body);
+  }
+  #card .hint {
+    margin-top: 9px;
+    color: var(--ink-dim);
+    font-size: 10px;
+  }
+  #loading {
+    position: absolute;
+    z-index: 6;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--ink-dim);
+    background: rgba(3, 4, 5, 0.34);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  #loading.error { color: var(--danger); }
+  @media (max-width: 760px) {
+    #header {
+      top: 12px;
+      left: 12px;
+      width: calc(100vw - 24px);
+      padding: 12px 14px;
+    }
+    #build-status { display: none; }
+    #search-wrap { top: 150px; left: 12px; right: auto; }
+    #search { width: calc(100vw - 24px); }
+    #rail { display: none; }
+    #card {
+      right: 12px;
+      left: 12px;
+      bottom: 324px;
+      width: auto;
+    }
+    #controls {
+      left: 12px;
+      bottom: 12px;
+      top: auto;
+      width: calc(100vw - 24px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+  <svg id="stars"></svg>
+  <div id="scene" aria-label="3D Possibility Management bubble map"></div>
+  <div id="labels" aria-hidden="true"></div>
+
+  <div id="header" class="panel">
+    <h1><span class="dot"></span> Startover.xyz 3D Bubble Map Spaceport</h1>
+    <div class="sub" id="counts">Possibility Management sites loading...</div>
+    <div class="sub" id="build-status"></div>
+  </div>
+
+  <div id="search-wrap">
+    <input id="search" type="search" placeholder="Search sites..." autocomplete="off" />
+  </div>
+
+  <nav id="rail" class="panel" aria-label="A to Z index"></nav>
+
+  <div id="controls" class="panel">
+    <div class="row tight">
+      <label class="switch" aria-label="Show curated links">
+        <input type="checkbox" id="toggle-curated" checked />
+        <span class="slider"></span>
+      </label>
+      <span>Curated links</span>
+    </div>
+    <div class="row tight">
+      <label class="switch" aria-label="Show organic links">
+        <input type="checkbox" id="toggle-organic" checked />
+        <span class="slider"></span>
+      </label>
+      <span>Organic links</span>
+    </div>
+    <div class="row tight">
+      <label class="switch" aria-label="Orbit every bubble around Radical Responsibility">
+        <input type="checkbox" id="radical-orbit" checked />
+        <span class="slider"></span>
+      </label>
+      <span>Radical orbit</span>
+    </div>
+    <div class="row">
+      <label for="zoom">Zoom</label>
+      <span class="range-wrap">
+        <input id="zoom" type="range" min="20" max="500" value="175" aria-describedby="zoom-value" />
+        <output id="zoom-value" class="range-value" for="zoom">175%</output>
+      </span>
+    </div>
+    <div class="row">
+      <label for="tension">Tension</label>
+      <span class="range-wrap">
+        <input id="tension" type="range" min="0" max="100" step="0.05" value="0" aria-describedby="tension-value" />
+        <output id="tension-value" class="range-value" for="tension">0%</output>
+      </span>
+    </div>
+    <div class="row">
+      <label for="bubble-size">Bubble size</label>
+      <span class="range-wrap">
+        <input id="bubble-size" type="range" min="55" max="800" value="100" aria-describedby="bubble-size-value" />
+        <output id="bubble-size-value" class="range-value" for="bubble-size">100%</output>
+      </span>
+    </div>
+    <div class="row">
+      <label for="bubble-spacing">Spacing</label>
+      <span class="range-wrap">
+        <input id="bubble-spacing" type="range" min="70" max="460" value="100" aria-describedby="bubble-spacing-value" />
+        <output id="bubble-spacing-value" class="range-value" for="bubble-spacing">100%</output>
+      </span>
+    </div>
+    <div class="row tight">
+      <label class="switch" aria-label="Size bubbles by number of links">
+        <input type="checkbox" id="size-by-links" checked />
+        <span class="slider"></span>
+      </label>
+      <span>Size by links</span>
+    </div>
+    <div class="actions">
+      <button class="ghost" id="reset" type="button">Reset view</button>
+      <button class="ghost" id="reset-settings" type="button">Default settings</button>
+    </div>
+  </div>
+
+  <div id="card" class="panel">
+    <div class="top">
+      <img id="card-img" alt="" />
+      <div>
+        <div class="title" id="card-title"></div>
+        <div class="slug" id="card-slug"></div>
+      </div>
+    </div>
+    <div class="tag" id="card-tag"></div>
+    <div class="hint" id="card-hint"></div>
+  </div>
+
+  <div id="loading">Building 3D constellation...</div>
+
+  <script src="assets/vendor/three.min.js"></script>
+  <script src="assets/vendor/OrbitControls.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

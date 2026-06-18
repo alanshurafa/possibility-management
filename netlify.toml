@@ -3,6 +3,24 @@
   publish = "."
   command = "python scripts/update_map_data.py"
 
+[[redirects]]
+  from = "/"
+  to = "/3d-bubble-map/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/bubble-map"
+  to = "/3d-bubble-map/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/bubble-map/"
+  to = "/3d-bubble-map/"
+  status = 301
+  force = true
+
 # The deduped assets have content-hashed names and never change, so cache hard.
 [[headers]]
   for = "/_assets/*"

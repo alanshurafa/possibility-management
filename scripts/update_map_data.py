@@ -25,6 +25,7 @@ EXCLUDED_DIRS = {
     ".github",
     ".netlify",
     "_assets",
+    "3d-bubble-map",
     "assets",
     "data",
     "netlify",

@@ -25,6 +25,9 @@
   var DEFAULT_CAMERA_Y = -120;
   var DEFAULT_CAMERA_Z = 1680;
   var DEFAULT_CAMERA_DISTANCE = Math.hypot(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z);
+  var RADICAL_FOCUS_MIN_DISTANCE = 175;
+  var RADICAL_FOCUS_MAX_DISTANCE = 360;
+  var RADICAL_FOCUS_GAP = 66;
   var BUBBLE_GLOW_SCALE = 2.55;
   var BUBBLE_GLOW_OPACITY = 0.075;
   var BUBBLE_INNER_GLOW_OPACITY = 0.2;
@@ -89,6 +92,7 @@
     sizeByLinks: DEFAULT_SETTINGS.sizeByLinks,
     spreadScale: DEFAULT_SETTINGS.spreadScale,
     radicalOrbit: DEFAULT_SETTINGS.radicalOrbit,
+    radicalFocus: null,
     drag: null,
     pointerDownEmpty: null
   };
@@ -604,12 +608,18 @@
     state.radicalOrbit = DEFAULT_SETTINGS.radicalOrbit;
     state.bubbleScale = DEFAULT_SETTINGS.bubbleScale;
     state.sizeByLinks = DEFAULT_SETTINGS.sizeByLinks;
+    state.radicalFocus = null;
     setSpreadScale(DEFAULT_SETTINGS.spreadScale, true);
     updateNodeRadii();
-    if (state.radicalOrbit) centerRadicalOrbitHub(true);
-    else restoreRadicalOrbitHub();
     if (state.pinned) state.pinnedSet = neighborsVisible(state.pinned);
     if (state.hovered) state.hoverSet = neighborsVisible(state.hovered);
+    if (state.radicalOrbit && state.pinned && state.pinned !== RADICAL_RESPONSIBILITY_SLUG) {
+      focusRadicalOrbitSelection(state.pinned);
+    } else if (state.radicalOrbit) {
+      centerRadicalOrbitHub(true);
+    } else {
+      restoreRadicalOrbitHub();
+    }
     applyVisualState(true);
   }
 
@@ -661,8 +671,13 @@
     state.radicalOrbit = event.target.checked;
     if (state.radicalOrbit && graph.nodeBySlug.has(RADICAL_RESPONSIBILITY_SLUG)) {
       centerRadicalOrbitHub(true);
-      focusOnSlugs([RADICAL_RESPONSIBILITY_SLUG], true);
+      if (state.pinned && state.pinned !== RADICAL_RESPONSIBILITY_SLUG) {
+        focusRadicalOrbitSelection(state.pinned);
+      } else {
+        focusOnSlugs([RADICAL_RESPONSIBILITY_SLUG], true);
+      }
     } else if (!state.radicalOrbit) {
+      state.radicalFocus = null;
       restoreRadicalOrbitHub();
     }
     applyVisualState(true);
@@ -947,6 +962,7 @@
   function clearPin() {
     state.pinned = null;
     state.pinnedSet = new Set();
+    state.radicalFocus = null;
     if (!state.hovered) $("card").classList.remove("show");
   }
 
@@ -955,8 +971,14 @@
     state.pinnedSet = slug ? neighborsVisible(slug) : new Set();
     if (slug) {
       showCard(slug);
-      focusOnSlugs(Array.from(state.pinnedSet), true);
+      if (state.radicalOrbit && slug !== RADICAL_RESPONSIBILITY_SLUG) {
+        focusRadicalOrbitSelection(slug);
+      } else {
+        state.radicalFocus = null;
+        focusOnSlugs(Array.from(state.pinnedSet), true);
+      }
     } else if (!state.hovered) {
+      state.radicalFocus = null;
       $("card").classList.remove("show");
     }
     applyVisualState(true);
@@ -1032,12 +1054,50 @@
     updateZoomSliderFromCamera();
   }
 
+  function focusRadicalOrbitSelection(slug) {
+    var hub = graph.nodeBySlug.get(RADICAL_RESPONSIBILITY_SLUG);
+    var node = graph.nodeBySlug.get(slug);
+    if (!hub || !node || node === hub || !node.mesh.visible) return;
+
+    centerRadicalOrbitHub(false);
+    var side = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
+    var lift = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
+    var focusDirection = side.multiplyScalar(0.92).addScaledVector(lift, 0.28).normalize();
+    state.radicalFocus = {
+      slug: slug,
+      direction: focusDirection
+    };
+
+    radicalOrbitTarget(node, hub, 0, tmpVec);
+    node.pos.copy(tmpVec);
+    node.velocity.set(0, 0, 0);
+    if (node.mesh) node.mesh.position.copy(node.pos);
+    focusOnRadicalOrbitPair(node, hub);
+  }
+
+  function focusOnRadicalOrbitPair(node, hub) {
+    var center = hub.pos.clone().add(node.pos).multiplyScalar(0.5);
+    var direction = camera.position.clone().sub(controls.target);
+    if (direction.lengthSq() < 0.001) direction.set(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z);
+    direction.normalize();
+
+    var separation = hub.pos.distanceTo(node.pos);
+    var extent = separation + (hub.renderRadius || hub.targetRadius || hub.radius) + (node.renderRadius || node.targetRadius || node.radius);
+    var distance = THREE.MathUtils.clamp(extent * 2.15 + 240, 460, 980);
+
+    controls.target.copy(center);
+    camera.position.copy(center).addScaledVector(direction, distance);
+    controls.update();
+    updateZoomSliderFromCamera();
+  }
+
   function resetView() {
     state.hovered = null;
     state.hoverSet = new Set();
     state.pinned = null;
     state.pinnedSet = new Set();
     state.filterSet = null;
+    state.radicalFocus = null;
     state.drag = null;
     $("search").value = "";
     clearRailActive();
@@ -1147,6 +1207,7 @@
 
       if (!drag.moved) setPinned(drag.node.slug);
       else {
+        if (state.radicalFocus && state.radicalFocus.slug === drag.node.slug) state.radicalFocus = null;
         updateSelectionText();
       }
       document.body.style.cursor = state.hovered ? "grab" : "default";
@@ -1247,6 +1308,11 @@
       var targetPull = THREE.MathUtils.clamp(tmpDir.length() * 0.00115, 0, 1.25) * frame;
       if (targetPull > 0) node.velocity.addScaledVector(tmpDir.normalize(), targetPull);
 
+      if (isRadicalFocusNode(node)) {
+        node.velocity.multiplyScalar(Math.pow(0.62, frame));
+        return;
+      }
+
       tmpVec2.crossVectors(radicalOrbitAxis, tmpVec);
       if (tmpVec2.lengthSq() < 0.0001) tmpVec2.set(-tmpVec.y, tmpVec.x, tmpVec.z);
       tmpVec2.normalize();
@@ -1256,6 +1322,7 @@
   }
 
   function radicalOrbitDistance(node, hub) {
+    if (isRadicalFocusNode(node)) return focusedRadicalOrbitDistance(node, hub);
     return THREE.MathUtils.clamp(
       (node.orbitDistance || 560) * Math.max(0.9, Math.sqrt(state.spreadScale)) + node.radius * 1.2,
       hub.radius + node.radius + 95,
@@ -1264,10 +1331,33 @@
   }
 
   function radicalOrbitTarget(node, hub, elapsed, out) {
+    if (isRadicalFocusNode(node)) {
+      out.copy(state.radicalFocus.direction).normalize();
+      return out.multiplyScalar(focusedRadicalOrbitDistance(node, hub)).add(hub.pos);
+    }
     if (!node.orbitSlot) node.orbitSlot = new THREE.Vector3(1, 0, 0);
     var angle = (elapsed || 0) * (node.orbitSpeed || 0.055) + (node.orbitPhase || 0);
     out.copy(node.orbitSlot).applyAxisAngle(radicalOrbitAxis, angle).normalize();
     return out.multiplyScalar(radicalOrbitDistance(node, hub)).add(hub.pos);
+  }
+
+  function isRadicalFocusNode(node) {
+    return !!(
+      state.radicalOrbit &&
+      state.radicalFocus &&
+      state.radicalFocus.slug === node.slug &&
+      state.radicalFocus.direction
+    );
+  }
+
+  function focusedRadicalOrbitDistance(node, hub) {
+    var hubRadius = Math.max(hub.renderRadius || 0, hub.targetRadius || 0, hub.radius || 0);
+    var nodeRadius = Math.max(node.renderRadius || 0, node.targetRadius || 0, node.radius || 0);
+    return THREE.MathUtils.clamp(
+      hubRadius + nodeRadius + RADICAL_FOCUS_GAP,
+      RADICAL_FOCUS_MIN_DISTANCE,
+      RADICAL_FOCUS_MAX_DISTANCE
+    );
   }
 
   function easeSphereScales() {

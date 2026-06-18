@@ -17,11 +17,44 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: full-map
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
+      - name: Detect changed site folders
+        shell: bash
+        run: |
+          : > .changed-site-slugs
+          if [ "${{ github.event_name }}" != "push" ]; then
+            echo "No push event; skipping subdomain alias detection."
+            exit 0
+          fi
+          before="${{ github.event.before }}"
+          after="${{ github.sha }}"
+          if [ "$before" = "0000000000000000000000000000000000000000" ]; then
+            git diff-tree --no-commit-id --name-only -r "$after" > .changed-files
+          else
+            git diff --name-only "$before" "$after" > .changed-files
+          fi
+          awk -F/ 'NF > 1 { print $1 }' .changed-files | sort -u | while read -r dir; do
+            if [ -f "$dir/index.html" ]; then
+              echo "$dir"
+            fi
+          done > .changed-site-slugs
+          cat .changed-site-slugs
       - name: Regenerate map data
         run: python scripts/update_map_data.py
+      - name: Sync Netlify subdomain aliases
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ecde882e-bd83-4d05-a0e9-0eaba83e311f
+          PM_DOMAIN: possibilitymanagement.xyz
+        run: |
+          if [ ! -s .changed-site-slugs ]; then
+            echo "No changed site folders with index.html."
+            exit 0
+          fi
+          python scripts/sync_netlify_subdomains.py $(cat .changed-site-slugs)
       - name: Commit generated data
         run: |
           if git diff --quiet; then

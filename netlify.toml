@@ -1,7 +1,7 @@
-# Static archive: no build step, serve the repo root exactly as it is.
+# Static archive: regenerate folder-derived map metadata, then serve the repo root.
 [build]
   publish = "."
-  command = ""
+  command = "python scripts/update_map_data.py"
 
 # The deduped assets have content-hashed names and never change, so cache hard.
 [[headers]]

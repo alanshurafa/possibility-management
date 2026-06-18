@@ -45,7 +45,7 @@
         y: pos[1],
         size: 6, // refined below by degree
         label: site.title,
-        image: "assets/bubbles/" + site.slug + ".webp",
+        image: site.bubble_image || "assets/bubbles/" + site.slug + ".webp",
         type: "image",
         color: "#0b1430",
         url: archiveManifest[site.slug] || site.live_url || site.url,
@@ -161,9 +161,9 @@
     const card = $("card");
     function showCard(node) {
       const s = byId[node];
-      $("card-img").src = "assets/bubbles/" + node + ".webp";
+      $("card-img").src = s.bubble_image || "assets/bubbles/" + node + ".webp";
       $("card-title").textContent = s.title;
-      $("card-slug").textContent = s.slug + ".mystrikingly.com";
+      $("card-slug").textContent = s.display_host || hostForSite(s);
       $("card-tag").textContent = s.tagline || "";
       $("card-hint").textContent = graph.getNodeAttribute(node, "archived")
         ? "Double-click to open the local backup ↗"
@@ -183,6 +183,14 @@
       renderer.refresh();
       document.body.style.cursor = "default";
     });
+
+    function hostForSite(site) {
+      try {
+        return new URL(site.live_url || site.url).host;
+      } catch (_) {
+        return site.slug + ".possibilitymanagement.xyz";
+      }
+    }
     renderer.on("doubleClickNode", ({ node, event }) => {
       if (event && event.preventSigmaDefault) event.preventSigmaDefault();
       const url = graph.getNodeAttribute(node, "url");

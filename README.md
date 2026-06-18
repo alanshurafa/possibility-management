@@ -1,7 +1,7 @@
 # Possibility Management — full offline map
 
 A complete, self-contained copy of the StartOver.xyz / Possibility Management web
-of 771 sites, saved in 2025. It includes an interactive map that links the sites
+of 925 sites, saved in 2025. It includes an interactive map that links the sites
 together and a saved copy of every captured page, with all images, fonts, and
 styles included. You can run the whole thing on your own computer, online or off.
 
@@ -29,8 +29,9 @@ https://www.python.org/downloads/ and tick "Add Python to PATH" during setup.
 any bubble to open that site. Leave the window running while you browse; press
 Ctrl+C to stop.
 
-Everything is served from your own copy, so it works offline and keeps working
-even if the original sites go down.
+Everything is served from your own copy with relative paths, so it works offline
+and keeps working from any folder or static host even if the original sites go
+down.
 
 ### Why does it need a server?
 
@@ -66,6 +67,22 @@ which needs no host at all.
 - one folder per site (for example `centered/`, `4brains/`), each with its saved
   `index.html`
 - `serve.py` and the `start-*` launchers — the local server
+
+## Adding a site folder
+
+Add a top-level folder with an `index.html`, then run:
+
+```
+python scripts/update_map_data.py
+```
+
+This updates the local map data, offline archive manifest, and Netlify subdomain
+rewrites. On GitHub, the `Sync map data` workflow also runs on pushes to
+`full-map` and commits the generated files when needed. Netlify runs the same
+script during deploy, so a newly added folder is published at `/folder/` and
+appears as a bubble on the map. The generated subdomain rewrites are ready for
+Netlify wildcard-domain hosting, or for Cloudflare wildcard forwarding from
+`https://folder.possibilitymanagement.xyz/` to `https://possibilitymanagement.xyz/folder/`.
 
 ## About the content
 

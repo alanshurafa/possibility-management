@@ -1010,9 +1010,11 @@
     if (!node) return;
     $("card-img").src = node.image;
     $("card-title").textContent = node.title;
-    $("card-slug").textContent = node.slug + ".mystrikingly.com";
+    $("card-slug").textContent = node.archived
+      ? "possibilitymanagement.xyz/" + node.slug + "/"
+      : node.slug + ".mystrikingly.com";
     $("card-tag").textContent = node.tagline;
-    $("card-hint").textContent = node.archived ? "Archived copy available" : "Live site fallback";
+    $("card-hint").textContent = node.archived ? "Local archive page" : "Live site fallback";
     $("card").classList.add("show");
   }
 

@@ -1026,7 +1026,7 @@
     if (!node) return;
     $("card-img").src = node.image;
     $("card-img").alt = node.title + " preview";
-    var cardLink = $("card-link");
+    var cardLink = $("card");
     if (node.url) {
       cardLink.href = node.url;
       cardLink.tabIndex = 0;

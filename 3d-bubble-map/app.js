@@ -541,10 +541,26 @@
     });
   }
 
+  function setControlsCollapsed(collapsed) {
+    var panel = $("controls");
+    var button = $("toggle-controls");
+    if (!panel || !button) return;
+
+    panel.classList.toggle("collapsed", collapsed);
+    document.body.classList.toggle("controls-collapsed", collapsed);
+    button.textContent = collapsed ? "+" : "-";
+    button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    button.setAttribute("aria-label", collapsed ? "Expand controls" : "Minimize controls");
+    button.title = collapsed ? "Expand controls" : "Minimize controls";
+  }
+
   function buildControls() {
     $("toggle-curated").addEventListener("change", updateLinkVisibility);
     $("toggle-organic").addEventListener("change", updateLinkVisibility);
     $("radical-orbit").addEventListener("change", updateRadicalOrbit);
+    $("toggle-controls").addEventListener("click", function () {
+      setControlsCollapsed(!$("controls").classList.contains("collapsed"));
+    });
 
     $("search").addEventListener("input", function (event) {
       applySearch(event.target.value);
@@ -1009,6 +1025,19 @@
     var node = graph.nodeBySlug.get(slug);
     if (!node) return;
     $("card-img").src = node.image;
+    $("card-img").alt = node.title + " preview";
+    var cardLink = $("card-link");
+    if (node.url) {
+      cardLink.href = node.url;
+      cardLink.tabIndex = 0;
+      cardLink.removeAttribute("aria-disabled");
+      cardLink.setAttribute("aria-label", "Open " + node.title);
+    } else {
+      cardLink.removeAttribute("href");
+      cardLink.tabIndex = -1;
+      cardLink.setAttribute("aria-disabled", "true");
+      cardLink.setAttribute("aria-label", "Selected site has no link");
+    }
     $("card-title").textContent = node.title;
     $("card-slug").textContent = node.archived
       ? "possibilitymanagement.xyz/" + node.slug + "/"

@@ -11,7 +11,8 @@
     edges: DATA_ROOT + "data/edges.json",
     layout: DATA_ROOT + "data/layout.json",
     archive: DATA_ROOT + "data/archive-manifest.json",
-    build: DATA_ROOT + "data/build-status.json"
+    build: DATA_ROOT + "data/build-status.json",
+    local: DATA_ROOT + "data/local.json"
   };
 
   var CURATED_COLOR = 0xf4f7fa;
@@ -247,10 +248,15 @@
       loadJson(DATA_URLS.registry),
       loadJson(DATA_URLS.edges),
       loadJson(DATA_URLS.layout),
-      loadJson(DATA_URLS.archive).catch(function () { return {}; })
+      loadJson(DATA_URLS.archive).catch(function () { return {}; }),
+      loadJson(DATA_URLS.local).catch(function () { return {}; })
     ]).then(function (loaded) {
+      var local = loaded[4] || {};
+      var registry = loaded[0].concat(local.nodes || []);
+      var rawEdges = loaded[1].concat(local.edges || []);
+      var layout = Object.assign({}, loaded[2], local.layout || {});
       initScene();
-      buildGraph(loaded[0], loaded[1], loaded[2], loaded[3]);
+      buildGraph(registry, rawEdges, layout, loaded[3]);
       buildMeshes();
       buildControls();
       applyVisualState(true);
@@ -382,8 +388,8 @@
         (letterIndex - 12.5) * 7;
       var d = degree.get(site.slug) || 0;
       var degreeRatio = d / maxDegree;
-      var linkRadius = 4.8 + 32 * Math.pow(degreeRatio, 0.62);
-      var uniformRadius = 20;
+      var linkRadius = site.featured ? 26 : 4.8 + 32 * Math.pow(degreeRatio, 0.62);
+      var uniformRadius = site.featured ? 24 : 20;
       var baseHome = new THREE.Vector3((pos[0] - centerX) * scale, (centerY - pos[1]) * scale, z);
       var node = {
         slug: site.slug,
@@ -393,6 +399,8 @@
         degree: d,
         url: siteUrl(site, archiveManifest),
         archived: !!(archiveManifest && archiveManifest[site.slug]),
+        featured: !!site.featured,
+        local: !!site.local,
         image: DATA_ROOT + "assets/bubbles/" + site.slug + ".webp",
         baseHome: baseHome,
         home: baseHome.clone(),
@@ -490,7 +498,7 @@
     var labels = $("labels");
 
     graph.nodes.forEach(function (node) {
-      var color = colorForSlug(node.slug);
+      var color = node.featured ? new THREE.Color(0xc43b1c) : colorForSlug(node.slug);
       var material = new THREE.MeshBasicMaterial({
         color: color,
         transparent: true,
@@ -994,9 +1002,9 @@
     if (!node) return;
     $("card-img").src = node.image;
     $("card-title").textContent = node.title;
-    $("card-slug").textContent = node.slug + ".mystrikingly.com";
+    $("card-slug").textContent = node.local ? node.url.replace(/^\.\.\//, "") : node.slug + ".mystrikingly.com";
     $("card-tag").textContent = node.tagline;
-    $("card-hint").textContent = node.archived ? "Archived copy available" : "Live site fallback";
+    $("card-hint").textContent = node.local ? "On this site" : (node.archived ? "Archived copy available" : "Live site fallback");
     $("card").classList.add("show");
   }
 

@@ -1,0 +1,20 @@
+{
+  "nodes": [
+    {
+      "slug": "mapsfromexpandthebox",
+      "title": "Maps & Processes from Expand the Box",
+      "tagline": "A self-paced study of the maps a live Expand the Box Training works with — not the Training itself.",
+      "url": "../courses/maps-and-processes-from-expand-the-box/",
+      "live_url": "../courses/maps-and-processes-from-expand-the-box/",
+      "featured": true,
+      "local": true
+    }
+  ],
+  "edges": [],
+  "layout": {
+    "mapsfromexpandthebox": [
+      207.19,
+      151.21
+    ]
+  }
+}

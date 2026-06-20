@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EHP Walker · ETB Day 6</title>
-<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<link rel="preload" href="../../_assets/fonts/files/6NUV8FyLNQOQZAnv9ZwIlOkuy91B.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/SlGUmQSNjdsmc35JDF1K5GR1SDk_YAPI.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/SlGWmQSNjdsmc35JDF1K5GRweDs1ZyHKpWg.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2" as="font" type="font/woff2" crossorigin>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
 <style>
 :root {
   --ivory: #f4ecdc;
@@ -299,7 +303,7 @@ h1.display em {
   bottom: 20px;
   left: 24px;
   z-index: 45;
-  display: flex;
+  display: none;
   gap: 12px;
   align-items: center;
 }
@@ -1834,7 +1838,7 @@ function restart() {
 /* -------------------------------- prior-session banner -------------------------------- */
 function hideBanner() { document.getElementById('returnBanner').classList.remove('show'); }
 
-window.addEventListener('DOMContentLoaded', () => {
+function loadReturnBanner() {
   try {
     const existing = localStorage.getItem('etb_day06_ehp_sessions');
     if (existing) {
@@ -1850,7 +1854,10 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
   } catch (e) {}
-  show('gate');
+}
+
+window.addEventListener('load', () => {
+  setTimeout(loadReturnBanner, 0);
 });
 </script>
 <!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->

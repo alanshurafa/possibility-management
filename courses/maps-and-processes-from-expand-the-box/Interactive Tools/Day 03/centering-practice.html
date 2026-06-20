@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Centering Practice · ETB Day 3</title>
-<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<link rel="preload" href="../../_assets/fonts/files/6NUV8FyLNQOQZAnv9ZwIlOkuy91B.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/SlGUmQSNjdsmc35JDF1K5GR1SDk_YAPI.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/SlGWmQSNjdsmc35JDF1K5GRweDs1ZyHKpWg.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2" as="font" type="font/woff2" crossorigin>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
 <style>
 :root {
   --ivory: #f4ecdc;
@@ -914,7 +918,14 @@ h1.display em {
 
   </main>
 
-  <div class="progress" id="progressBar"></div>
+  <div class="progress" id="progressBar">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
 </div>
 
 <script>
@@ -1018,6 +1029,7 @@ function bodySvg(opts) {
 /* ─── state ──────────────────────────────────────────────────────────────── */
 const TOTAL_STEPS = 6;
 let current = 1;
+let figuresRendered = false;
 const breathTimers = {}; // keyed by stepNum
 const elapsedTimers = {};
 
@@ -1029,8 +1041,15 @@ function renderFigures() {
   document.getElementById('fig5').innerHTML = bodySvg({ center: true, cord: true,  bubble: true,  cube: true  });
 }
 
+function ensureFigures() {
+  if (figuresRendered) return;
+  figuresRendered = true;
+  renderFigures();
+}
+
 /* ─── step navigation ───────────────────────────────────────────────────── */
 function show(stepId) {
+  if (stepId >= 2 && stepId <= 5) ensureFigures();
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
   const target = document.querySelector(`[data-step="${stepId}"]`);
   if (target) target.classList.add('active');
@@ -1167,8 +1186,7 @@ function hideBanner() {
 }
 
 /* ─── on load: render figures + check for prior practice ─────────────────── */
-window.addEventListener('DOMContentLoaded', () => {
-  renderFigures();
+function loadReturnBanner() {
   const stored = localStorage.getItem('etb_day03_practice');
   if (stored) {
     try {
@@ -1184,7 +1202,10 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('returnBanner').classList.add('show');
     } catch (e) {}
   }
-  show(1);
+}
+
+window.addEventListener('load', () => {
+  setTimeout(loadReturnBanner, 0);
 });
 </script>
 <!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->

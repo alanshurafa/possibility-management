@@ -13,8 +13,8 @@ Each property is a self-contained static site in its own folder, so you can take
 | [Thoughtmap Atlas](thoughtmaps/) | Every PM thoughtmap in one place, each with its own interactive one-page module. | [open](https://alanshurafa.github.io/possibility-management/thoughtmaps/) |
 | [Infographic Atlas](infographics/) | Every map as an infographic, each linked by name to its interactive map and StartOver Spaceport site. | [open](https://alanshurafa.github.io/possibility-management/infographics/) |
 | [SpacePort 3D Bubble Map](3d-bubble-map/) | The default Three.js sphere-map view of the SpacePort network, with orbiting and draggable bubbles. | [open](https://alanshurafa.github.io/possibility-management/3d-bubble-map/) |
-| [Expand the Box](courses/expand-the-box/) | The full course: modules, daily interactive tools, practice spines, and learner resources. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/) |
-| [Interactive Tools](courses/expand-the-box/Interactive%20Tools/) | Feeling locator, drama detector, EHP walker, ego-state locator, and more. | [open](https://alanshurafa.github.io/possibility-management/courses/expand-the-box/Interactive%20Tools/) |
+| [Maps & Processes from Expand the Box](courses/maps-and-processes-from-expand-the-box/) | A self-paced study of the maps a live Expand the Box *Training* works with — modules, interactive tools, practice spines, and learner resources. Not the Training itself. | [open](https://alanshurafa.github.io/possibility-management/courses/maps-and-processes-from-expand-the-box/) |
+| [Interactive Tools](courses/maps-and-processes-from-expand-the-box/Interactive%20Tools/) | Feeling locator, drama detector, EHP walker, ego-state locator, and more. | [open](https://alanshurafa.github.io/possibility-management/courses/maps-and-processes-from-expand-the-box/Interactive%20Tools/) |
 
 ## Layout
 
@@ -26,7 +26,7 @@ infographics/           the Infographic Atlas (gallery + per-map teaching pages)
 bubble-map/             the SpacePort data, bubble images, A-Z archive, and redirect to the 3D map
 3d-bubble-map/          the default Three.js 3D sphere view of the SpacePort network
 courses/
-  expand-the-box/       the Expand the Box course site
+  maps-and-processes-from-expand-the-box/   the Maps & Processes from Expand the Box study site
 tools/                  room for standalone teaching tools
 README · LICENSE        repo docs and the full CC BY-SA 4.0 license
 ```
@@ -43,7 +43,7 @@ cd possibility-management
 python -m http.server 8000
 # hub:    http://localhost:8000
 # atlas:  http://localhost:8000/thoughtmaps/
-# course: http://localhost:8000/courses/expand-the-box/
+# study:  http://localhost:8000/courses/maps-and-processes-from-expand-the-box/
 ```
 
 Or open any property's `index.html` directly in a browser.

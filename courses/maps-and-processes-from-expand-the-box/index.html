@@ -157,6 +157,14 @@ footer.bottom .license{margin-top:26px;font-family:var(--mono);font-size:10px;li
 footer.bottom .license a{color:var(--ink-mute);text-decoration:underline;}
 footer.bottom .license a:hover{color:var(--vermillion);}
 footer.bottom .license .cc{color:var(--ink-soft);font-weight:600;letter-spacing:0.06em;}
+footer.bottom .crumb{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:28px;
+  padding-bottom:22px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-mute);}
+footer.bottom .crumb a{color:var(--ink-mute);text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px;transition:all 0.2s;}
+footer.bottom .crumb a:hover{color:var(--vermillion);border-bottom-color:var(--vermillion);}
+footer.bottom .crumb .sep{color:var(--rule);}
+footer.bottom .crumb .here{color:var(--ink-soft);}
 
 @media (max-width:760px){
   .wrap{padding:24px 20px 60px;}
@@ -388,6 +396,11 @@ footer.bottom .license .cc{color:var(--ink-soft);font-weight:600;letter-spacing:
   </section>
 
   <footer class="bottom">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="../../3d-bubble-map/">&larr; 3D SpacePort</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="here">Maps &amp; Processes from Expand the Box</span>
+    </nav>
     <div class="nav-row">
       <a href="Course/module-00.html">Begin · Module 00 →</a>
       <a href="Map%20Atlas/index.html">Map Atlas</a>

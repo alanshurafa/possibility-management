@@ -5,14 +5,13 @@
 (function () {
   "use strict";
 
-  var DATA_ROOT = "../bubble-map/";
+  var DATA_ROOT = "../";
   var DATA_URLS = {
     registry: DATA_ROOT + "data/registry.json",
     edges: DATA_ROOT + "data/edges.json",
     layout: DATA_ROOT + "data/layout.json",
     archive: DATA_ROOT + "data/archive-manifest.json",
-    build: DATA_ROOT + "data/build-status.json",
-    local: DATA_ROOT + "data/local.json"
+    build: DATA_ROOT + "data/build-status.json"
   };
 
   var CURATED_COLOR = 0xf4f7fa;
@@ -26,6 +25,9 @@
   var DEFAULT_CAMERA_Y = -120;
   var DEFAULT_CAMERA_Z = 1680;
   var DEFAULT_CAMERA_DISTANCE = Math.hypot(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z);
+  var RADICAL_FOCUS_MIN_DISTANCE = 175;
+  var RADICAL_FOCUS_MAX_DISTANCE = 360;
+  var RADICAL_FOCUS_GAP = 66;
   var BUBBLE_GLOW_SCALE = 2.55;
   var BUBBLE_GLOW_OPACITY = 0.075;
   var BUBBLE_INNER_GLOW_OPACITY = 0.2;
@@ -47,6 +49,7 @@
   var tmpVec2 = new THREE.Vector3();
   var tmpDir = new THREE.Vector3();
   var radicalOrbitAxis = new THREE.Vector3(0.24, 0.91, 0.34).normalize();
+  var radicalOrbitTime = 0;
 
   var graph = {
     nodes: [],
@@ -74,6 +77,7 @@
     radicalOrbit: true,
     zoom: "175",
     tension: "0",
+    orbitSpeed: "100",
     bubbleSize: "100",
     bubbleSpacing: "100"
   };
@@ -90,6 +94,8 @@
     sizeByLinks: DEFAULT_SETTINGS.sizeByLinks,
     spreadScale: DEFAULT_SETTINGS.spreadScale,
     radicalOrbit: DEFAULT_SETTINGS.radicalOrbit,
+    orbitSpeedScale: Number(DEFAULT_SETTINGS.orbitSpeed) / 100,
+    radicalFocus: null,
     drag: null,
     pointerDownEmpty: null
   };
@@ -214,22 +220,8 @@
     });
   }
 
-  function usesRootArchiveUrls() {
-    var host = window.location.hostname.toLowerCase();
-    if (!host || host === "localhost" || host === "127.0.0.1") return false;
-    if (host === "alanshurafa.github.io") return false;
-    return host === "possibilitymanagement.xyz" ||
-      host === "www.possibilitymanagement.xyz" ||
-      host.slice(-11) === ".netlify.app";
-  }
-
-  function archiveIndexUrl() {
-    return usesRootArchiveUrls() ? "/archive/" : DATA_ROOT + "archive/index.html";
-  }
-
   function siteUrl(site, archiveManifest) {
     if (archiveManifest && archiveManifest[site.slug]) {
-      if (usesRootArchiveUrls()) return "/" + encodeURIComponent(site.slug) + "/index.html";
       return DATA_ROOT + archiveManifest[site.slug];
     }
     return site.live_url || site.url || "";
@@ -241,22 +233,14 @@
       return;
     }
 
-    var archiveLink = $("archive-link");
-    if (archiveLink) archiveLink.href = archiveIndexUrl();
-
     Promise.all([
       loadJson(DATA_URLS.registry),
       loadJson(DATA_URLS.edges),
       loadJson(DATA_URLS.layout),
-      loadJson(DATA_URLS.archive).catch(function () { return {}; }),
-      loadJson(DATA_URLS.local).catch(function () { return {}; })
+      loadJson(DATA_URLS.archive).catch(function () { return {}; })
     ]).then(function (loaded) {
-      var local = loaded[4] || {};
-      var registry = loaded[0].concat(local.nodes || []);
-      var rawEdges = loaded[1].concat(local.edges || []);
-      var layout = Object.assign({}, loaded[2], local.layout || {});
       initScene();
-      buildGraph(registry, rawEdges, layout, loaded[3]);
+      buildGraph(loaded[0], loaded[1], loaded[2], loaded[3]);
       buildMeshes();
       buildControls();
       applyVisualState(true);
@@ -388,8 +372,8 @@
         (letterIndex - 12.5) * 7;
       var d = degree.get(site.slug) || 0;
       var degreeRatio = d / maxDegree;
-      var linkRadius = site.featured ? 26 : 4.8 + 32 * Math.pow(degreeRatio, 0.62);
-      var uniformRadius = site.featured ? 24 : 20;
+      var linkRadius = 4.8 + 32 * Math.pow(degreeRatio, 0.62);
+      var uniformRadius = 20;
       var baseHome = new THREE.Vector3((pos[0] - centerX) * scale, (centerY - pos[1]) * scale, z);
       var node = {
         slug: site.slug,
@@ -399,9 +383,7 @@
         degree: d,
         url: siteUrl(site, archiveManifest),
         archived: !!(archiveManifest && archiveManifest[site.slug]),
-        featured: !!site.featured,
-        local: !!site.local,
-        image: DATA_ROOT + "assets/bubbles/" + site.slug + ".webp",
+        image: DATA_ROOT + (site.bubble_image || ("assets/bubbles/" + site.slug + ".webp")),
         baseHome: baseHome,
         home: baseHome.clone(),
         pos: baseHome.clone(),
@@ -498,7 +480,7 @@
     var labels = $("labels");
 
     graph.nodes.forEach(function (node) {
-      var color = node.featured ? new THREE.Color(0xc43b1c) : colorForSlug(node.slug);
+      var color = colorForSlug(node.slug);
       var material = new THREE.MeshBasicMaterial({
         color: color,
         transparent: true,
@@ -559,10 +541,26 @@
     });
   }
 
+  function setControlsCollapsed(collapsed) {
+    var panel = $("controls");
+    var button = $("toggle-controls");
+    if (!panel || !button) return;
+
+    panel.classList.toggle("collapsed", collapsed);
+    document.body.classList.toggle("controls-collapsed", collapsed);
+    button.textContent = collapsed ? "+" : "-";
+    button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    button.setAttribute("aria-label", collapsed ? "Expand controls" : "Minimize controls");
+    button.title = collapsed ? "Expand controls" : "Minimize controls";
+  }
+
   function buildControls() {
     $("toggle-curated").addEventListener("change", updateLinkVisibility);
     $("toggle-organic").addEventListener("change", updateLinkVisibility);
     $("radical-orbit").addEventListener("change", updateRadicalOrbit);
+    $("toggle-controls").addEventListener("click", function () {
+      setControlsCollapsed(!$("controls").classList.contains("collapsed"));
+    });
 
     $("search").addEventListener("input", function (event) {
       applySearch(event.target.value);
@@ -575,6 +573,11 @@
     controls.addEventListener("change", updateZoomSliderFromCamera);
 
     $("tension").addEventListener("input", function (event) {
+      updateSliderValue(event.target);
+    });
+
+    $("orbit-speed").addEventListener("input", function (event) {
+      state.orbitSpeedScale = Number(event.target.value) / 100;
       updateSliderValue(event.target);
     });
 
@@ -608,6 +611,7 @@
     $("radical-orbit").checked = DEFAULT_SETTINGS.radicalOrbit;
     if (state.radicalOrbit) centerRadicalOrbitHub(true);
     $("zoom").value = DEFAULT_SETTINGS.zoom;
+    $("orbit-speed").value = DEFAULT_SETTINGS.orbitSpeed;
     setZoomFromSlider(DEFAULT_SETTINGS.zoom);
     updateSliderValues();
   }
@@ -619,6 +623,7 @@
     $("size-by-links").checked = DEFAULT_SETTINGS.sizeByLinks;
     $("zoom").value = DEFAULT_SETTINGS.zoom;
     $("tension").value = DEFAULT_SETTINGS.tension;
+    $("orbit-speed").value = DEFAULT_SETTINGS.orbitSpeed;
     $("bubble-size").value = DEFAULT_SETTINGS.bubbleSize;
     $("bubble-spacing").value = DEFAULT_SETTINGS.bubbleSpacing;
     setZoomFromSlider(DEFAULT_SETTINGS.zoom);
@@ -629,12 +634,19 @@
     state.radicalOrbit = DEFAULT_SETTINGS.radicalOrbit;
     state.bubbleScale = DEFAULT_SETTINGS.bubbleScale;
     state.sizeByLinks = DEFAULT_SETTINGS.sizeByLinks;
+    state.orbitSpeedScale = Number(DEFAULT_SETTINGS.orbitSpeed) / 100;
+    state.radicalFocus = null;
     setSpreadScale(DEFAULT_SETTINGS.spreadScale, true);
     updateNodeRadii();
-    if (state.radicalOrbit) centerRadicalOrbitHub(true);
-    else restoreRadicalOrbitHub();
     if (state.pinned) state.pinnedSet = neighborsVisible(state.pinned);
     if (state.hovered) state.hoverSet = neighborsVisible(state.hovered);
+    if (state.radicalOrbit && state.pinned && state.pinned !== RADICAL_RESPONSIBILITY_SLUG) {
+      focusRadicalOrbitSelection(state.pinned);
+    } else if (state.radicalOrbit) {
+      centerRadicalOrbitHub(true);
+    } else {
+      restoreRadicalOrbitHub();
+    }
     applyVisualState(true);
   }
 
@@ -686,8 +698,13 @@
     state.radicalOrbit = event.target.checked;
     if (state.radicalOrbit && graph.nodeBySlug.has(RADICAL_RESPONSIBILITY_SLUG)) {
       centerRadicalOrbitHub(true);
-      focusOnSlugs([RADICAL_RESPONSIBILITY_SLUG], true);
+      if (state.pinned && state.pinned !== RADICAL_RESPONSIBILITY_SLUG) {
+        focusRadicalOrbitSelection(state.pinned);
+      } else {
+        focusOnSlugs([RADICAL_RESPONSIBILITY_SLUG], true);
+      }
     } else if (!state.radicalOrbit) {
+      state.radicalFocus = null;
       restoreRadicalOrbitHub();
     }
     applyVisualState(true);
@@ -737,7 +754,7 @@
   }
 
   function updateSliderValues() {
-    ["zoom", "tension", "bubble-size", "bubble-spacing"].forEach(function (id) {
+    ["zoom", "tension", "orbit-speed", "bubble-size", "bubble-spacing"].forEach(function (id) {
       updateSliderValue($(id));
     });
   }
@@ -972,6 +989,7 @@
   function clearPin() {
     state.pinned = null;
     state.pinnedSet = new Set();
+    state.radicalFocus = null;
     if (!state.hovered) $("card").classList.remove("show");
   }
 
@@ -980,8 +998,14 @@
     state.pinnedSet = slug ? neighborsVisible(slug) : new Set();
     if (slug) {
       showCard(slug);
-      focusOnSlugs(Array.from(state.pinnedSet), true);
+      if (state.radicalOrbit && slug !== RADICAL_RESPONSIBILITY_SLUG) {
+        focusRadicalOrbitSelection(slug);
+      } else {
+        state.radicalFocus = null;
+        focusOnSlugs(Array.from(state.pinnedSet), true);
+      }
     } else if (!state.hovered) {
+      state.radicalFocus = null;
       $("card").classList.remove("show");
     }
     applyVisualState(true);
@@ -1001,10 +1025,25 @@
     var node = graph.nodeBySlug.get(slug);
     if (!node) return;
     $("card-img").src = node.image;
+    $("card-img").alt = node.title + " preview";
+    var cardLink = $("card");
+    if (node.url) {
+      cardLink.href = node.url;
+      cardLink.tabIndex = 0;
+      cardLink.removeAttribute("aria-disabled");
+      cardLink.setAttribute("aria-label", "Open " + node.title);
+    } else {
+      cardLink.removeAttribute("href");
+      cardLink.tabIndex = -1;
+      cardLink.setAttribute("aria-disabled", "true");
+      cardLink.setAttribute("aria-label", "Selected site has no link");
+    }
     $("card-title").textContent = node.title;
-    $("card-slug").textContent = node.local ? node.url.replace(/^\.\.\//, "") : node.slug + ".mystrikingly.com";
+    $("card-slug").textContent = node.archived
+      ? "possibilitymanagement.xyz/" + node.slug + "/"
+      : node.slug + ".mystrikingly.com";
     $("card-tag").textContent = node.tagline;
-    $("card-hint").textContent = node.local ? "On this site" : (node.archived ? "Archived copy available" : "Live site fallback");
+    $("card-hint").textContent = node.archived ? "Local archive page" : "Live site fallback";
     $("card").classList.add("show");
   }
 
@@ -1057,12 +1096,50 @@
     updateZoomSliderFromCamera();
   }
 
+  function focusRadicalOrbitSelection(slug) {
+    var hub = graph.nodeBySlug.get(RADICAL_RESPONSIBILITY_SLUG);
+    var node = graph.nodeBySlug.get(slug);
+    if (!hub || !node || node === hub || !node.mesh.visible) return;
+
+    centerRadicalOrbitHub(false);
+    var side = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
+    var lift = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
+    var focusDirection = side.multiplyScalar(0.92).addScaledVector(lift, 0.28).normalize();
+    state.radicalFocus = {
+      slug: slug,
+      direction: focusDirection
+    };
+
+    radicalOrbitTarget(node, hub, 0, tmpVec);
+    node.pos.copy(tmpVec);
+    node.velocity.set(0, 0, 0);
+    if (node.mesh) node.mesh.position.copy(node.pos);
+    focusOnRadicalOrbitPair(node, hub);
+  }
+
+  function focusOnRadicalOrbitPair(node, hub) {
+    var center = hub.pos.clone().add(node.pos).multiplyScalar(0.5);
+    var direction = camera.position.clone().sub(controls.target);
+    if (direction.lengthSq() < 0.001) direction.set(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z);
+    direction.normalize();
+
+    var separation = hub.pos.distanceTo(node.pos);
+    var extent = separation + (hub.renderRadius || hub.targetRadius || hub.radius) + (node.renderRadius || node.targetRadius || node.radius);
+    var distance = THREE.MathUtils.clamp(extent * 2.15 + 240, 460, 980);
+
+    controls.target.copy(center);
+    camera.position.copy(center).addScaledVector(direction, distance);
+    controls.update();
+    updateZoomSliderFromCamera();
+  }
+
   function resetView() {
     state.hovered = null;
     state.hoverSet = new Set();
     state.pinned = null;
     state.pinnedSet = new Set();
     state.filterSet = null;
+    state.radicalFocus = null;
     state.drag = null;
     $("search").value = "";
     clearRailActive();
@@ -1172,6 +1249,7 @@
 
       if (!drag.moved) setPinned(drag.node.slug);
       else {
+        if (state.radicalFocus && state.radicalFocus.slug === drag.node.slug) state.radicalFocus = null;
         updateSelectionText();
       }
       document.body.style.cursor = state.hovered ? "grab" : "default";
@@ -1239,7 +1317,8 @@
   function applyRadicalOrbit(frame) {
     var hub = graph.nodeBySlug.get(RADICAL_RESPONSIBILITY_SLUG);
     if (!hub || !hub.mesh.visible) return;
-    var elapsed = clock ? clock.elapsedTime : 0;
+    radicalOrbitTime += (frame / 60) * Math.max(0, state.orbitSpeedScale);
+    var elapsed = radicalOrbitTime;
 
     if (!state.drag || state.drag.node !== hub) {
       tmpVec.set(0, 0, 0).sub(hub.pos);
@@ -1272,15 +1351,21 @@
       var targetPull = THREE.MathUtils.clamp(tmpDir.length() * 0.00115, 0, 1.25) * frame;
       if (targetPull > 0) node.velocity.addScaledVector(tmpDir.normalize(), targetPull);
 
+      if (isRadicalFocusNode(node)) {
+        node.velocity.multiplyScalar(Math.pow(0.62, frame));
+        return;
+      }
+
       tmpVec2.crossVectors(radicalOrbitAxis, tmpVec);
       if (tmpVec2.lengthSq() < 0.0001) tmpVec2.set(-tmpVec.y, tmpVec.x, tmpVec.z);
       tmpVec2.normalize();
       var speedSeed = (hashString(node.slug) % 100) / 100;
-      node.velocity.addScaledVector(tmpVec2, (0.1 + speedSeed * 0.06) * frame);
+      node.velocity.addScaledVector(tmpVec2, (0.1 + speedSeed * 0.06) * frame * Math.max(0, state.orbitSpeedScale));
     });
   }
 
   function radicalOrbitDistance(node, hub) {
+    if (isRadicalFocusNode(node)) return focusedRadicalOrbitDistance(node, hub);
     return THREE.MathUtils.clamp(
       (node.orbitDistance || 560) * Math.max(0.9, Math.sqrt(state.spreadScale)) + node.radius * 1.2,
       hub.radius + node.radius + 95,
@@ -1289,10 +1374,33 @@
   }
 
   function radicalOrbitTarget(node, hub, elapsed, out) {
+    if (isRadicalFocusNode(node)) {
+      out.copy(state.radicalFocus.direction).normalize();
+      return out.multiplyScalar(focusedRadicalOrbitDistance(node, hub)).add(hub.pos);
+    }
     if (!node.orbitSlot) node.orbitSlot = new THREE.Vector3(1, 0, 0);
     var angle = (elapsed || 0) * (node.orbitSpeed || 0.055) + (node.orbitPhase || 0);
     out.copy(node.orbitSlot).applyAxisAngle(radicalOrbitAxis, angle).normalize();
     return out.multiplyScalar(radicalOrbitDistance(node, hub)).add(hub.pos);
+  }
+
+  function isRadicalFocusNode(node) {
+    return !!(
+      state.radicalOrbit &&
+      state.radicalFocus &&
+      state.radicalFocus.slug === node.slug &&
+      state.radicalFocus.direction
+    );
+  }
+
+  function focusedRadicalOrbitDistance(node, hub) {
+    var hubRadius = Math.max(hub.renderRadius || 0, hub.targetRadius || 0, hub.radius || 0);
+    var nodeRadius = Math.max(node.renderRadius || 0, node.targetRadius || 0, node.radius || 0);
+    return THREE.MathUtils.clamp(
+      hubRadius + nodeRadius + RADICAL_FOCUS_GAP,
+      RADICAL_FOCUS_MIN_DISTANCE,
+      RADICAL_FOCUS_MAX_DISTANCE
+    );
   }
 
   function easeSphereScales() {

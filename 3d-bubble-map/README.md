@@ -2,18 +2,17 @@
 
 The default SpacePort network map for Possibility Management sites.
 
-The 3D app reuses the shared SpacePort data package in `../bubble-map/`:
+The 3D app reuses the shared SpacePort data package at the deploy root:
 
-- `../bubble-map/data/registry.json`
-- `../bubble-map/data/edges.json`
-- `../bubble-map/data/layout.json`
-- `../bubble-map/data/archive-manifest.json`
-- `../bubble-map/assets/bubbles/*.webp`
-- `../bubble-map/archive/`
+- `../data/registry.json`
+- `../data/edges.json`
+- `../data/layout.json`
+- `../data/archive-manifest.json`
+- `../assets/bubbles/*.webp`
+- `../<site-slug>/index.html`
 
-`../bubble-map/` is kept as a compatibility route and redirects here. Its data,
-bubble images, archive pages, and maintenance scripts remain the source package
-for this 3D view.
+The deploy root redirects to this view. Site bubbles open the full root-level
+archived pages through `data/archive-manifest.json`.
 
 ## Runtime
 
@@ -30,12 +29,6 @@ Then open:
 
 ```text
 http://localhost:8013/3d-bubble-map/
-```
-
-The legacy URL also forwards to the 3D map:
-
-```text
-http://localhost:8013/bubble-map/
 ```
 
 ## Interaction Model

@@ -1,0 +1,112 @@
+100milliondollars	wayback	685KB
+10doorways	wayback	440KB
+122methoden	wayback	1838KB
+122ways	live	1473KB
+13tools	wayback	872KB
+18boxes	FAIL	captcha
+18startnow	wayback	1602KB
+1truething	FAIL	captcha
+27experiments	FAIL	captcha
+2dramas	wayback	400KB
+2rapidlearnings	live	122KB
+3-3-3	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+3cells	wayback	2463KB
+3domainsoflove	wayback	1008KB
+3games	wayback	197KB
+3phasehealing	ERR	TimeoutError: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  -
+3powers	live	983KB
+3worlds	wayback	2KB
+4brains	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+4emotions	wayback	1067KB
+4enemies	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+4feelings	wayback	1430KB
+4lineages	live	825KB
+50levelsdown	FAIL	captcha
+50thoughtwareupgrades	FAIL	captcha
+51coreinitiations	ERR	TimeoutError: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  -
+5bodies	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+5controls	FAIL	captcha
+5offers	wayback	329KB
+5phasesofchange	live	248KB
+7coreskills	FAIL	captcha
+8prisons	wayback	1860KB
+9gaps	wayback	600KB
+accountability	wayback	185KB
+addicted	wayback	428KB
+adulthood	FAIL	captcha
+agreement	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+alamab	live	379KB
+alifeoflearning	wayback	809KB
+alifeofpractice	wayback	2205KB
+apprentice	wayback	580KB
+archan	wayback	420KB
+archaneconomics	FAIL	captcha
+archangoodnews	FAIL	captcha
+archanhealth	live	1234KB
+archaninfrastructure	wayback	693KB
+archanlaw	ERR	TimeoutError: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  -
+archanpermaculture	wayback	660KB
+archanphilosophy	FAIL	captcha
+archanrelating	live	1239KB
+archanshamanism	ERR	TimeoutError: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  -
+archetypaldomains	wayback	991KB
+archetypallineage	FAIL	captcha
+archetypallove	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+archhouse	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+archiamory	wayback	903KB
+archiarchalchildrensculture	live	1216KB
+archiarchalmen	wayback	655KB
+archiarchalmusic	wayback	907KB
+archiarchalwomen	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+archiarchy	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+archiarchyartabana	wayback	1079KB
+archiarchyinventioncenters	ERR	TimeoutError: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  -
+archiarchykiva	live	1528KB
+archiarchymakersfair	FAIL	captcha
+archthegame	wayback	123KB
+asisprocess	wayback	425KB
+asking	wayback	1368KB
+assholetraining	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+assumptions	wayback	584KB
+authority	live	3255KB
+awe	ERR	TimeoutError: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  -
+baggage	FAIL	captcha
+bagofthings	wayback	46KB
+balls	wayback	445KB
+beadaptive	wayback	912KB
+becomeabridge	live	1458KB
+becomeabundance	wayback	633KB
+becomeanelder	wayback	145KB
+becomeanexperimenter	wayback	2093KB
+becomeaseed	wayback	834KB
+becomeaspace	live	83KB
+becomeauthentic	FAIL	captcha
+becomebubbled	FAIL	captcha
+becomecentered	wayback	1730KB
+becomegaia	FAIL	captcha
+becomegrounded	wayback	523KB
+becomemagic	FAIL	captcha
+becomemeditation	wayback	114KB
+becomemoney	live	2146KB
+becomepossibility	wayback	156KB
+becomepresent	FAIL	captcha
+becomesubversive	FAIL	captcha
+becomeunhookable	wayback	2973KB
+beepbook	wayback	870KB
+beingatrainer	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+beingwith	wayback	132KB
+beingyourself	wayback	2743KB
+beliefs	ERR	Error: Page.goto: net::ERR_CONNECTION_REFUSED at http://w
+boundaries	wayback	1158KB

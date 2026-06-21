@@ -12323,5 +12323,29 @@
     "image_url": "",
     "also_see": [],
     "bubble_image": "assets/bubbles/_fallback.svg"
+  },
+  {
+    "slug": "maps-and-processes-from-expand-the-box",
+    "title": "Maps & Processes from Expand the Box",
+    "tagline": "A self-paced study of the maps and processes used in Expand the Box, with modules, a map atlas, and interactive practice tools.",
+    "url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
+    "live_url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
+    "archive_url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
+    "image_url": "",
+    "also_see": [
+      "expandthebox",
+      "practiceexpandthebox",
+      "pmprocesses",
+      "pmthoughtmaps",
+      "4feelings",
+      "radicalresponsibility"
+    ],
+    "bubble_image": "courses/maps-and-processes-from-expand-the-box/Maps/M01.webp",
+    "breadcrumb": [
+      "Courses",
+      "Expand the Box",
+      "Maps & Processes"
+    ],
+    "path_label": "courses/maps-and-processes-from-expand-the-box/"
   }
 ]

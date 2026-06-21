@@ -384,6 +384,8 @@
         url: siteUrl(site, archiveManifest),
         archived: !!(archiveManifest && archiveManifest[site.slug]),
         image: DATA_ROOT + (site.bubble_image || ("assets/bubbles/" + site.slug + ".webp")),
+        breadcrumb: Array.isArray(site.breadcrumb) ? site.breadcrumb : [],
+        pathLabel: site.path_label || "",
         baseHome: baseHome,
         home: baseHome.clone(),
         pos: baseHome.clone(),
@@ -982,7 +984,15 @@
         state.filterSet.add(node.slug);
       }
     });
-    focusOnSlugs(Array.from(state.filterSet));
+
+    var matches = Array.from(state.filterSet);
+    if (matches.length === 1) {
+      setPinned(matches[0]);
+      return;
+    }
+
+    if (!matches.length && !state.hovered) $("card").classList.remove("show");
+    focusOnSlugs(matches);
     applyVisualState(true);
   }
 
@@ -1026,6 +1036,16 @@
     if (!node) return;
     $("card-img").src = node.image;
     $("card-img").alt = node.title + " preview";
+    var cardBreadcrumb = $("card-breadcrumb");
+    if (cardBreadcrumb) {
+      if (node.breadcrumb && node.breadcrumb.length) {
+        cardBreadcrumb.textContent = node.breadcrumb.join(" / ");
+        cardBreadcrumb.hidden = false;
+      } else {
+        cardBreadcrumb.textContent = "";
+        cardBreadcrumb.hidden = true;
+      }
+    }
     var cardLink = $("card");
     if (node.url) {
       cardLink.href = node.url;
@@ -1039,8 +1059,9 @@
       cardLink.setAttribute("aria-label", "Selected site has no link");
     }
     $("card-title").textContent = node.title;
+    var archivedPath = node.pathLabel || (node.slug + "/");
     $("card-slug").textContent = node.archived
-      ? "possibilitymanagement.xyz/" + node.slug + "/"
+      ? "possibilitymanagement.xyz/" + archivedPath
       : node.slug + ".mystrikingly.com";
     $("card-tag").textContent = node.tagline;
     $("card-hint").textContent = node.archived ? "Local archive page" : "Live site fallback";

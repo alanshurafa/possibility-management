@@ -37,6 +37,71 @@ EXCLUDED_DIRS = {
     "thoughtmaps",
     "tools",
 }
+CUSTOM_SITES = {
+    "maps-and-processes-from-expand-the-box": {
+        "title": "Maps & Processes from Expand the Box",
+        "tagline": "A self-paced study of the maps and processes used in Expand the Box, with modules, a map atlas, and interactive practice tools.",
+        "url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
+        "live_url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
+        "archive_url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
+        "image_url": "",
+        "bubble_image": "courses/maps-and-processes-from-expand-the-box/Maps/M01.webp",
+        "also_see": [
+            "expandthebox",
+            "practiceexpandthebox",
+            "pmprocesses",
+            "pmthoughtmaps",
+            "4feelings",
+            "radicalresponsibility",
+        ],
+        "breadcrumb": [
+            "Courses",
+            "Expand the Box",
+            "Maps & Processes",
+        ],
+        "path_label": "courses/maps-and-processes-from-expand-the-box/",
+        "archive_path": "courses/maps-and-processes-from-expand-the-box/index.html",
+        "layout": [484.8, 559.6],
+    }
+}
+CUSTOM_EDGES = [
+    {
+        "src": "maps-and-processes-from-expand-the-box",
+        "tgt": "expandthebox",
+        "count": 0,
+        "type": "curated",
+    },
+    {
+        "src": "maps-and-processes-from-expand-the-box",
+        "tgt": "practiceexpandthebox",
+        "count": 0,
+        "type": "curated",
+    },
+    {
+        "src": "maps-and-processes-from-expand-the-box",
+        "tgt": "pmprocesses",
+        "count": 0,
+        "type": "curated",
+    },
+    {
+        "src": "maps-and-processes-from-expand-the-box",
+        "tgt": "pmthoughtmaps",
+        "count": 0,
+        "type": "curated",
+    },
+    {
+        "src": "maps-and-processes-from-expand-the-box",
+        "tgt": "4feelings",
+        "count": 0,
+        "type": "curated",
+    },
+    {
+        "src": "maps-and-processes-from-expand-the-box",
+        "tgt": "radicalresponsibility",
+        "count": 0,
+        "type": "curated",
+    },
+]
 GENERIC_TITLES = {
     "",
     "forwarding website",
@@ -65,6 +130,15 @@ def site_dirs() -> list[Path]:
         if (path / "index.html").is_file():
             dirs.append(path)
     return sorted(dirs, key=lambda p: p.name)
+
+
+def custom_slugs() -> list[str]:
+    slugs = []
+    for slug, site in CUSTOM_SITES.items():
+        archive_path = ROOT / site["archive_path"]
+        if archive_path.is_file():
+            slugs.append(slug)
+    return sorted(slugs)
 
 
 def humanize_slug(slug: str) -> str:
@@ -112,11 +186,12 @@ def sync_registry(slugs: list[str]) -> list[dict]:
     slug_set = set(slugs)
 
     for slug in slugs:
+        custom_site = CUSTOM_SITES.get(slug)
         entry = by_slug.get(slug)
         if entry is None:
             entry = {
                 "slug": slug,
-                "title": extract_title(slug, ROOT / slug / "index.html"),
+                "title": custom_site["title"] if custom_site else extract_title(slug, ROOT / slug / "index.html"),
                 "tagline": "",
                 "url": f"https://{slug}.{DOMAIN}/",
                 "live_url": f"https://{slug}.{DOMAIN}/",
@@ -127,7 +202,11 @@ def sync_registry(slugs: list[str]) -> list[dict]:
             registry.append(entry)
             by_slug[slug] = entry
 
-        if has_bubble(slug):
+        if custom_site:
+            for key, value in custom_site.items():
+                if key not in {"archive_path", "layout"}:
+                    entry[key] = value
+        elif has_bubble(slug):
             entry.pop("bubble_image", None)
         else:
             entry["bubble_image"] = "assets/bubbles/_fallback.svg"
@@ -136,12 +215,35 @@ def sync_registry(slugs: list[str]) -> list[dict]:
 
 
 def sync_manifest(slugs: list[str]) -> dict[str, str]:
-    return {slug: f"{slug}/index.html" for slug in slugs}
+    return {
+        slug: CUSTOM_SITES[slug]["archive_path"] if slug in CUSTOM_SITES else f"{slug}/index.html"
+        for slug in slugs
+    }
 
 
 def sync_layout(slugs: list[str]) -> dict[str, list[float]]:
     layout = load_json(DATA / "layout.json", {})
-    return {slug: layout.get(slug) or fallback_position(slug) for slug in slugs}
+    return {
+        slug: layout.get(slug) or CUSTOM_SITES.get(slug, {}).get("layout") or fallback_position(slug)
+        for slug in slugs
+    }
+
+
+def sync_edges(slugs: list[str]) -> list[dict]:
+    slug_set = set(slugs)
+    edges = load_json(DATA / "edges.json", [])
+    custom_pairs = {(edge["src"], edge["tgt"], edge["type"]) for edge in CUSTOM_EDGES}
+    synced = [
+        edge
+        for edge in edges
+        if (edge.get("src"), edge.get("tgt"), edge.get("type")) not in custom_pairs
+    ]
+    synced.extend(
+        edge
+        for edge in CUSTOM_EDGES
+        if edge["src"] in slug_set and edge["tgt"] in slug_set
+    )
+    return synced
 
 
 def write_redirects(slugs: list[str]) -> None:
@@ -153,15 +255,21 @@ def write_redirects(slugs: list[str]) -> None:
         "# Slug subdomains rewrite to the matching archived folder.",
     ]
     for slug in slugs:
-        lines.append(f"https://{slug}.{DOMAIN}/* /{slug}/:splat 200!")
-        lines.append(f"http://{slug}.{DOMAIN}/* /{slug}/:splat 200!")
+        archive_path = CUSTOM_SITES.get(slug, {}).get("archive_path")
+        if archive_path:
+            target_base = "/" + archive_path.removesuffix("index.html")
+        else:
+            target_base = f"/{slug}/"
+        lines.append(f"https://{slug}.{DOMAIN}/* {target_base}:splat 200!")
+        lines.append(f"http://{slug}.{DOMAIN}/* {target_base}:splat 200!")
     lines.append("")
     with (ROOT / "_redirects").open("w", encoding="utf-8", newline="\n") as handle:
         handle.write("\n".join(lines))
 
 
 def main() -> None:
-    slugs = [path.name for path in site_dirs()]
+    site_slugs = [path.name for path in site_dirs()]
+    slugs = sorted(site_slugs + custom_slugs())
     if not slugs:
         raise SystemExit("No site folders with index.html found")
 
@@ -169,8 +277,12 @@ def main() -> None:
     write_json(DATA / "registry.json", sync_registry(slugs))
     write_json(DATA / "archive-manifest.json", sync_manifest(slugs))
     write_json(DATA / "layout.json", sync_layout(slugs))
+    write_json(DATA / "edges.json", sync_edges(slugs))
     write_redirects(slugs)
-    print(f"Map data synced for {len(slugs)} site folders.")
+    print(
+        f"Map data synced for {len(site_slugs)} site folders "
+        f"and {len(slugs) - len(site_slugs)} custom entries."
+    )
 
 
 if __name__ == "__main__":

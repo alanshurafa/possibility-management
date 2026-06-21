@@ -390,6 +390,19 @@
   #card[aria-disabled="true"] {
     cursor: default;
   }
+  #card .breadcrumb {
+    margin: 0 0 8px;
+    color: var(--accent-2);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+  #card .breadcrumb[hidden] {
+    display: none;
+  }
   #card .top { display: flex; gap: 12px; align-items: center; }
   #card .top > div {
     min-width: 0;
@@ -594,6 +607,7 @@
   </div>
 
   <a id="card" class="panel" href="#" target="_blank" rel="noopener" aria-label="Open selected site">
+    <div class="breadcrumb" id="card-breadcrumb" hidden></div>
     <div class="top">
       <img id="card-img" alt="" />
       <div>

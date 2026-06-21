@@ -63892,5 +63892,41 @@
     "tgt": "youandyourjob",
     "count": 0,
     "type": "curated"
+  },
+  {
+    "src": "maps-and-processes-from-expand-the-box",
+    "tgt": "expandthebox",
+    "count": 0,
+    "type": "curated"
+  },
+  {
+    "src": "maps-and-processes-from-expand-the-box",
+    "tgt": "practiceexpandthebox",
+    "count": 0,
+    "type": "curated"
+  },
+  {
+    "src": "maps-and-processes-from-expand-the-box",
+    "tgt": "pmprocesses",
+    "count": 0,
+    "type": "curated"
+  },
+  {
+    "src": "maps-and-processes-from-expand-the-box",
+    "tgt": "pmthoughtmaps",
+    "count": 0,
+    "type": "curated"
+  },
+  {
+    "src": "maps-and-processes-from-expand-the-box",
+    "tgt": "4feelings",
+    "count": 0,
+    "type": "curated"
+  },
+  {
+    "src": "maps-and-processes-from-expand-the-box",
+    "tgt": "radicalresponsibility",
+    "count": 0,
+    "type": "curated"
   }
 ]

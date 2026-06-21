@@ -277,6 +277,7 @@ def write_redirects(slugs: list[str]) -> None:
         archive_path = CUSTOM_SITES.get(slug, {}).get("archive_path")
         if archive_path:
             continue
+        lines.append(f"/{slug}/_assets/* /bubble-map/_assets/:splat 200!")
         lines.append(f"/{slug} /bubble-map/{slug}/ 301!")
         lines.append(f"/{slug}/* /bubble-map/{slug}/:splat 301!")
     lines.append("")

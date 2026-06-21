@@ -1,5 +1,7 @@
+# Static archive: regenerate folder-derived map metadata, then serve the repo root.
 [build]
   publish = "."
+  command = "python scripts/update_map_data.py"
 
 [[redirects]]
   from = "/"
@@ -19,27 +21,8 @@
   status = 301
   force = true
 
-[[redirects]]
-  from = "/archive"
-  to = "/bubble-map/archive/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/archive/"
-  to = "/bubble-map/archive/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/assets/*"
-  to = "/bubble-map/archive/assets/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/:slug/index.html"
-  to = "/bubble-map/archive/:slug/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/:slug/"
-  to = "/bubble-map/archive/:slug/index.html"
-  status = 200
+# The deduped assets have content-hashed names and never change, so cache hard.
+[[headers]]
+  for = "/_assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

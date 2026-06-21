@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Drama Position Detector · ETB Day 7</title>
-<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
+<link rel="preload" href="../../_assets/fonts/files/6NUV8FyLNQOQZAnv9ZwIlOkuy91B.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/SlGUmQSNjdsmc35JDF1K5GR1SDk_YAPI.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/SlGWmQSNjdsmc35JDF1K5GRweDs1ZyHKpWg.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../_assets/fonts/files/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2" as="font" type="font/woff2" crossorigin>
+<link href="../../_assets/fonts/fonts.css" rel="stylesheet">
 <style>
 :root {
   --ivory: #f4ecdc;
@@ -1479,6 +1483,15 @@ let state = {
   rg2: '',
   rg3: ''
 };
+let toolInitialized = false;
+
+function initializeToolBody() {
+  if (toolInitialized) return;
+  toolInitialized = true;
+  buildFoodChips();
+  showStep(1);
+  renderLog();
+}
 
 /* ---- navigation ---- */
 function showStep(n) {
@@ -1791,11 +1804,6 @@ function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  buildFoodChips();
-  showStep(1);
-  renderLog();
-});
 </script>
 
 <script>
@@ -1810,6 +1818,7 @@ function onConsent() {
   const body = document.getElementById('toolBody');
   // GROUND NOW stays visible the whole visit, including on the gate screen
   if (checked) {
+    initializeToolBody();
     body.classList.add('open');
     // make the gate real for keyboard/AT users: lift inert so the tool body
     // becomes focusable. Visual pointer-events/opacity gating alone let Tab
@@ -1843,18 +1852,11 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* keep the consent gate in view on load: the existing boot calls showStep(1),
-   which scrolls to step 1. This listener runs after it and brings the gate back
-   to the top so a learner cannot skip past consent. */
-window.addEventListener('DOMContentLoaded', () => {
-  // default closed every load — never auto-open from storage
-  document.getElementById('consentBox').checked = false;
-  const body = document.getElementById('toolBody');
-  body.classList.remove('open');
-  body.setAttribute('inert', '');
-  // GROUND NOW remains visible on the gate screen — it must be reachable before consent
-  setTimeout(() => window.scrollTo({ top: 0, behavior: 'auto' }), 80);
-});
+// Default closed every load: never auto-open from storage or restored form state.
+document.getElementById('consentBox').checked = false;
+const body = document.getElementById('toolBody');
+body.classList.remove('open');
+body.setAttribute('inert', '');
 </script>
 <!-- World Copyleft 2026 — Expand the Box (Digital). Licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Re-presents Possibility Management thoughtware originated by Clinton Callahan & the Possibility Management community. Please share, share-alike. Powered by Possibility Management — possibilitymanagement.org. Full terms: LICENSE.md in the course root. -->
 </body>

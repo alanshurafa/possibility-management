@@ -1,67 +1,67 @@
-# Possibility Management — open web toolkit
+# Possibility Management full offline map
 
-Open tools and sites for Possibility Management thoughtware: maps, courses, and interactive teaching tools. This repository is the source — fork it, adapt it, and host your own version anywhere. Everything is released under World Copyleft (CC BY-SA 4.0).
+A complete, self-contained copy of the StartOver.xyz / Possibility Management
+web of 925 sites, saved in 2025. It includes an interactive 3D bubble map that
+links the sites together and a saved copy of every captured page, with images,
+fonts, and styles included.
 
-**Live demo: https://alanshurafa.github.io/possibility-management/**
+This branch is the full, image-rich archive. The live static deploy serves the
+3D map at `/3d-bubble-map/`, and the root `index.html` redirects there.
 
-Each property is a self-contained static site in its own folder, so you can take one on its own or run the whole set together.
+## Run it on your own computer
 
-## Properties
+You need Python 3. On Windows, install it from https://www.python.org/downloads/
+and tick "Add Python to PATH" during setup.
 
-| Property | What it is | Live demo |
-|----------|------------|-----------|
-| [Thoughtmap Atlas](thoughtmaps/) | Every PM thoughtmap in one place, each with its own interactive one-page module. | [open](https://alanshurafa.github.io/possibility-management/thoughtmaps/) |
-| [Infographic Atlas](infographics/) | Every map as an infographic, each linked by name to its interactive map and StartOver Spaceport site. | [open](https://alanshurafa.github.io/possibility-management/infographics/) |
-| [SpacePort 3D Bubble Map](3d-bubble-map/) | The default Three.js sphere-map view of the SpacePort network, with orbiting and draggable bubbles. | [open](https://alanshurafa.github.io/possibility-management/3d-bubble-map/) |
-| [Maps & Processes from Expand the Box](courses/maps-and-processes-from-expand-the-box/) | A self-paced study of the maps a live Expand the Box *Training* works with — modules, interactive tools, practice spines, and learner resources. Not the Training itself. | [open](https://alanshurafa.github.io/possibility-management/courses/maps-and-processes-from-expand-the-box/) |
-| [Interactive Tools](courses/maps-and-processes-from-expand-the-box/Interactive%20Tools/) | Feeling locator, drama detector, EHP walker, ego-state locator, and more. | [open](https://alanshurafa.github.io/possibility-management/courses/maps-and-processes-from-expand-the-box/Interactive%20Tools/) |
+1. Get the files:
 
-## Layout
+   ```sh
+   git clone --single-branch -b full-map https://github.com/alanshurafa/possibility-management.git
+   ```
 
-```
-index.html              the hub that links to every property
-_shared/                the common design kit: fonts, tokens, base styles
-thoughtmaps/            the Thoughtmap Atlas
-infographics/           the Infographic Atlas (gallery + per-map teaching pages)
-bubble-map/             the SpacePort data, bubble images, A-Z archive, and redirect to the 3D map
-3d-bubble-map/          the default Three.js 3D sphere view of the SpacePort network
-courses/
-  maps-and-processes-from-expand-the-box/   the Maps & Processes from Expand the Box study site
-tools/                  room for standalone teaching tools
-README · LICENSE        repo docs and the full CC BY-SA 4.0 license
-```
+2. Start the local server from inside the folder:
 
-Only published web artifacts live here. Raw media (video, audio) and working source stay out of the repo; the sites link to hosted media where needed.
+   ```sh
+   python -m http.server 8102
+   ```
 
-## Run it locally
+3. Browse to:
 
-Plain static sites, no build step and no dependencies. Serve the repo root and browse the hub:
+   ```text
+   http://localhost:8102/
+   ```
+
+The root page redirects to the 3D map. Double-click a bubble to open that
+site's archived page.
+
+Everything is served with relative paths, so the archive works from a local
+server or any static host. Individual site pages can also be opened directly.
+
+## What's in the folder
+
+- `index.html` - redirect fallback for the 3D map
+- `3d-bubble-map/` - the interactive 3D bubble map
+- `data/` - the site registry, link graph, archive manifest, and map layout
+- `assets/bubbles/` - bubble thumbnail textures for the 3D map
+- `_assets/` - shared page assets, deduplicated across the archived sites
+- one folder per site, each with its saved `index.html`
+- `scripts/update_map_data.py` - regenerates map data and Netlify redirects
+
+## Adding a site folder
+
+Add a top-level folder with an `index.html`, then run:
 
 ```sh
-git clone https://github.com/alanshurafa/possibility-management.git
-cd possibility-management
-python -m http.server 8000
-# hub:    http://localhost:8000
-# atlas:  http://localhost:8000/thoughtmaps/
-# study:  http://localhost:8000/courses/maps-and-processes-from-expand-the-box/
+python scripts/update_map_data.py
 ```
 
-Or open any property's `index.html` directly in a browser.
+This updates the local map data, archive manifest, and Netlify-compatible
+redirects. Netlify runs the same script during deploy, so a new folder is
+published at `/<folder>/` and appears as a bubble on the map.
 
-## Make your own version
+## About the content
 
-Click **Use this template** at the top of this repo (or fork it) to get your own copy. Then publish it on whatever you like — no build step required:
-
-- **GitHub Pages** — in your copy, go to Settings → Pages, set Source to "Deploy from a branch", branch `main`, folder `/ (root)`. A `.nojekyll` file is included so the `_shared` and `_assets` folders are served correctly.
-- **Netlify / Cloudflare Pages** — point it at the repo with no build command and the publish directory set to the repo root (or a single property's folder).
-- **Any static host** — copy the files to any web server or object store.
-
-All links are relative, so the whole site works the same at a domain root or under a sub-path.
-
-## License
-
-World Copyleft. Released under [CC BY-SA 4.0](LICENSE), the same terms Possibility Management uses for its maps and Sparks. Share it, adapt it, use it commercially; keep the attribution and release adaptations under the same license.
-
-This re-presents Possibility Management thoughtware originated by [Clinton Callahan](https://possibilitymanagement.org/) and the Possibility Management community. It follows the spirit of World Copyleft and is not an official Possibility Management product.
-
-Powered by Possibility Management — https://possibilitymanagement.org
+This is an archival snapshot from 2025 of sites that were published at
+`*.mystrikingly.com` and are no longer reliably online. The writing and images
+belong to the Possibility Management community and its authors; the archive
+exists to keep that material readable and linked.

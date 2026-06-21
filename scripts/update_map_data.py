@@ -2,8 +2,9 @@
 """Regenerate static map metadata from archived site folders.
 
 The archive is intentionally static and portable. This script keeps the JSON
-files and Netlify subdomain rewrites in sync with top-level folders that contain
-an index.html file, without requiring any external packages or network access.
+files and Netlify redirects in sync with site folders under bubble-map/ that
+contain an index.html file, without requiring any external packages or network
+access.
 """
 
 from __future__ import annotations
@@ -17,33 +18,26 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data"
-BUBBLES = ROOT / "assets" / "bubbles"
+PUBLIC_ROOT = ROOT / "bubble-map"
+DATA = PUBLIC_ROOT / "data"
+BUBBLES = PUBLIC_ROOT / "assets" / "bubbles"
 DOMAIN = "possibilitymanagement.xyz"
 EXCLUDED_DIRS = {
-    ".git",
-    ".github",
-    ".netlify",
     "_assets",
-    "_shared",
-    "3d-bubble-map",
     "assets",
     "courses",
     "data",
-    "docs",
     "infographics",
-    "netlify",
-    "scripts",
     "thoughtmaps",
-    "tools",
 }
+LEGACY_PUBLIC_PREFIXES = ("courses", "infographics", "thoughtmaps")
 CUSTOM_SITES = {
     "maps-and-processes-from-expand-the-box": {
         "title": "Maps & Processes from Expand the Box",
         "tagline": "A self-paced study of the maps and processes used in Expand the Box, with modules, a map atlas, and interactive practice tools.",
-        "url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
-        "live_url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
-        "archive_url": "https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/",
+        "url": "https://possibilitymanagement.xyz/bubble-map/courses/maps-and-processes-from-expand-the-box/",
+        "live_url": "https://possibilitymanagement.xyz/bubble-map/courses/maps-and-processes-from-expand-the-box/",
+        "archive_url": "https://possibilitymanagement.xyz/bubble-map/courses/maps-and-processes-from-expand-the-box/",
         "image_url": "",
         "bubble_image": "courses/maps-and-processes-from-expand-the-box/Maps/M01.webp",
         "also_see": [
@@ -59,7 +53,7 @@ CUSTOM_SITES = {
             "Expand the Box",
             "Maps & Processes",
         ],
-        "path_label": "courses/maps-and-processes-from-expand-the-box/",
+        "path_label": "bubble-map/courses/maps-and-processes-from-expand-the-box/",
         "archive_path": "courses/maps-and-processes-from-expand-the-box/index.html",
         "layout": [484.8, 559.6],
     }
@@ -124,7 +118,7 @@ def write_json(path: Path, value) -> None:
 
 def site_dirs() -> list[Path]:
     dirs = []
-    for path in ROOT.iterdir():
+    for path in PUBLIC_ROOT.iterdir():
         if not path.is_dir() or path.name in EXCLUDED_DIRS or path.name.startswith("."):
             continue
         if (path / "index.html").is_file():
@@ -135,7 +129,7 @@ def site_dirs() -> list[Path]:
 def custom_slugs() -> list[str]:
     slugs = []
     for slug, site in CUSTOM_SITES.items():
-        archive_path = ROOT / site["archive_path"]
+        archive_path = PUBLIC_ROOT / site["archive_path"]
         if archive_path.is_file():
             slugs.append(slug)
     return sorted(slugs)
@@ -191,7 +185,7 @@ def sync_registry(slugs: list[str]) -> list[dict]:
         if entry is None:
             entry = {
                 "slug": slug,
-                "title": custom_site["title"] if custom_site else extract_title(slug, ROOT / slug / "index.html"),
+                "title": custom_site["title"] if custom_site else extract_title(slug, PUBLIC_ROOT / slug / "index.html"),
                 "tagline": "",
                 "url": f"https://{slug}.{DOMAIN}/",
                 "live_url": f"https://{slug}.{DOMAIN}/",
@@ -208,8 +202,10 @@ def sync_registry(slugs: list[str]) -> list[dict]:
                     entry[key] = value
         elif has_bubble(slug):
             entry.pop("bubble_image", None)
+            entry["path_label"] = f"bubble-map/{slug}/"
         else:
             entry["bubble_image"] = "assets/bubbles/_fallback.svg"
+            entry["path_label"] = f"bubble-map/{slug}/"
 
     return [entry for entry in registry if entry.get("slug") in slug_set]
 
@@ -257,11 +253,32 @@ def write_redirects(slugs: list[str]) -> None:
     for slug in slugs:
         archive_path = CUSTOM_SITES.get(slug, {}).get("archive_path")
         if archive_path:
-            target_base = "/" + archive_path.removesuffix("index.html")
+            target_base = "/bubble-map/" + archive_path.removesuffix("index.html")
         else:
-            target_base = f"/{slug}/"
+            target_base = f"/bubble-map/{slug}/"
+            lines.append(f"https://{slug}.{DOMAIN}/_assets/* /bubble-map/_assets/:splat 200!")
+            lines.append(f"http://{slug}.{DOMAIN}/_assets/* /bubble-map/_assets/:splat 200!")
         lines.append(f"https://{slug}.{DOMAIN}/* {target_base}:splat 200!")
         lines.append(f"http://{slug}.{DOMAIN}/* {target_base}:splat 200!")
+
+    lines.extend([
+        "",
+        "# Legacy public paths redirect into the single bubble-map folder.",
+        "/3d-bubble-map /bubble-map/ 301!",
+        "/3d-bubble-map/* /bubble-map/:splat 301!",
+        "/data/* /bubble-map/data/:splat 200!",
+        "/assets/* /bubble-map/assets/:splat 200!",
+        "/_assets/* /bubble-map/_assets/:splat 200!",
+    ])
+    for prefix in LEGACY_PUBLIC_PREFIXES:
+        lines.append(f"/{prefix} /bubble-map/{prefix}/ 301!")
+        lines.append(f"/{prefix}/* /bubble-map/{prefix}/:splat 301!")
+    for slug in slugs:
+        archive_path = CUSTOM_SITES.get(slug, {}).get("archive_path")
+        if archive_path:
+            continue
+        lines.append(f"/{slug} /bubble-map/{slug}/ 301!")
+        lines.append(f"/{slug}/* /bubble-map/{slug}/:splat 301!")
     lines.append("")
     with (ROOT / "_redirects").open("w", encoding="utf-8", newline="\n") as handle:
         handle.write("\n".join(lines))

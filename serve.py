@@ -58,7 +58,7 @@ def main():
     with http.server.ThreadingHTTPServer(("127.0.0.1", port), handler) as httpd:
         print("PM Bubble Map is running.")
         print("  Open this in your browser:  %s" % url)
-        print("  (Individual sites live at   %s<site-name>/ )" % url)
+        print("  (Individual sites live at   %sbubble-map/<site-name>/ )" % url)
         print("Serving your local copy - no internet needed. Press Ctrl+C to stop.")
         try:
             webbrowser.open(url)

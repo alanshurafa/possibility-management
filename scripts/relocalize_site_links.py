@@ -3,7 +3,7 @@
 The archived pages still contain original in-page links like
 ``https://some-slug.mystrikingly.com``, typo variants seen in the archive such
 as ``mystrkingly.com``, or ``https://some-slug.strikingly.com``. When
-``some-slug`` exists as a captured local folder, rewrite the clickable
+``some-slug`` exists as a captured local folder under bubble-map/, rewrite the clickable
 attributes to ``../some-slug/index.html``.
 
 Clear legacy typos/renames are handled by ``LEGACY_ALIASES``. Unknown
@@ -19,7 +19,8 @@ from collections import Counter
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-EXCLUDE_DIRS = {".git", ".netlify", "_assets", "assets", "data", "3d-bubble-map", "scripts"}
+ARCHIVE_ROOT = ROOT / "bubble-map"
+EXCLUDE_DIRS = {"_assets", "assets", "courses", "data", "infographics", "thoughtmaps"}
 LINK_ATTR = re.compile(
     r"""\b(href|data-image-link|data-item-link|data-url)\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)""",
     re.IGNORECASE,
@@ -48,7 +49,7 @@ DEAD_LEGACY_LINKS = {"heartgym-po"}
 def captured_slugs() -> set[str]:
     return {
         item.name.lower()
-        for item in ROOT.iterdir()
+        for item in ARCHIVE_ROOT.iterdir()
         if item.is_dir()
         and item.name not in EXCLUDE_DIRS
         and (item / "index.html").exists()
@@ -92,7 +93,7 @@ def main() -> None:
     stats: Counter[str] = Counter()
     changed_pages = 0
 
-    for folder in sorted(ROOT.iterdir()):
+    for folder in sorted(ARCHIVE_ROOT.iterdir()):
         if folder.name in EXCLUDE_DIRS or not folder.is_dir():
             continue
         page = folder / "index.html"

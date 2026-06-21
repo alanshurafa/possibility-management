@@ -5,24 +5,29 @@
 
 [[redirects]]
   from = "/"
-  to = "/3d-bubble-map/"
+  to = "/bubble-map/"
   status = 302
   force = true
 
 [[redirects]]
-  from = "/bubble-map"
-  to = "/3d-bubble-map/"
+  from = "/3d-bubble-map"
+  to = "/bubble-map/"
   status = 301
   force = true
 
 [[redirects]]
-  from = "/bubble-map/"
-  to = "/3d-bubble-map/"
+  from = "/3d-bubble-map/*"
+  to = "/bubble-map/:splat"
   status = 301
   force = true
 
 # The deduped assets have content-hashed names and never change, so cache hard.
 [[headers]]
-  for = "/_assets/*"
+  for = "/bubble-map/_assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/bubble-map/assets/bubbles/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"

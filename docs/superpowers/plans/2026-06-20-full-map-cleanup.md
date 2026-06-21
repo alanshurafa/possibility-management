@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the obsolete nested bubble-map archive on the cleanup branch with the verified full 3D Bubble Map archive while preserving unrelated current-main content.
+**Goal:** Replace the obsolete nested bubble-map archive on the cleanup branch with the verified full 3D Bubble Map archive, preserve the current Expand the Box training updates, and prepare a reviewed merge to `main`.
 
-**Architecture:** Start from `origin/main` on branch `codex/full-map-cleanup`, remove the old `bubble-map/` tree, and copy the verified full archive layers from `C:\Users\alan\Project\pm-fullmap-deploy`. The resulting site publishes the repo root, redirects `/` and `/bubble-map/` to `/3d-bubble-map/`, and serves archived sites from top-level folders such as `/4feelings/` and `/radicalresponsibility/`.
+**Architecture:** Start from `origin/main` on branch `codex/full-map-cleanup`, remove the old `bubble-map/` tree, and copy the verified full archive layers from `C:\Users\alan\Project\pm-fullmap-deploy`. The resulting site publishes the repo root, redirects `/` and `/bubble-map/` to `/3d-bubble-map/`, serves archived sites from top-level folders such as `/4feelings/` and `/radicalresponsibility/`, and keeps the current Expand the Box course, infographic, and thoughtmap updates from the active local worktree.
 
 **Tech Stack:** Static HTML/CSS/JavaScript, Three.js bundled under `3d-bubble-map/assets/vendor`, Python 3 for `scripts/update_map_data.py`, Netlify static redirects.
 
@@ -295,6 +295,148 @@ Expected: branch pushes to GitHub. Do not merge into `main` in this step.
 
 ### Self-Review
 
-- Spec coverage: This plan identifies the correct full-map source, removes only the obsolete nested archive, copies the verified full archive files into a branch based on current GitHub `main`, regenerates metadata, verifies local runtime behavior, and prepares a pushed branch for review.
+- Spec coverage: This plan identifies the correct full-map source, removes only the obsolete nested archive, copies the verified full archive files into a branch based on current GitHub `main`, preserves the current Expand the Box training updates, regenerates metadata, verifies local runtime behavior, and prepares a pushed branch for review and merge.
 - Placeholder scan: No TBD/TODO/fill-in placeholders are used.
 - Scope control: The plan preserves `courses/`, `infographics/`, `thoughtmaps/`, `LICENSE`, and `.nojekyll` because the user asked to remove old bubble-map files, not unrelated mainline content.
+
+---
+
+### Task 6: Preserve Expand the Box Training Updates
+
+**Files:**
+- Replace from source worktree: `C:\Users\alan\.codex\worktrees\8e90\possibility-management\courses\maps-and-processes-from-expand-the-box\`
+- Replace from source worktree: `C:\Users\alan\.codex\worktrees\8e90\possibility-management\infographics\`
+- Replace from source worktree: `C:\Users\alan\.codex\worktrees\8e90\possibility-management\thoughtmaps\`
+- Modify in cleanup branch: `C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup\courses\maps-and-processes-from-expand-the-box\`
+- Modify in cleanup branch: `C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup\infographics\`
+- Modify in cleanup branch: `C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup\thoughtmaps\`
+
+- [x] **Step 1: Copy only Expand the Box-related content from the dirty local worktree**
+
+Run:
+
+```powershell
+$sourceRoot = "C:\Users\alan\.codex\worktrees\8e90\possibility-management"
+$targetRoot = "C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup"
+$items = @(
+  "courses\maps-and-processes-from-expand-the-box",
+  "infographics",
+  "thoughtmaps"
+)
+foreach ($item in $items) {
+  $src = Join-Path $sourceRoot $item
+  $dst = Join-Path $targetRoot $item
+  if (Test-Path -LiteralPath $dst) { Remove-Item -LiteralPath $dst -Recurse -Force }
+  Copy-Item -LiteralPath $src -Destination $dst -Recurse -Force
+}
+```
+
+Expected: only the Expand the Box course, infographic, and thoughtmap updates are copied. Dirty changes to the old `bubble-map/`, stale `3d-bubble-map/`, root `index.html`, `.gitignore`, and perf tooling are not copied.
+
+- [x] **Step 2: Verify the Expand the Box URLs locally**
+
+Run against the local preview server:
+
+```powershell
+$port = 8127
+$urls = @(
+  "http://127.0.0.1:$port/courses/maps-and-processes-from-expand-the-box/",
+  "http://127.0.0.1:$port/Course/module-00.html",
+  "http://127.0.0.1:$port/Course/module-05.html",
+  "http://127.0.0.1:$port/Interactive%20Tools/index.html",
+  "http://127.0.0.1:$port/Interactive%20Tools/Day%2003/centering-practice.html",
+  "http://127.0.0.1:$port/Interactive%20Tools/Day%2006/ehp-walker.html",
+  "http://127.0.0.1:$port/Map%20Atlas/index.html",
+  "http://127.0.0.1:$port/Map%20Atlas/M01%20-%20New%20Context%20(the%20chain).html",
+  "http://127.0.0.1:$port/infographics/",
+  "http://127.0.0.1:$port/infographics/teaching/4-listenings.html",
+  "http://127.0.0.1:$port/thoughtmaps/",
+  "http://127.0.0.1:$port/thoughtmaps/atlas/M01%20-%20New%20Context%20(the%20chain).html"
+)
+foreach ($url in $urls) {
+  $response = Invoke-WebRequest -Uri $url -UseBasicParsing
+  [pscustomobject]@{ Url = $url; Status = [int]$response.StatusCode; Bytes = $response.RawContentLength }
+}
+```
+
+Expected: every URL returns HTTP `200`, nonzero bytes, and no local image request returns `404`.
+
+- [x] **Step 3: Commit the Expand the Box update**
+
+Run:
+
+```powershell
+git -C "C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup" add courses/maps-and-processes-from-expand-the-box infographics thoughtmaps
+git -C "C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup" commit -m "Add Expand the Box training media updates"
+```
+
+Expected: commit succeeds and includes the current course, infographic, and thoughtmap media updates.
+
+---
+
+### Task 7: MoTest Review And Merge To Main
+
+**Files:**
+- Review: `C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup\3d-bubble-map\index.html`
+- Review: `C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup\3d-bubble-map\app.js`
+- Review: `C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup\data\registry.json`
+- Review: `C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup\data\archive-manifest.json`
+- Review: `C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup\courses\maps-and-processes-from-expand-the-box\index.html`
+
+- [x] **Step 1: Push the complete branch to GitHub**
+
+Run:
+
+```powershell
+git -C "C:\Users\alan\.codex\worktrees\8e90\full-map-cleanup" push -u origin codex/full-map-cleanup
+gh pr view 5 --json number,isDraft,state,url,commits
+```
+
+Expected: PR #5 contains commits `d63f5e2c Replace stale bubble archive with full 3D map` and `6a4db23d Add Expand the Box training media updates`.
+
+- [ ] **Step 2: Complete manual MoTest in the browser**
+
+Open:
+
+```text
+http://127.0.0.1:8127/3d-bubble-map/
+http://127.0.0.1:8127/courses/maps-and-processes-from-expand-the-box/
+```
+
+Expected on the 3D Bubble Map: the map renders, the orbit speed slider is visible and usable, the StartOver and Spaceport banner/title links are clickable, sample bubbles open pages such as `/4feelings/`, `/radicalresponsibility/`, `/spaceholder/`, and `/spaceport/`, and the page reports `925 sites`.
+
+Expected on Expand the Box: the updated course shell, media, interactive tools, map atlas, infographics, and thoughtmaps load without missing-image placeholders.
+
+- [ ] **Step 3: Mark the PR ready after manual MoTest passes**
+
+Run:
+
+```powershell
+gh pr ready 5
+```
+
+Expected: PR #5 changes from draft to ready for review.
+
+- [ ] **Step 4: Merge PR #5 into `main`**
+
+Run:
+
+```powershell
+gh pr merge 5 --merge --delete-branch
+```
+
+Expected: GitHub merges `codex/full-map-cleanup` into `main` with the cleanup commits and deletes the remote branch after merge.
+
+- [ ] **Step 5: Verify production after deploy**
+
+Open:
+
+```text
+https://possibilitymanagement.xyz/3d-bubble-map/
+https://possibilitymanagement.xyz/4feelings/
+https://possibilitymanagement.xyz/radicalresponsibility/
+https://possibilitymanagement.xyz/spaceholder/
+https://possibilitymanagement.xyz/courses/maps-and-processes-from-expand-the-box/
+```
+
+Expected: production serves the new map, top-level archive pages, and Expand the Box training pages. `/bubble-map/` redirects to `/3d-bubble-map/` instead of serving stale nested archive content.

@@ -5,8 +5,9 @@ web of 925 sites, saved in 2025. It includes an interactive 3D bubble map that
 links the sites together and a saved copy of every captured page, with images,
 fonts, and styles included.
 
-This branch is the full, image-rich archive. The live static deploy serves the
-3D map at `/3d-bubble-map/`, and the root `index.html` redirects there.
+The `main` branch is the source of truth for the full, image-rich archive. The
+live static deploy serves the 3D map at `/3d-bubble-map/`, and the root
+`index.html` redirects there.
 
 ## Run it on your own computer
 
@@ -16,7 +17,7 @@ and tick "Add Python to PATH" during setup.
 1. Get the files:
 
    ```sh
-   git clone --single-branch -b full-map https://github.com/alanshurafa/possibility-management.git
+   git clone https://github.com/alanshurafa/possibility-management.git
    ```
 
 2. Start the local server from inside the folder:
@@ -58,6 +59,29 @@ python scripts/update_map_data.py
 This updates the local map data, archive manifest, and Netlify-compatible
 redirects. Netlify runs the same script during deploy, so a new folder is
 published at `/<folder>/` and appears as a bubble on the map.
+
+## Maintaining the map
+
+- Work from `main` unless you are deliberately preparing a pull request.
+- The active map app lives in `3d-bubble-map/` and reads data from the repo root
+  with `DATA_ROOT = "../"`.
+- Archived sites live as top-level folders such as `4feelings/`,
+  `radicalresponsibility/`, and `spaceholder/`.
+- `bubble-map/` is obsolete. It should not contain tracked files; `/bubble-map/`
+  exists only as a redirect compatibility path.
+- `scripts/update_map_data.py` is the source for generated map data. After a
+  metadata change, run it and expect:
+
+  ```text
+  Map data synced for 925 site folders and 1 custom entries.
+  ```
+
+- `courses/`, `infographics/`, and `thoughtmaps/` are intentionally excluded
+  from the automatic archive scan. Add a course or other non-archive resource
+  as a deliberate `CUSTOM_SITES` entry in `scripts/update_map_data.py`.
+- The Expand the Box self-study bubble is the custom entry
+  `maps-and-processes-from-expand-the-box`; it points to
+  `courses/maps-and-processes-from-expand-the-box/index.html`.
 
 ## About the content
 
